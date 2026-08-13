@@ -118,6 +118,14 @@ function escapeHtml(str) {
   }[c]));
 }
 
+// og:image / twitter:image / JSON-LD "image" all require an ABSOLUTE url per
+// spec — our own images are stored as root-relative paths (/images/foo.jpg),
+// so this turns them into full https://8concert.com/images/foo.jpg URLs.
+function absUrl(p) {
+  if (!p) return '';
+  return /^https?:\/\//.test(p) ? p : `${SITE_URL}${p}`;
+}
+
 // Best-effort parse of the free-text Ukrainian "Date" field (e.g. "15 серпня",
 // "сьогодні") into an ISO date. Returns null if it can't confidently parse —
 // callers must handle that (omit startDate rather than emit a wrong one).
@@ -243,6 +251,36 @@ function extractImageUrl(field) {
   return '';
 }
 
+const IMAGE_EXT_BY_CONTENT_TYPE = {
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+  'image/webp': 'webp',
+  'image/gif': 'gif',
+};
+
+// Airtable's attachment URLs (v5.airtableusercontent.com/...) are SIGNED and
+// expire a few hours after Airtable generates them — hotlinking them means
+// images silently break on the live site well before the next scheduled
+// rebuild. Download each image once at build time and self-host it in
+// dist/images/ instead, so the URL baked into the HTML is our own domain's
+// and never expires between deploys.
+async function downloadImage(url, slug, destDir) {
+  if (!url) return '';
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const contentType = (res.headers.get('content-type') || '').split(';')[0].trim();
+    const ext = IMAGE_EXT_BY_CONTENT_TYPE[contentType] || 'jpg';
+    const filename = `${slug}.${ext}`;
+    const buf = Buffer.from(await res.arrayBuffer());
+    fs.writeFileSync(path.join(destDir, filename), buf);
+    return `/images/${filename}`;
+  } catch (err) {
+    console.warn(`Warning: couldn't download image for "${slug}" (${err.message}). Card will render without an image.`);
+    return '';
+  }
+}
+
 function buildConcertData(record) {
   const f = record.fields;
   const price = f.Price || '';
@@ -322,9 +360,9 @@ function pageShell({ title, description, canonical, bodyExtraHead = '', headerHt
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${canonical}">
-${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}">` : ''}
+${ogImage ? `<meta property="og:image" content="${escapeHtml(absUrl(ogImage))}">` : ''}
 <meta name="twitter:card" content="${ogImage ? 'summary_large_image' : 'summary'}">
-${ogImage ? `<meta name="twitter:image" content="${escapeHtml(ogImage)}">` : ''}
+${ogImage ? `<meta name="twitter:image" content="${escapeHtml(absUrl(ogImage))}">` : ''}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/icon-32.png" type="image/png" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -510,7 +548,7 @@ function renderConcertPage(c) {
       address: { '@type': 'PostalAddress', addressLocality: 'Київ', addressCountry: 'UA' },
     },
     ...(f.Category ? { genre: f.Category } : {}),
-    ...(image ? { image: [image] } : {}),
+    ...(image ? { image: [absUrl(image)] } : {}),
     offers: {
       '@type': 'Offer',
       url: link,
@@ -700,6 +738,14 @@ async function main() {
 
   fs.rmSync(DIST, { recursive: true, force: true });
   fs.mkdirSync(DIST, { recursive: true });
+
+  const imagesDir = path.join(DIST, 'images');
+  fs.mkdirSync(imagesDir, { recursive: true });
+  for (const c of concerts) {
+    if (c.image) {
+      c.image = await downloadImage(c.image, c.slug, imagesDir);
+    }
+  }
 
   fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts));
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(concerts));
