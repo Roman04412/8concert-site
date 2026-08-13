@@ -281,6 +281,24 @@ async function downloadImage(url, slug, destDir) {
   }
 }
 
+// Airtable's "Time" field can be either plain text ("19:00") or, if it was
+// set up as a Duration field type (which is what "19:00" looks like when you
+// just start typing a time into a new column — Airtable defaults new time-ish
+// columns to Duration, not Time-of-day, since it has no dedicated
+// time-only field type), the API returns a NUMBER of total seconds instead
+// of the string. Handle both rather than silently dropping the number case.
+function parseTimeField(raw) {
+  if (raw === null || raw === undefined || raw === '') return null;
+  if (typeof raw === 'number' && Number.isFinite(raw)) {
+    const totalMinutes = Math.round(raw / 60);
+    const hours = Math.floor(totalMinutes / 60) % 24;
+    const minutes = totalMinutes % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+  }
+  const match = String(raw).trim().match(/^([01]?\d|2[0-3]):([0-5]\d)/);
+  return match ? `${match[1].padStart(2, '0')}:${match[2]}` : null;
+}
+
 function buildConcertData(record) {
   const f = record.fields;
   const price = f.Price || '';
@@ -291,16 +309,13 @@ function buildConcertData(record) {
   const title = f.Title || 'Назва уточнюється';
   const slug = `${slugify(title)}-${record.id.slice(-6).toLowerCase()}`;
   const isoDate = parseUkrainianDate(f.Date);
-  // "Time" is a plain text field (e.g. "19:00") — validate loosely, ignore
-  // anything that doesn't look like HH:MM rather than emit a broken datetime.
-  const timeMatch = f.Time ? String(f.Time).trim().match(/^([01]?\d|2[0-3]):([0-5]\d)/) : null;
-  const timeDisplay = timeMatch ? `${timeMatch[1].padStart(2, '0')}:${timeMatch[2]}` : '';
+  const timeDisplay = parseTimeField(f.Time) || '';
   const dateDisplay = (isoDate ? formatDateDisplay(isoDate) : (f.Date || '')) + (timeDisplay ? `, ${timeDisplay}` : '');
   // Full ISO datetime with Kyiv's correct UTC offset for that specific date —
   // used as Event startDate in JSON-LD. Falls back to date-only when there's
   // no time, and to nothing at all when there's no date either (existing
   // isoDate-null behaviour is unchanged).
-  const startDateTime = isoDate && timeMatch ? `${isoDate}T${timeDisplay}:00${kyivOffset(isoDate)}` : isoDate;
+  const startDateTime = isoDate && timeDisplay ? `${isoDate}T${timeDisplay}:00${kyivOffset(isoDate)}` : isoDate;
   const image = extractImageUrl(f.Image);
 
   return { record, f, price, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, startDateTime, image };
