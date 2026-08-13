@@ -286,6 +286,24 @@ nav a:hover { color: var(--dark); background: var(--line); }
   background: rgba(196,149,106,0.12);
 }
 
+.concert-thumb {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.concert-page-image {
+  width: 100%;
+  max-height: 380px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 24px;
+  display: block;
+}
+
 .concert-title {
   font-family: 'Cormorant Garamond', serif;
   font-size: 26px;

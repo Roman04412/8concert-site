@@ -144,6 +144,23 @@ async function fetchConcerts() {
 // Rendering
 // ---------------------------------------------------------------------------
 
+
+// Airtable "Image" field can be an Attachment array or a plain URL string —
+// handle both, prefer a larger thumbnail when Airtable generated one.
+function extractImageUrl(field) {
+  if (!field) return '';
+  if (Array.isArray(field) && field.length > 0) {
+    const att = field[0];
+    if (att && att.thumbnails) {
+      if (att.thumbnails.full && att.thumbnails.full.url) return att.thumbnails.full.url;
+      if (att.thumbnails.large && att.thumbnails.large.url) return att.thumbnails.large.url;
+    }
+    return (att && att.url) || '';
+  }
+  if (typeof field === 'string') return field.trim();
+  return '';
+}
+
 function buildConcertData(record, index) {
   const f = record.fields;
   const num = String(index + 1).padStart(2, '0');
@@ -156,12 +173,13 @@ function buildConcertData(record, index) {
   const title = f.Title || 'Назва уточнюється';
   const slug = `${slugify(title)}-${record.id.slice(-6).toLowerCase()}`;
   const isoDate = parseUkrainianDate(f.Date);
+  const image = extractImageUrl(f.Image);
 
-  return { record, f, num, price, link, isTop, isFree, snippet, desc, title, slug, isoDate };
+  return { record, f, num, price, link, isTop, isFree, snippet, desc, title, slug, isoDate, image };
 }
 
 function renderConcertCard(c, { linkTitle }) {
-  const { f, num, price, link, isTop, isFree, desc, title, slug } = c;
+  const { f, num, price, link, isTop, isFree, desc, title, slug, image } = c;
   const titleHtml = linkTitle
     ? `<a class="concert-title" href="/concert/${slug}/">${escapeHtml(title)}</a>`
     : `<div class="concert-title">${escapeHtml(title)}</div>`;
@@ -170,6 +188,7 @@ function renderConcertCard(c, { linkTitle }) {
       <div class="concert-item" data-category="${escapeHtml(f.Category || '')}">
         <div class="concert-num">${num}</div>
         <div class="concert-info">
+          ${image ? `<img class="concert-thumb" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
           <div class="concert-tags">
             ${isTop ? '<span class="tag tag-warm">Вибір редакції</span>' : ''}
             ${f.Category ? `<span class="tag">${escapeHtml(f.Category)}</span>` : ''}
@@ -193,7 +212,7 @@ function renderConcertCard(c, { linkTitle }) {
       </div>`;
 }
 
-function pageShell({ title, description, canonical, bodyExtraHead = '', headerHtml, contentHtml, jsonLd = null }) {
+function pageShell({ title, description, canonical, bodyExtraHead = '', headerHtml, contentHtml, jsonLd = null, ogImage = '' }) {
   return `<!DOCTYPE html>
 <html lang="uk">
 <head>
@@ -206,7 +225,9 @@ function pageShell({ title, description, canonical, bodyExtraHead = '', headerHt
 <meta property="og:title" content="${escapeHtml(title)}">
 <meta property="og:description" content="${escapeHtml(description)}">
 <meta property="og:url" content="${canonical}">
-<meta name="twitter:card" content="summary">
+${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}">` : ''}
+<meta name="twitter:card" content="${ogImage ? 'summary_large_image' : 'summary'}">
+${ogImage ? `<meta name="twitter:image" content="${escapeHtml(ogImage)}">` : ''}
 <link rel="stylesheet" href="/styles.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
 ${bodyExtraHead}
@@ -324,11 +345,12 @@ function renderHomepage(concerts) {
     canonical: `${SITE_URL}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
+    ogImage: (concerts.find((c) => c.image) || {}).image || '',
   });
 }
 
 function renderConcertPage(c) {
-  const { f, title, desc, snippet, price, isFree, link, slug, isoDate, record } = c;
+  const { f, title, desc, snippet, price, isFree, link, slug, isoDate, record, image } = c;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -344,6 +366,7 @@ function renderConcertPage(c) {
       address: { '@type': 'PostalAddress', addressLocality: 'Київ', addressCountry: 'UA' },
     },
     ...(f.Category ? { genre: f.Category } : {}),
+    ...(image ? { image: [image] } : {}),
     offers: {
       '@type': 'Offer',
       url: link,
@@ -356,6 +379,7 @@ function renderConcertPage(c) {
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(title)}</nav>
 <article class="concert-page">
+  ${image ? `<img class="concert-page-image" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
   <div class="concert-tags">
     ${f.Category ? `<span class="tag">${escapeHtml(f.Category)}</span>` : ''}
   </div>
@@ -380,6 +404,7 @@ function renderConcertPage(c) {
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
     jsonLd,
+    ogImage: image,
   });
 }
 
