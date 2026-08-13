@@ -48,10 +48,12 @@ function ensureEmptyState(container) {
 
 function refreshVisibility() {
   const active = activeCategories();
-  let weekVisible = 0;
-  let weekTotal = 0;
+  // "8 подій" (the full curated pool) is the default/primary tab, so the
+  // count label in the top-right tracks its filtered count.
+  let topVisible = 0;
+  let topTotal = 0;
 
-  ['tab-week', 'tab-today', 'tab-top8'].forEach((id) => {
+  ['tab-top8', 'tab-week', 'tab-today'].forEach((id) => {
     const container = document.getElementById(id);
     if (!container) return;
     const items = container.querySelectorAll('.concert-item');
@@ -61,7 +63,7 @@ function refreshVisibility() {
       item.style.display = show ? '' : 'none';
       if (show) visibleCount += 1;
     });
-    if (id === 'tab-week') { weekVisible = visibleCount; weekTotal = items.length; }
+    if (id === 'tab-top8') { topVisible = visibleCount; topTotal = items.length; }
 
     const emptyState = container.querySelector('.filter-empty');
     if (items.length > 0 && visibleCount === 0) {
@@ -75,7 +77,7 @@ function refreshVisibility() {
   if (label) {
     label.textContent = active.size >= 3
       ? (label.dataset.total || label.textContent)
-      : `${weekVisible} з ${weekTotal}`;
+      : `${topVisible} з ${topTotal}`;
   }
 }
 

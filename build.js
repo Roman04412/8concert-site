@@ -361,7 +361,7 @@ function renderHomepage(concerts) {
     ? concerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
     : '<div class="loading">Незабаром тут з\'являться найкращі вечори Києва</div>';
 
-  const countLabel = pluralEvents(weekList.length);
+  const countLabel = pluralEvents(concerts.length);
 
   const content = `
 <div class="hero">
@@ -385,15 +385,15 @@ function renderHomepage(concerts) {
 </div>
 
 <div class="tabs-bar">
-  <button class="tab active" onclick="switchTab(this,'week')">Цей тиждень</button>
+  <button class="tab active" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
+  <button class="tab" onclick="switchTab(this,'week')">Цей тиждень</button>
   <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
-  <button class="tab" onclick="switchTab(this,'top8')" id="top8">Топ 8</button>
   <span class="tabs-right">${countLabel}</span>
 </div>
 
-<div id="tab-week">${weekHtml}</div>
+<div id="tab-top8">${top8Html}</div>
+<div id="tab-week" style="display:none">${weekHtml}</div>
 <div id="tab-today" style="display:none">${todayHtml}</div>
-<div id="tab-top8" style="display:none">${top8Html}</div>
 `;
 
   return pageShell({
