@@ -36,7 +36,10 @@ const SITE_URL = (process.env.SITE_URL || 'https://8concert.com').replace(/\/$/,
 const MAX_RECORDS = Number(process.env.MAX_RECORDS || 8);
 
 const DIST = path.join(__dirname, 'dist');
-const SRC = path.join(__dirname, 'src');
+// styles.css / client.js live next to build.js at the repo root (not in a
+// src/ subfolder) — GitHub's drag-and-drop web uploader flattens folders,
+// so this matches what actually ends up in the repo.
+const SRC = __dirname;
 
 // TODO: замініть на реальні контакти/соцмережі — зараз це чернетка-заглушка,
 // сторінки /about/ і /contacts/ вже підключені й попадуть у sitemap.
