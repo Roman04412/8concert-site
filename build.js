@@ -351,7 +351,7 @@ function renderConcertCard(c, { linkTitle }) {
           </div>
         </div>
         <div class="concert-right">
-          <div class="concert-price-label">${isFree ? 'Вхід' : 'Від'}</div>
+          ${isFree ? '<div class="concert-price-label">Вхід</div>' : ''}
           <div class="concert-price">${isFree ? 'Вільний' : escapeHtml(price) || '—'}</div>
           <a href="${escapeHtml(link)}" class="${isFree ? 'btn-ticket btn-free' : 'btn-ticket'}" target="_blank" rel="noopener sponsored"
              data-ticket-link data-concert-id="${c.record.id}" data-concert-title="${escapeHtml(title)}"
