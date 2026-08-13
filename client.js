@@ -48,10 +48,6 @@ function ensureEmptyState(container) {
 
 function refreshVisibility() {
   const active = activeCategories();
-  // "8 подій" (the full curated pool) is the default/primary tab, so the
-  // count label in the top-right tracks its filtered count.
-  let topVisible = 0;
-  let topTotal = 0;
 
   ['tab-top8', 'tab-week', 'tab-today'].forEach((id) => {
     const container = document.getElementById(id);
@@ -63,7 +59,6 @@ function refreshVisibility() {
       item.style.display = show ? '' : 'none';
       if (show) visibleCount += 1;
     });
-    if (id === 'tab-top8') { topVisible = visibleCount; topTotal = items.length; }
 
     const emptyState = container.querySelector('.filter-empty');
     if (items.length > 0 && visibleCount === 0) {
@@ -72,13 +67,6 @@ function refreshVisibility() {
       emptyState.style.display = 'none';
     }
   });
-
-  const label = document.querySelector('.tabs-right');
-  if (label) {
-    label.textContent = active.size >= 3
-      ? (label.dataset.total || label.textContent)
-      : `${topVisible} з ${topTotal}`;
-  }
 }
 
 document.querySelectorAll('.genre-pill').forEach((p) => {
@@ -87,11 +75,6 @@ document.querySelectorAll('.genre-pill').forEach((p) => {
     refreshVisibility();
   });
 });
-
-// store the original "вісім подій" label so we can restore it when all
-// three genres are active (i.e. no real filtering is happening)
-const tabsRight = document.querySelector('.tabs-right');
-if (tabsRight) tabsRight.dataset.total = tabsRight.textContent;
 
 refreshVisibility();
 
