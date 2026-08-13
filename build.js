@@ -98,6 +98,12 @@ function parseUkrainianDate(raw) {
   const text = String(raw).trim().toLowerCase();
   const now = new Date();
 
+  // Airtable's native "Date" field type returns ISO format (e.g. "2026-08-13"),
+  // not Ukrainian text — handle that directly instead of falling through to the
+  // Ukrainian-text regex below (which would never match it).
+  const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+
   if (text.includes('сьогодні')) return now.toISOString().slice(0, 10);
   if (text.includes('завтра')) {
     const d = new Date(now);
@@ -117,6 +123,20 @@ function parseUkrainianDate(raw) {
   if (candidate < now && (now - candidate) / 86400000 > 31) year += 1;
 
   return `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function formatDateDisplay(isoDate) {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+  if (isoDate === todayStr) return 'Сьогодні';
+  if (isoDate === tomorrowStr) return 'Завтра';
+  const sameYear = y === now.getFullYear();
+  return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
 }
 
 function getWeekRange() {
@@ -172,9 +192,10 @@ function buildConcertData(record) {
   const title = f.Title || 'Назва уточнюється';
   const slug = `${slugify(title)}-${record.id.slice(-6).toLowerCase()}`;
   const isoDate = parseUkrainianDate(f.Date);
+  const dateDisplay = isoDate ? formatDateDisplay(isoDate) : (f.Date || '');
   const image = extractImageUrl(f.Image);
 
-  return { record, f, price, link, isFree, snippet, desc, title, slug, isoDate, image };
+  return { record, f, price, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, image };
 }
 
 // Only filters out events we're CONFIDENT have already happened (a successfully
@@ -185,7 +206,7 @@ function isPastEvent(concert, todayStr) {
 }
 
 function renderConcertCard(c, { linkTitle }) {
-  const { f, num, price, link, isTop, isFree, desc, title, slug, image } = c;
+  const { f, num, price, link, isTop, isFree, desc, title, slug, image, dateDisplay } = c;
   const titleHtml = linkTitle
     ? `<a class="concert-title" href="/concert/${slug}/">${escapeHtml(title)}</a>`
     : `<div class="concert-title">${escapeHtml(title)}</div>`;
@@ -202,7 +223,7 @@ function renderConcertCard(c, { linkTitle }) {
           ${titleHtml}
           ${desc ? `<div class="concert-desc">${escapeHtml(desc)}</div>` : ''}
           <div class="concert-meta">
-            ${f.Date ? `<span>📅 ${escapeHtml(f.Date)}</span>` : ''}
+            ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
             ${f.Location ? `<span>📍 ${escapeHtml(f.Location)}</span>` : ''}
           </div>
         </div>
@@ -293,12 +314,8 @@ function siteFooter() {
 }
 
 function renderHomepage(concerts) {
-  const weekRange = getWeekRange();
-  const today = new Date().toLocaleDateString('uk-UA', { day: 'numeric', month: 'long' }).toLowerCase();
-  const todayConcerts = concerts.filter((c) => {
-    const d = (c.f.Date || '').toLowerCase();
-    return d.includes('сьогодні') || d.includes(today);
-  });
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const todayConcerts = concerts.filter((c) => c.isoDate === todayStr);
 
   const weekHtml = concerts.length
     ? concerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
@@ -318,10 +335,6 @@ function renderHomepage(concerts) {
     <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та трибьютів у Києві — для тих, хто цінує особливі моменти.</p>
   </div>
   <div class="hero-right">
-    <div class="hero-week">
-      <div class="hero-week-label">Тиждень</div>
-      <div class="hero-week-dates">${weekRange}</div>
-    </div>
     <div class="hero-genres">
       <div class="genre-pill active">🎷 Джаз</div>
       <div class="genre-pill active">🎻 Класика</div>
@@ -356,7 +369,7 @@ function renderHomepage(concerts) {
 }
 
 function renderConcertPage(c) {
-  const { f, title, desc, snippet, price, isFree, link, slug, isoDate, record, image } = c;
+  const { f, title, desc, snippet, price, isFree, link, slug, isoDate, dateDisplay, record, image } = c;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -392,7 +405,7 @@ function renderConcertPage(c) {
   <h1 class="concert-title">${escapeHtml(title)}</h1>
   ${snippet ? `<p class="concert-desc">${escapeHtml(snippet)}</p>` : ''}
   <div class="concert-meta">
-    ${f.Date ? `<span>📅 ${escapeHtml(f.Date)}</span>` : ''}
+    ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
     ${f.Location ? `<span>📍 ${escapeHtml(f.Location)}</span>` : ''}
   </div>
   <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>
