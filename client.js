@@ -11,14 +11,19 @@ function switchTab(btn, tab) {
   refreshVisibility();
 }
 
-// Header/footer links point to /#today, /#week, /#top8. On load, if the URL
-// has one of those hashes, switch to the matching tab automatically (the
-// tab buttons share their id with the hash: id="today" <-> #today, etc).
-const hashTab = window.location.hash.replace('#', '');
-if (hashTab) {
+// Header/footer links point to /#today, /#week, /#top8. The tab buttons
+// share their id with the hash (id="today" <-> #today, etc), so on load —
+// and whenever the hash changes, since clicking one of these links while
+// already on the homepage only changes the hash and doesn't reload the
+// page — switch to the matching tab automatically.
+function applyHashTab() {
+  const hashTab = window.location.hash.replace('#', '');
+  if (!hashTab) return;
   const hashBtn = document.getElementById(hashTab);
   if (hashBtn && hashBtn.classList.contains('tab')) switchTab(hashBtn, hashTab);
 }
+applyHashTab();
+window.addEventListener('hashchange', applyHashTab);
 
 // --- Genre filter --------------------------------------------------------
 // Pills toggle active/inactive. Visible concerts = those whose category is
