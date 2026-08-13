@@ -167,6 +167,26 @@ function formatDateDisplay(isoDate) {
   return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
 }
 
+// Kyiv flips between EET (+2) and EEST (+3) twice a year (DST), so the
+// correct UTC offset for a given date can't be hardcoded. Let the JS Intl
+// API (backed by the full IANA tz database) resolve it instead of
+// reimplementing the EU DST rules by hand.
+function kyivOffset(isoDate) {
+  try {
+    const d = new Date(`${isoDate}T12:00:00Z`); // midday sidesteps any DST-boundary edge case
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Europe/Kyiv',
+      timeZoneName: 'shortOffset',
+    }).formatToParts(d);
+    const tzPart = parts.find((p) => p.type === 'timeZoneName');
+    const match = tzPart && tzPart.value.match(/GMT([+-]\d+)/);
+    const hours = match ? parseInt(match[1], 10) : 2;
+    return `${hours >= 0 ? '+' : '-'}${String(Math.abs(hours)).padStart(2, '0')}:00`;
+  } catch {
+    return '+02:00';
+  }
+}
+
 // ISO (Mon-Sun) bounds of the current calendar week, as YYYY-MM-DD strings —
 // used to make the "Цей тиждень" tab actually mean "this week" instead of
 // "next 8 concerts whenever they happen to be".
@@ -233,10 +253,19 @@ function buildConcertData(record) {
   const title = f.Title || 'Назва уточнюється';
   const slug = `${slugify(title)}-${record.id.slice(-6).toLowerCase()}`;
   const isoDate = parseUkrainianDate(f.Date);
-  const dateDisplay = isoDate ? formatDateDisplay(isoDate) : (f.Date || '');
+  // "Time" is a plain text field (e.g. "19:00") — validate loosely, ignore
+  // anything that doesn't look like HH:MM rather than emit a broken datetime.
+  const timeMatch = f.Time ? String(f.Time).trim().match(/^([01]?\d|2[0-3]):([0-5]\d)/) : null;
+  const timeDisplay = timeMatch ? `${timeMatch[1].padStart(2, '0')}:${timeMatch[2]}` : '';
+  const dateDisplay = (isoDate ? formatDateDisplay(isoDate) : (f.Date || '')) + (timeDisplay ? `, ${timeDisplay}` : '');
+  // Full ISO datetime with Kyiv's correct UTC offset for that specific date —
+  // used as Event startDate in JSON-LD. Falls back to date-only when there's
+  // no time, and to nothing at all when there's no date either (existing
+  // isoDate-null behaviour is unchanged).
+  const startDateTime = isoDate && timeMatch ? `${isoDate}T${timeDisplay}:00${kyivOffset(isoDate)}` : isoDate;
   const image = extractImageUrl(f.Image);
 
-  return { record, f, price, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, image };
+  return { record, f, price, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, startDateTime, image };
 }
 
 // Only filters out events we're CONFIDENT have already happened (a successfully
@@ -465,7 +494,7 @@ function renderHomepage(concerts) {
 }
 
 function renderConcertPage(c) {
-  const { f, title, desc, snippet, price, isFree, link, slug, isoDate, dateDisplay, record, image } = c;
+  const { f, title, desc, snippet, price, isFree, link, slug, isoDate, dateDisplay, startDateTime, record, image } = c;
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -474,7 +503,7 @@ function renderConcertPage(c) {
     description: snippet || desc || title,
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
-    ...(isoDate ? { startDate: isoDate } : {}),
+    ...(startDateTime ? { startDate: startDateTime } : {}),
     location: {
       '@type': 'Place',
       name: f.Location || 'Київ',
