@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>8CONCERT — Вісім вечорів, які варто прожити | Афіша концертів Києва</title>
+<meta name="description" content="Щотижнева редакційна добірка з восьми концертів джазу, класики та трибьютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.">
+<link rel="canonical" href="https://8concert.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="8CONCERT — Вісім вечорів, які варто прожити | Афіша концертів Києва">
+<meta property="og:description" content="Щотижнева редакційна добірка з восьми концертів джазу, класики та трибьютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.">
+<meta property="og:url" content="https://8concert.com/">
+<meta name="twitter:card" content="summary">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@800;900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --cream: #FAF7F2;
+  --dark: #1C1612;
+  --brown: #8B6F5E;
+  --warm: #C4956A;
+  --muted: #A89890;
+  --line: #E8E0D8;
+  --rose: #D4A5A0;
+  --tag-bg: #F2EDE6;
+}
+
+body {
+  background: var(--cream);
+  color: var(--dark);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* HEADER */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  height: 64px;
+  border-bottom: 1px solid var(--line);
+  position: sticky;
+  top: 0;
+  background: rgba(250,247,242,0.96);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+
+.logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--dark);
+  text-decoration: none;
+}
+
+.logo span { color: var(--warm); }
+
+nav {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+nav a {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--muted);
+  text-decoration: none;
+  padding: 7px 14px;
+  border-radius: 8px;
+  transition: all 0.15s;
+  letter-spacing: 0.01em;
+}
+
+nav a:hover { color: var(--dark); background: var(--line); }
+
+.nav-city {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cream);
+  background: var(--dark);
+  padding: 7px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+/* HERO */
+.hero {
+  padding: 72px 48px 60px;
+  border-bottom: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.hero-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 22px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-label::before {
+  content: '';
+  display: inline-block;
+  width: 28px;
+  height: 1px;
+  background: var(--warm);
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(48px, 6.5vw, 84px);
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -1px;
+  margin-bottom: 24px;
+  color: var(--dark);
+}
+
+.hero-title em {
+  font-style: italic;
+  color: var(--warm);
+}
+
+.hero-sub {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 380px;
+}
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  align-items: flex-end;
+}
+
+.hero-week {
+  text-align: right;
+}
+
+.hero-week-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+
+.hero-week-dates {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 38px;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -1px;
+  color: var(--dark);
+}
+
+.hero-genres {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.genre-pill {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  padding: 6px 13px;
+  border-radius: 100px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--cream);
+}
+
+.genre-pill.active, .genre-pill:hover {
+  border-color: var(--warm);
+  color: var(--warm);
+  background: rgba(196,149,106,0.08);
+}
+
+/* TABS */
+.tabs-bar {
+  display: flex;
+  align-items: center;
+  padding: 0 48px;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding: 18px 16px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+}
+
+.tab.active { color: var(--dark); border-bottom-color: var(--warm); }
+.tab:hover { color: var(--dark); }
+
+.tabs-right {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+  font-style: italic;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+}
+
+/* CONCERTS */
+.concert-item {
+  display: grid;
+  grid-template-columns: 80px 1fr 180px;
+  gap: 28px;
+  align-items: center;
+  padding: 32px 48px;
+  border-bottom: 1px solid var(--line);
+  cursor: pointer;
+  transition: background 0.2s;
+  position: relative;
+}
+
+.concert-item::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--warm);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.concert-item:hover { background: #F5EFE6; }
+.concert-item:hover::after { opacity: 1; }
+
+.concert-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 52px;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--line);
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.concert-item:hover .concert-num { color: var(--warm); }
+
+.concert-tags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: var(--tag-bg);
+  padding: 3px 9px;
+  border-radius: 4px;
+}
+
+.tag-warm {
+  color: var(--warm);
+  background: rgba(196,149,106,0.12);
+}
+
+.concert-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+  margin-bottom: 8px;
+  line-height: 1.2;
+  color: var(--dark);
+  text-decoration: none;
+  display: block;
+}
+
+.concert-desc {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.concert-meta {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--brown);
+  display: flex;
+  gap: 18px;
+}
+
+.concert-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.concert-price-label {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.concert-price {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--dark);
+  letter-spacing: -0.5px;
+}
+
+.btn-ticket {
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  padding: 10px 20px;
+  background: var(--dark);
+  color: var(--cream);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+
+.btn-ticket:hover { background: var(--warm); }
+
+.btn-free {
+  background: transparent;
+  color: var(--warm);
+  border: 1.5px solid var(--warm);
+}
+
+.btn-free:hover { background: rgba(196,149,106,0.1); }
+
+.loading {
+  text-align: center;
+  padding: 80px 48px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-style: italic;
+  color: var(--muted);
+}
+
+/* QUOTE STRIP */
+.quote-strip {
+  padding: 40px 48px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.quote-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 300;
+  color: var(--brown);
+  line-height: 1.4;
+}
+
+.quote-line {
+  width: 40px;
+  height: 1px;
+  background: var(--warm);
+  flex-shrink: 0;
+}
+
+/* FOOTER */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 48px;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 48px;
+  margin-top: 80px;
+}
+
+.footer-logo {
+  font-family: 'Inter', sans-serif;
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  color: var(--dark);
+  margin-bottom: 12px;
+}
+
+.footer-logo span { color: var(--warm); }
+
+.footer-desc {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.footer-genres {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.footer-genre {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--warm);
+  background: rgba(196,149,106,0.1);
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.footer-col-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 16px;
+}
+
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+
+.footer-links a {
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--brown);
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.footer-links a:hover { color: var(--dark); }
+
+.footer-bottom {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.footer-copy {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--muted);
+}
+
+/* BREADCRUMB (concert page) */
+.breadcrumb {
+  padding: 20px 48px 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.breadcrumb a { color: var(--brown); text-decoration: none; }
+.breadcrumb a:hover { color: var(--dark); }
+
+.concert-page {
+  padding: 40px 48px 80px;
+  max-width: 720px;
+}
+
+.concert-page .concert-title { font-size: 40px; margin-bottom: 16px; }
+.concert-page .concert-desc { font-size: 15px; margin-bottom: 24px; }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  header { padding: 0 20px; }
+  nav a { display: none; }
+  .hero { grid-template-columns: 1fr; padding: 48px 20px 40px; gap: 36px; }
+  .hero-right { align-items: flex-start; }
+  .hero-genres { justify-content: flex-start; }
+  .tabs-bar { padding: 0 20px; }
+  .concert-item { grid-template-columns: 56px 1fr; padding: 24px 20px; gap: 16px; }
+  .concert-right { display: none; }
+  .quote-strip { padding: 28px 20px; }
+  footer { grid-template-columns: 1fr; padding: 40px 20px; }
+  .breadcrumb, .concert-page { padding-left: 20px; padding-right: 20px; }
+}
+
+</style>
+
+
+</head>
+<body>
+<header>
+  <a href="/" class="logo">8<span>CONCERT</span></a>
+  <nav>
+    <a href="/">Афіша</a>
+    <a href="/#today" data-tab-link="today">Сьогодні</a>
+    <a href="/about/">Про нас</a>
+    <a href="/" class="nav-city">Київ</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-label">Редакційна добірка</div>
+    <h1 class="hero-title">Вісім вечорів,<br>які варто <em>прожити</em></h1>
+    <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та трибьютів у Києві — для тих, хто цінує особливі моменти.</p>
+  </div>
+  <div class="hero-right">
+    <div class="hero-week">
+      <div class="hero-week-label">Тиждень</div>
+      <div class="hero-week-dates">10 — 16<br>серпня</div>
+    </div>
+    <div class="hero-genres">
+      <div class="genre-pill active">🎷 Джаз</div>
+      <div class="genre-pill active">🎻 Класика</div>
+      <div class="genre-pill active">🎤 Трибьюти</div>
+    </div>
+  </div>
+</div>
+
+<div class="quote-strip">
+  <div class="quote-line"></div>
+  <div class="quote-text">«Музика — найкоротший шлях між двома серцями»</div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab active" onclick="switchTab(this,'week')">Цей тиждень</button>
+  <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
+  <span class="tabs-right">вісім подій</span>
+</div>
+
+<div id="tab-week">
+      <div class="concert-item" data-category="Джаз">
+        <div class="concert-num">01</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            <span class="tag tag-warm">Вибір редакції</span>
+            <span class="tag">Джаз</span>
+          </div>
+          <a class="concert-title" href="/concert/dzhazovyi-vechir-z-orkestrom-kyieva-000001/">Джазовий вечір з Оркестром Києва</a>
+          <div class="concert-desc">Атмосферний джазовий концерт у супроводі струнного квартету, який перенесе вас у Нью-Йорк ...</div>
+          <div class="concert-meta">
+            <span>📅 15 серпня</span>
+            <span>📍 Будинок офіцерів, Київ</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">450 грн</div>
+          <a href="https://concert.ua/example1" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000001" data-concert-title="Джазовий вечір з Оркестром Києва"
+             data-concert-category="Джаз" data-concert-price="450 грн">
+            Квитки →
+          </a>
+        </div>
+      </div>
+      <div class="concert-item" data-category="Класика">
+        <div class="concert-num">02</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            <span class="tag tag-warm">Вибір редакції</span>
+            <span class="tag">Класика</span>
+          </div>
+          <a class="concert-title" href="/concert/rekviiem-motsarta-000002/">Реквієм Моцарта</a>
+          <div class="concert-desc">Виконання одного з найвідоміших творів класичної музики у супроводі симфонічного оркестру.</div>
+          <div class="concert-meta">
+            <span>📅 16 серпня</span>
+            <span>📍 Національна філармонія</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">600 грн</div>
+          <a href="https://concert.ua/example2" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000002" data-concert-title="Реквієм Моцарта"
+             data-concert-category="Класика" data-concert-price="600 грн">
+            Квитки →
+          </a>
+        </div>
+      </div>
+      <div class="concert-item" data-category="Трибьюти">
+        <div class="concert-num">03</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            
+            <span class="tag">Трибьюти</span>
+          </div>
+          <a class="concert-title" href="/concert/trybiut-queen-bohemian-night-000003/">Трибьют Queen: Bohemian Night</a>
+          <div class="concert-desc">Живе виконання найвідоміших хітів гурту Queen у виконанні київського трибьют-гурту.</div>
+          <div class="concert-meta">
+            <span>📅 сьогодні</span>
+            <span>📍 Atlas</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">350 грн</div>
+          <a href="https://concert.ua/example3" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000003" data-concert-title="Трибьют Queen: Bohemian Night"
+             data-concert-category="Трибьюти" data-concert-price="350 грн">
+            Квитки →
+          </a>
+        </div>
+      </div>
+      <div class="concert-item" data-category="Класика">
+        <div class="concert-num">04</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            
+            <span class="tag">Класика</span>
+          </div>
+          <a class="concert-title" href="/concert/kamerna-muzyka-pry-svichkakh-000004/">Камерна музика при свічках</a>
+          <div class="concert-desc">Інтимний вечір камерної музики Баха і Вівальді при свічках.</div>
+          <div class="concert-meta">
+            <span>📅 18 серпня</span>
+            <span>📍 Костел Св. Миколая</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Вхід</div>
+          <div class="concert-price">Вільний</div>
+          <a href="https://concert.ua/example4" class="btn-ticket btn-free" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000004" data-concert-title="Камерна музика при свічках"
+             data-concert-category="Класика" data-concert-price="Вільний вхід">
+            Деталі
+          </a>
+        </div>
+      </div>
+      <div class="concert-item" data-category="Джаз">
+        <div class="concert-num">05</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            
+            <span class="tag">Джаз</span>
+          </div>
+          <a class="concert-title" href="/concert/dzhem-seishn-molodi-talanty-000005/">Джем-сейшн: молоді таланти</a>
+          <div class="concert-desc">Імпровізаційний джазовий вечір за участі студентів консерваторії.</div>
+          <div class="concert-meta">
+            <span>📅 19 серпня</span>
+            <span>📍 Джаз-клуб Caribbean</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">250 грн</div>
+          <a href="https://concert.ua/example5" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000005" data-concert-title="Джем-сейшн: молоді таланти"
+             data-concert-category="Джаз" data-concert-price="250 грн">
+            Квитки →
+          </a>
+        </div>
+      </div>
+      <div class="concert-item" data-category="Трибьюти">
+        <div class="concert-num">06</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            
+            <span class="tag">Трибьюти</span>
+          </div>
+          <a class="concert-title" href="/concert/trybiut-pink-floyd-000006/">Трибьют Pink Floyd</a>
+          <div class="concert-desc">Психоделічне шоу з візуальними ефектами на честь легендарного гурту.</div>
+          <div class="concert-meta">
+            <span>📅 20 серпня</span>
+            <span>📍 Bel Etage</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">500 грн</div>
+          <a href="https://concert.ua/example6" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000006" data-concert-title="Трибьют Pink Floyd"
+             data-concert-category="Трибьюти" data-concert-price="500 грн">
+            Квитки →
+          </a>
+        </div>
+      </div>
+      <div class="concert-item" data-category="Класика">
+        <div class="concert-num">07</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            
+            <span class="tag">Класика</span>
+          </div>
+          <a class="concert-title" href="/concert/vechir-fortepiannoi-muzyky-000007/">Вечір фортепіанної музики</a>
+          <div class="concert-desc">Соло-концерт лауреата міжнародних конкурсів.</div>
+          <div class="concert-meta">
+            <span>📅 найближчим часом</span>
+            <span>📍 Колонний зал</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">400 грн</div>
+          <a href="https://concert.ua/example7" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000007" data-concert-title="Вечір фортепіанної музики"
+             data-concert-category="Класика" data-concert-price="400 грн">
+            Квитки →
+          </a>
+        </div>
+      </div>
+      <div class="concert-item" data-category="Джаз">
+        <div class="concert-num">08</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            
+            <span class="tag">Джаз</span>
+          </div>
+          <a class="concert-title" href="/concert/retro-dzhaz-vechirka-000008/">Ретро-джаз вечірка</a>
+          <div class="concert-desc">Танцювальна джазова вечірка у стилі свінг.</div>
+          <div class="concert-meta">
+            <span>📅 21 серпня</span>
+            <span>📍 Freud</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">300 грн</div>
+          <a href="https://concert.ua/example8" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000008" data-concert-title="Ретро-джаз вечірка"
+             data-concert-category="Джаз" data-concert-price="300 грн">
+            Квитки →
+          </a>
+        </div>
+      </div></div>
+<div id="tab-today" style="display:none">
+      <div class="concert-item" data-category="Трибьюти">
+        <div class="concert-num">03</div>
+        <div class="concert-info">
+          <div class="concert-tags">
+            
+            <span class="tag">Трибьюти</span>
+          </div>
+          <a class="concert-title" href="/concert/trybiut-queen-bohemian-night-000003/">Трибьют Queen: Bohemian Night</a>
+          <div class="concert-desc">Живе виконання найвідоміших хітів гурту Queen у виконанні київського трибьют-гурту.</div>
+          <div class="concert-meta">
+            <span>📅 сьогодні</span>
+            <span>📍 Atlas</span>
+          </div>
+        </div>
+        <div class="concert-right">
+          <div class="concert-price-label">Від</div>
+          <div class="concert-price">350 грн</div>
+          <a href="https://concert.ua/example3" class="btn-ticket" target="_blank" rel="noopener sponsored"
+             data-ticket-link data-concert-id="rec0000003" data-concert-title="Трибьют Queen: Bohemian Night"
+             data-concert-category="Трибьюти" data-concert-price="350 грн">
+            Квитки →
+          </a>
+        </div>
+      </div></div>
+<footer>
+  <div>
+    <div class="footer-logo">8<span>CONCERT</span></div>
+    <div class="footer-desc">Редакційна добірка концертів Києва для тих, хто цінує особливі вечори. Оновлюється щопонеділка.</div>
+    <div class="footer-genres">
+      <span class="footer-genre">Джаз</span>
+      <span class="footer-genre">Класика</span>
+      <span class="footer-genre">Трибьюти</span>
+    </div>
+  </div>
+  <div>
+    <div class="footer-col-title">Афіша</div>
+    <div class="footer-links">
+      <a href="/">Цей тиждень</a>
+      <a href="/#today" data-tab-link="today">Сьогодні</a>
+    </div>
+  </div>
+  <div>
+    <div class="footer-col-title">Проєкт</div>
+    <div class="footer-links">
+      <a href="/about/">Про нас</a>
+      <a href="/contacts/">Контакти</a>
+      <a href="https://t.me/Roman0044" target="_blank" rel="noopener">Telegram</a>
+      
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 8concert.com — Київ</div>
+    <div class="footer-copy">Зроблено з любов'ю до музики</div>
+  </div>
+</footer>
+<script>
+// Client-side interactivity only. All concert data is already baked into the
+// HTML at build time (see build.js) — nothing is fetched from Airtable in
+// the browser, so there is no API token exposed to visitors.
+
+function switchTab(btn, tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-week').style.display = tab === 'week' ? 'block' : 'none';
+  document.getElementById('tab-today').style.display = tab === 'today' ? 'block' : 'none';
+  refreshVisibility();
+}
+
+// Links like "Сьогодні" in the header/footer point to /#today. On load, if
+// that hash is present, switch to the "today" tab automatically.
+if (window.location.hash === '#today') {
+  const todayBtn = document.getElementById('today');
+  if (todayBtn) switchTab(todayBtn, 'today');
+}
+
+// --- Genre filter --------------------------------------------------------
+// Pills toggle active/inactive. Visible concerts = those whose category is
+// in the set of active pills. With zero pills active we show an explicit
+// empty state rather than either "show everything" (confusing — looks like
+// the filter does nothing) or a blank page.
+
+function pillCategory(el) {
+  // strip the leading emoji, keep the Ukrainian genre word
+  return el.textContent.replace(/^[^\p{L}]+/u, '').trim();
+}
+
+function activeCategories() {
+  return new Set(
+    Array.from(document.querySelectorAll('.genre-pill.active')).map(pillCategory)
+  );
+}
+
+function ensureEmptyState(container) {
+  let el = container.querySelector('.filter-empty');
+  if (!el) {
+    el = document.createElement('div');
+    el.className = 'loading filter-empty';
+    el.textContent = 'Оберіть хоча б один жанр вище, щоб побачити концерти.';
+    container.appendChild(el);
+  }
+  return el;
+}
+
+function refreshVisibility() {
+  const active = activeCategories();
+  let weekVisible = 0;
+  let weekTotal = 0;
+
+  ['tab-week', 'tab-today'].forEach((id) => {
+    const container = document.getElementById(id);
+    if (!container) return;
+    const items = container.querySelectorAll('.concert-item');
+    let visibleCount = 0;
+    items.forEach((item) => {
+      const show = active.size > 0 && active.has(item.dataset.category || '');
+      item.style.display = show ? '' : 'none';
+      if (show) visibleCount += 1;
+    });
+    if (id === 'tab-week') { weekVisible = visibleCount; weekTotal = items.length; }
+
+    const emptyState = container.querySelector('.filter-empty');
+    if (items.length > 0 && visibleCount === 0) {
+      ensureEmptyState(container).style.display = 'block';
+    } else if (emptyState) {
+      emptyState.style.display = 'none';
+    }
+  });
+
+  const label = document.querySelector('.tabs-right');
+  if (label) {
+    label.textContent = active.size >= 3
+      ? (label.dataset.total || label.textContent)
+      : `${weekVisible} з ${weekTotal}`;
+  }
+}
+
+document.querySelectorAll('.genre-pill').forEach((p) => {
+  p.addEventListener('click', () => {
+    p.classList.toggle('active');
+    refreshVisibility();
+  });
+});
+
+// store the original "вісім подій" label so we can restore it when all
+// three genres are active (i.e. no real filtering is happening)
+const tabsRight = document.querySelector('.tabs-right');
+if (tabsRight) tabsRight.dataset.total = tabsRight.textContent;
+
+refreshVisibility();
+
+// --- Ad tracking placeholder -------------------------------------------
+// Tickets are sold on a third-party site, so the closest thing we have to a
+// "sale" signal on our own domain is a click on the ticket button. Once GTM /
+// GA4 / Meta Pixel are installed (next step), this event is already wired up
+// to become a Google Ads / Meta conversion — just create a trigger listening
+// for "ticket_click" in GTM, no code changes needed here.
+window.dataLayer = window.dataLayer || [];
+
+document.querySelectorAll('[data-ticket-link]').forEach(el => {
+  el.addEventListener('click', () => {
+    window.dataLayer.push({
+      event: 'ticket_click',
+      concert_id: el.dataset.concertId || '',
+      concert_title: el.dataset.concertTitle || '',
+      concert_category: el.dataset.concertCategory || '',
+      concert_price: el.dataset.concertPrice || ''
+    });
+  });
+});
+
+</script>
+</body>
+</html>
