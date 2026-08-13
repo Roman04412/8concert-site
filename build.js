@@ -306,7 +306,7 @@ function siteFooter() {
   <div>
     <div class="footer-col-title">Афіша</div>
     <div class="footer-links">
-      <a href="/">Цей тиждень</a>
+      <a href="/#week" data-tab-link="week">Цей тиждень</a>
       <a href="/#today" data-tab-link="today">Сьогодні</a>
     </div>
   </div>
@@ -384,7 +384,7 @@ function renderHomepage(concerts) {
 
 <div class="tabs-bar">
   <button class="tab active" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
-  <button class="tab" onclick="switchTab(this,'week')">Цей тиждень</button>
+  <button class="tab" onclick="switchTab(this,'week')" id="week">Цей тиждень</button>
   <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
 </div>
 

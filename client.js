@@ -11,11 +11,13 @@ function switchTab(btn, tab) {
   refreshVisibility();
 }
 
-// Links like "Сьогодні" in the header/footer point to /#today. On load, if
-// that hash is present, switch to the "today" tab automatically.
-if (window.location.hash === '#today') {
-  const todayBtn = document.getElementById('today');
-  if (todayBtn) switchTab(todayBtn, 'today');
+// Header/footer links point to /#today, /#week, /#top8. On load, if the URL
+// has one of those hashes, switch to the matching tab automatically (the
+// tab buttons share their id with the hash: id="today" <-> #today, etc).
+const hashTab = window.location.hash.replace('#', '');
+if (hashTab) {
+  const hashBtn = document.getElementById(hashTab);
+  if (hashBtn && hashBtn.classList.contains('tab')) switchTab(hashBtn, hashTab);
 }
 
 // --- Genre filter --------------------------------------------------------
