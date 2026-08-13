@@ -139,14 +139,27 @@ function formatDateDisplay(isoDate) {
   return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
 }
 
-function getWeekRange() {
+// ISO (Mon-Sun) bounds of the current calendar week, as YYYY-MM-DD strings —
+// used to make the "Цей тиждень" tab actually mean "this week" instead of
+// "next 8 concerts whenever they happen to be".
+function getWeekBounds() {
   const now = new Date();
   const day = now.getDay();
   const mon = new Date(now);
   mon.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
   const sun = new Date(mon);
   sun.setDate(mon.getDate() + 6);
-  return `${mon.getDate()} — ${sun.getDate()}<br>${UA_MONTHS[sun.getMonth()]}`;
+  const toIso = (d) => d.toISOString().slice(0, 10);
+  return { start: toIso(mon), end: toIso(sun) };
+}
+
+function pluralEvents(n) {
+  if (n === 8) return 'вісім подій';
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return `${n} подія`;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${n} події`;
+  return `${n} подій`;
 }
 
 // ---------------------------------------------------------------------------
@@ -315,17 +328,33 @@ function siteFooter() {
 
 function renderHomepage(concerts) {
   const todayStr = new Date().toISOString().slice(0, 10);
+  const { start: weekStart, end: weekEnd } = getWeekBounds();
+
+  // "Цей тиждень" only shows concerts that actually fall within the current
+  // Mon–Sun week (unparseable dates are kept rather than hidden — see the
+  // isPastEvent comment above for the same reasoning). Anything with a known
+  // date outside this window belongs to a later week, not this one.
+  const weekConcerts = concerts.filter((c) => !c.isoDate || (c.isoDate >= weekStart && c.isoDate <= weekEnd));
   const todayConcerts = concerts.filter((c) => c.isoDate === todayStr);
 
-  const weekHtml = concerts.length
-    ? concerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
-    : '<div class="loading">Незабаром тут з\'являться найкращі вечори Києва</div>';
+  const renumber = (list) => list.map((c, index) => ({
+    ...c,
+    num: String(index + 1).padStart(2, '0'),
+    isTop: index < 2 || c.f.Status === 'Топ',
+  }));
 
-  const todayHtml = todayConcerts.length
-    ? todayConcerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+  const weekList = renumber(weekConcerts);
+  const todayList = renumber(todayConcerts);
+
+  const weekHtml = weekList.length
+    ? weekList.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : '<div class="loading">На цьому тижні нових концертів ще не додали. Загляньте трохи пізніше ✨</div>';
+
+  const todayHtml = todayList.length
+    ? todayList.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
     : '<div class="loading">Сьогодні ввечері — тиша. Перевірте афішу тижня ✨</div>';
 
-  const countLabel = concerts.length === 8 ? 'вісім подій' : `${concerts.length} подій`;
+  const countLabel = pluralEvents(weekList.length);
 
   const content = `
 <div class="hero">
