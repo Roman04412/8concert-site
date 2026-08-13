@@ -354,6 +354,13 @@ function renderHomepage(concerts) {
     ? todayList.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
     : '<div class="loading">Сьогодні ввечері — тиша. Перевірте афішу тижня ✨</div>';
 
+  // "Топ 8" is the full curated pool regardless of week — since "Цей тиждень"
+  // is now an honest weekly filter, this is the only place to see all 8 picks
+  // at once when they're spread across more than one week.
+  const top8Html = concerts.length
+    ? concerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : '<div class="loading">Незабаром тут з\'являться найкращі вечори Києва</div>';
+
   const countLabel = pluralEvents(weekList.length);
 
   const content = `
@@ -380,11 +387,13 @@ function renderHomepage(concerts) {
 <div class="tabs-bar">
   <button class="tab active" onclick="switchTab(this,'week')">Цей тиждень</button>
   <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
+  <button class="tab" onclick="switchTab(this,'top8')" id="top8">Топ 8</button>
   <span class="tabs-right">${countLabel}</span>
 </div>
 
 <div id="tab-week">${weekHtml}</div>
 <div id="tab-today" style="display:none">${todayHtml}</div>
+<div id="tab-top8" style="display:none">${top8Html}</div>
 `;
 
   return pageShell({

@@ -7,6 +7,7 @@ function switchTab(btn, tab) {
   btn.classList.add('active');
   document.getElementById('tab-week').style.display = tab === 'week' ? 'block' : 'none';
   document.getElementById('tab-today').style.display = tab === 'today' ? 'block' : 'none';
+  document.getElementById('tab-top8').style.display = tab === 'top8' ? 'block' : 'none';
   refreshVisibility();
 }
 
@@ -50,7 +51,7 @@ function refreshVisibility() {
   let weekVisible = 0;
   let weekTotal = 0;
 
-  ['tab-week', 'tab-today'].forEach((id) => {
+  ['tab-week', 'tab-today', 'tab-top8'].forEach((id) => {
     const container = document.getElementById(id);
     if (!container) return;
     const items = container.querySelectorAll('.concert-item');
