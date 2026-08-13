@@ -55,6 +55,34 @@ const SITE = {
   ],
 };
 
+// Static category landing pages (/jazz/, /klasika/, /trybuti/) — the genre
+// filter on the homepage is client-side JS only, so without these pages
+// Google has no crawlable URL to rank for "джаз Київ" / "класика Київ" /
+// "трибьюти Київ" style queries.
+const CATEGORIES = [
+  {
+    name: 'Джаз',
+    slug: 'jazz',
+    emoji: '🎷',
+    title: 'Джаз концерти Києва — афіша',
+    intro: 'Джазові концерти Києва цього сезону: джем-сейшени, вечори класичного свінгу та сучасного джазу на терасах і в клубах міста.',
+  },
+  {
+    name: 'Класика',
+    slug: 'klasika',
+    emoji: '🎻',
+    title: 'Класична музика Києва — афіша концертів',
+    intro: 'Концерти класичної музики в Києві: симфонічні оркестри, камерні вечори та виконання світових хітів у класичній обробці.',
+  },
+  {
+    name: 'Трибьюти',
+    slug: 'trybuti',
+    emoji: '🎤',
+    title: 'Трибьюти в Києві — афіша концертів',
+    intro: 'Трибьют-шоу та концерти на честь легендарних виконавців у Києві — від симфонічних програм до клубних вечорів.',
+  },
+];
+
 if (!AIRTABLE_TOKEN || !BASE_ID || !TABLE_ID) {
   console.error(
     'Missing env vars. Set AIRTABLE_TOKEN, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID\n' +
@@ -268,6 +296,9 @@ function pageShell({ title, description, canonical, bodyExtraHead = '', headerHt
 ${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}">` : ''}
 <meta name="twitter:card" content="${ogImage ? 'summary_large_image' : 'summary'}">
 ${ogImage ? `<meta name="twitter:image" content="${escapeHtml(ogImage)}">` : ''}
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/icon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
 ${bodyExtraHead}
@@ -308,6 +339,7 @@ function siteFooter() {
     <div class="footer-links">
       <a href="/#week" data-tab-link="week">Цей тиждень</a>
       <a href="/#today" data-tab-link="today">Сьогодні</a>
+      ${CATEGORIES.map((cat) => `<a href="/${cat.slug}/">${escapeHtml(cat.name)}</a>`).join('\n      ')}
     </div>
   </div>
   <div>
@@ -393,12 +425,41 @@ function renderHomepage(concerts) {
 <div id="tab-today" style="display:none">${todayHtml}</div>
 `;
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: '8CONCERT',
+        url: SITE_URL,
+        logo: `${SITE_URL}/icon-512.png`,
+        ...(SITE.telegramUrl ? { sameAs: [SITE.telegramUrl] } : {}),
+      },
+      {
+        '@type': 'WebSite',
+        name: '8CONCERT',
+        url: SITE_URL,
+      },
+      {
+        '@type': 'ItemList',
+        name: 'Афіша 8CONCERT — редакційна добірка концертів Києва',
+        itemListElement: concerts.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `${SITE_URL}/concert/${c.slug}/`,
+          name: c.title,
+        })),
+      },
+    ],
+  };
+
   return pageShell({
     title: '8CONCERT — Вісім вечорів, які варто прожити | Афіша концертів Києва',
     description: 'Щотижнева редакційна добірка з восьми концертів джазу, класики та трибьютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.',
     canonical: `${SITE_URL}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
+    jsonLd,
     ogImage: (concerts.find((c) => c.image) || {}).image || '',
   });
 }
@@ -502,11 +563,61 @@ function renderContactsPage() {
   });
 }
 
+function renderCategoryPage(cat, concerts) {
+  const items = concerts
+    .filter((c) => c.f.Category === cat.name)
+    .map((c, index) => ({
+      ...c,
+      num: String(index + 1).padStart(2, '0'),
+      isTop: index < 2 || c.f.Status === 'Топ',
+    }));
+
+  const listHtml = items.length
+    ? items.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : '<div class="loading">Найближчим часом нових концертів у цій категорії ще не додали. Загляньте трохи пізніше ✨</div>';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [{
+      '@type': 'ItemList',
+      name: `${cat.name} концерти Києва — 8CONCERT`,
+      itemListElement: items.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${SITE_URL}/concert/${c.slug}/`,
+        name: c.title,
+      })),
+    }],
+  };
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(cat.name)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Редакційна добірка</div>
+    <h1 class="hero-title">${cat.emoji} ${escapeHtml(cat.name)} у Києві</h1>
+    <p class="hero-sub">${escapeHtml(cat.intro)}</p>
+  </div>
+</div>
+<div class="category-list">${listHtml}</div>
+`;
+
+  return pageShell({
+    title: `${cat.title} | 8CONCERT`,
+    description: cat.intro,
+    canonical: `${SITE_URL}/${cat.slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+  });
+}
+
 function renderSitemap(concerts) {
   const urls = [
     `${SITE_URL}/`,
     `${SITE_URL}/about/`,
     `${SITE_URL}/contacts/`,
+    ...CATEGORIES.map((cat) => `${SITE_URL}/${cat.slug}/`),
     ...concerts.map((c) => `${SITE_URL}/concert/${c.slug}/`),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -571,8 +682,16 @@ async function main() {
   fs.mkdirSync(path.join(DIST, 'contacts'), { recursive: true });
   fs.writeFileSync(path.join(DIST, 'contacts', 'index.html'), renderContactsPage());
 
+  for (const cat of CATEGORIES) {
+    fs.mkdirSync(path.join(DIST, cat.slug), { recursive: true });
+    fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, concerts));
+  }
+
   fs.copyFileSync(path.join(SRC, 'styles.css'), path.join(DIST, 'styles.css'));
   fs.copyFileSync(path.join(SRC, 'client.js'), path.join(DIST, 'client.js'));
+  for (const asset of ['favicon.ico', 'apple-touch-icon.png', 'icon-32.png', 'icon-192.png', 'icon-512.png']) {
+    fs.copyFileSync(path.join(SRC, asset), path.join(DIST, asset));
+  }
 
   for (const c of concerts) {
     const dir = path.join(DIST, 'concert', c.slug);
@@ -580,7 +699,7 @@ async function main() {
     fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c));
   }
 
-  console.log(`Done. Wrote ${concerts.length + 3} HTML page(s) to dist/.`);
+  console.log(`Done. Wrote ${concerts.length + 3 + CATEGORIES.length} HTML page(s) to dist/.`);
 }
 
 main().catch((err) => {
