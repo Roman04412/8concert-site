@@ -33,7 +33,8 @@ const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const BASE_ID = process.env.AIRTABLE_BASE_ID;
 const TABLE_ID = process.env.AIRTABLE_TABLE_ID;
 const SITE_URL = (process.env.SITE_URL || 'https://8concert.com').replace(/\/$/, '');
-const MAX_RECORDS = Number(process.env.MAX_RECORDS || 8);
+const DISPLAY_COUNT = Number(process.env.DISPLAY_COUNT || 8);
+const FETCH_LIMIT = 100; // Airtable's max per request without pagination — plenty of headroom
 
 const DIST = path.join(__dirname, 'dist');
 // styles.css / client.js live next to build.js at the repo root (not in a
@@ -133,7 +134,7 @@ function getWeekRange() {
 // ---------------------------------------------------------------------------
 
 async function fetchConcerts() {
-  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?maxRecords=${MAX_RECORDS}&view=Grid%20view`;
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?maxRecords=${FETCH_LIMIT}&view=Grid%20view`;
   const res = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
   if (!res.ok) throw new Error(`Airtable ${res.status}: ${await res.text()}`);
   const data = await res.json();
@@ -161,12 +162,10 @@ function extractImageUrl(field) {
   return '';
 }
 
-function buildConcertData(record, index) {
+function buildConcertData(record) {
   const f = record.fields;
-  const num = String(index + 1).padStart(2, '0');
   const price = f.Price || '';
   const link = f.Link || '#';
-  const isTop = index < 2 || f.Status === 'Топ';
   const isFree = price.toLowerCase().includes('вільний') || price.toLowerCase().includes('безкоштовн');
   const snippet = f.Snippet || '';
   const desc = snippet ? snippet.slice(0, 90) + (snippet.length > 90 ? '...' : '') : '';
@@ -175,7 +174,14 @@ function buildConcertData(record, index) {
   const isoDate = parseUkrainianDate(f.Date);
   const image = extractImageUrl(f.Image);
 
-  return { record, f, num, price, link, isTop, isFree, snippet, desc, title, slug, isoDate, image };
+  return { record, f, price, link, isFree, snippet, desc, title, slug, isoDate, image };
+}
+
+// Only filters out events we're CONFIDENT have already happened (a successfully
+// parsed date that's strictly before today). Records with an unparseable date
+// are kept visible rather than risk hiding something that's actually upcoming.
+function isPastEvent(concert, todayStr) {
+  return Boolean(concert.isoDate) && concert.isoDate < todayStr;
 }
 
 function renderConcertCard(c, { linkTitle }) {
@@ -478,7 +484,23 @@ async function main() {
   const records = await fetchConcerts();
   console.log(`Got ${records.length} record(s).`);
 
-  const concerts = records.map(buildConcertData);
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const allConcerts = records.map(buildConcertData);
+
+  const pastCount = allConcerts.filter((c) => isPastEvent(c, todayStr)).length;
+  if (pastCount) {
+    console.log(`Skipping ${pastCount} concert(s) with a date in the past.`);
+  }
+
+  const concerts = allConcerts
+    .filter((c) => !isPastEvent(c, todayStr))
+    .slice(0, DISPLAY_COUNT)
+    .map((c, index) => ({
+      ...c,
+      num: String(index + 1).padStart(2, '0'),
+      isTop: index < 2 || c.f.Status === 'Топ',
+    }));
+
   const noDateCount = concerts.filter((c) => !c.isoDate).length;
   if (noDateCount) {
     console.warn(
