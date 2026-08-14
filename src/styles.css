@@ -65,7 +65,9 @@ nav a {
   letter-spacing: 0.01em;
 }
 
-nav a:hover { color: var(--dark); background: var(--line); }
+@media (hover: hover) {
+  nav a:hover { color: var(--dark); background: var(--line); }
+}
 
 .nav-city {
   font-family: 'Inter', sans-serif;
@@ -182,10 +184,18 @@ nav a:hover { color: var(--dark); background: var(--line); }
   background: var(--cream);
 }
 
-.genre-pill.active, .genre-pill:hover {
+.genre-pill.active {
   border-color: var(--warm);
   color: var(--warm);
   background: rgba(196,149,106,0.08);
+}
+
+@media (hover: hover) {
+  .genre-pill:hover {
+    border-color: var(--warm);
+    color: var(--warm);
+    background: rgba(196,149,106,0.08);
+  }
 }
 
 /* TABS */
@@ -212,7 +222,10 @@ nav a:hover { color: var(--dark); background: var(--line); }
 }
 
 .tab.active { color: var(--dark); border-bottom-color: var(--warm); }
-.tab:hover { color: var(--dark); }
+
+@media (hover: hover) {
+  .tab:hover { color: var(--dark); }
+}
 
 .tabs-right {
   margin-left: auto;
@@ -247,8 +260,10 @@ nav a:hover { color: var(--dark); background: var(--line); }
   transition: opacity 0.2s;
 }
 
-.concert-item:hover { background: #F5EFE6; }
-.concert-item:hover::after { opacity: 1; }
+@media (hover: hover) {
+  .concert-item:hover { background: #F5EFE6; }
+  .concert-item:hover::after { opacity: 1; }
+}
 
 .concert-num {
   font-family: 'Cormorant Garamond', serif;
@@ -260,7 +275,9 @@ nav a:hover { color: var(--dark); background: var(--line); }
   transition: color 0.2s;
 }
 
-.concert-item:hover .concert-num { color: var(--warm); }
+@media (hover: hover) {
+  .concert-item:hover .concert-num { color: var(--warm); }
+}
 
 .concert-tags {
   display: flex;
@@ -383,7 +400,9 @@ a.concert-title::after {
   white-space: nowrap;
 }
 
-.btn-ticket:hover { background: var(--warm); }
+@media (hover: hover) {
+  .btn-ticket:hover { background: var(--warm); }
+}
 
 .btn-free {
   background: transparent;
@@ -391,7 +410,9 @@ a.concert-title::after {
   border: 1.5px solid var(--warm);
 }
 
-.btn-free:hover { background: rgba(196,149,106,0.1); }
+@media (hover: hover) {
+  .btn-free:hover { background: rgba(196,149,106,0.1); }
+}
 
 .loading {
   text-align: center;
@@ -492,7 +513,9 @@ footer {
   transition: color 0.15s;
 }
 
-.footer-links a:hover { color: var(--dark); }
+@media (hover: hover) {
+  .footer-links a:hover { color: var(--dark); }
+}
 
 .footer-bottom {
   grid-column: 1 / -1;
@@ -516,7 +539,9 @@ footer {
 }
 
 .breadcrumb a { color: var(--brown); text-decoration: none; }
-.breadcrumb a:hover { color: var(--dark); }
+@media (hover: hover) {
+  .breadcrumb a:hover { color: var(--dark); }
+}
 
 .concert-page {
   padding: 40px 48px 80px;
