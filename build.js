@@ -675,10 +675,15 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   // MusicEvent (a subtype of Event) — every listing on this site is a
   // concert, so the more specific type is accurate and Google explicitly
   // supports it for the same Event rich result. "Performer" is only
-  // included when the Airtable "Performer" field is actually filled in:
+  // included when the Airtable "Performer" field has an actual name —
   // guessing it from the title would be wrong for tribute nights (the
   // performer is the local tribute act, not the artist being covered), and
-  // inaccurate structured data is worse than none.
+  // some rows use the literal placeholder "Без імені" instead of leaving
+  // the field blank, which needs the same "skip it" treatment as empty.
+  const performerName = f.Performer && f.Performer.trim().toLowerCase() !== 'без імені'
+    ? f.Performer.trim()
+    : '';
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'MusicEvent',
@@ -694,7 +699,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     },
     ...(f.Category ? { genre: f.Category } : {}),
     ...(image ? { image: [absUrl(image)] } : {}),
-    ...(f.Performer ? { performer: { '@type': 'PerformingGroup', name: f.Performer } } : {}),
+    ...(performerName ? { performer: { '@type': 'PerformingGroup', name: performerName } } : {}),
     offers: {
       '@type': 'Offer',
       url: link,
