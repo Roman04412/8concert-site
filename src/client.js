@@ -26,10 +26,12 @@ applyHashTab();
 window.addEventListener('hashchange', applyHashTab);
 
 // --- Genre filter --------------------------------------------------------
-// Pills toggle active/inactive. Visible concerts = those whose category is
-// in the set of active pills. With zero pills active we show an explicit
-// empty state rather than either "show everything" (confusing — looks like
-// the filter does nothing) or a blank page.
+// Tapping a pill ISOLATES that genre (the other two turn off) — one tap to
+// filter down to just "Джаз", not three. Tapping the only active pill again
+// resets to "show everything" (all three active). Previously pills were
+// independent toggles defaulting to all-active, so the first tap on a genre
+// removed it instead of isolating it — backwards from what people expect
+// and needed several taps to get a single-genre view.
 
 function pillCategory(el) {
   // strip the leading emoji, keep the Ukrainian genre word
@@ -76,9 +78,17 @@ function refreshVisibility() {
   });
 }
 
-document.querySelectorAll('.genre-pill').forEach((p) => {
+const genrePills = Array.from(document.querySelectorAll('.genre-pill'));
+genrePills.forEach((p) => {
   p.addEventListener('click', () => {
-    p.classList.toggle('active');
+    const activeCount = genrePills.filter((x) => x.classList.contains('active')).length;
+    const isSoleActive = p.classList.contains('active') && activeCount === 1;
+
+    if (isSoleActive) {
+      genrePills.forEach((x) => x.classList.add('active'));
+    } else {
+      genrePills.forEach((x) => x.classList.toggle('active', x === p));
+    }
     refreshVisibility();
   });
 });
