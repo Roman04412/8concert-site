@@ -601,13 +601,6 @@ function renderHomepage(concerts) {
     <h1 class="hero-title">Концерти Києва —<br>вісім вечорів, які варто <em>прожити</em></h1>
     <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та трибьютів у Києві — для тих, хто цінує особливі моменти.</p>
   </div>
-  <div class="hero-right">
-    <div class="hero-genres">
-      <div class="genre-pill active">🎷 Джаз</div>
-      <div class="genre-pill active">🎻 Класика</div>
-      <div class="genre-pill active">🎤 Трибьюти</div>
-    </div>
-  </div>
 </div>
 
 <div class="quote-strip">
@@ -619,6 +612,11 @@ function renderHomepage(concerts) {
   <button class="tab active" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
   <button class="tab" onclick="switchTab(this,'week')" id="week">Цей тиждень</button>
   <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
+  <div class="hero-genres tabs-genres">
+    <div class="genre-pill active">🎷 Джаз</div>
+    <div class="genre-pill active">🎻 Класика</div>
+    <div class="genre-pill active">🎤 Трибьюти</div>
+  </div>
 </div>
 
 <div id="tab-top8">${top8Html}</div>
