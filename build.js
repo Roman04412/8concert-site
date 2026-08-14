@@ -39,6 +39,7 @@ const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
 const BASE_ID = process.env.AIRTABLE_BASE_ID;
 const TABLE_ID = process.env.AIRTABLE_TABLE_ID;
 const SITE_URL = (process.env.SITE_URL || 'https://8concert.com').replace(/\/$/, '');
+const GA_MEASUREMENT_ID = 'G-W5L8STRVBJ'; // 8CONCERT GA4 property
 const DISPLAY_COUNT = Number(process.env.DISPLAY_COUNT || 8);
 const FETCH_LIMIT = 100; // Airtable's max per request without pagination — plenty of headroom
 
@@ -435,6 +436,14 @@ function pageShell({ title, description, canonical, bodyExtraHead = '', headerHt
   return `<!DOCTYPE html>
 <html lang="uk">
 <head>
+${GA_MEASUREMENT_ID ? `<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${GA_MEASUREMENT_ID}');
+</script>` : ''}
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>${escapeHtml(title)}</title>

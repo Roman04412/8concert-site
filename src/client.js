@@ -87,23 +87,28 @@ document.querySelectorAll('.genre-pill').forEach((p) => {
 
 refreshVisibility();
 
-// --- Ad tracking placeholder -------------------------------------------
+// --- Ad tracking -----------------------------------------------------------
 // Tickets are sold on a third-party site, so the closest thing we have to a
-// "sale" signal on our own domain is a click on the ticket button. Once GTM /
-// GA4 / Meta Pixel are installed (next step), this event is already wired up
-// to become a Google Ads / Meta conversion — just create a trigger listening
-// for "ticket_click" in GTM, no code changes needed here.
+// "sale" signal on our own domain is a click on the ticket button.
+//
+// Two pushes on purpose: the plain dataLayer.push(object) is GTM's "custom
+// event" convention, kept for if a GTM container gets added later. The
+// gtag('event', ...) call is what GA4's own gtag.js (already installed in
+// pageShell) actually listens for — without it, clicks would sit in
+// dataLayer but never reach GA4's reports.
 window.dataLayer = window.dataLayer || [];
+function gtag() { window.dataLayer.push(arguments); }
 
 document.querySelectorAll('[data-ticket-link]').forEach(el => {
   el.addEventListener('click', () => {
-    window.dataLayer.push({
-      event: 'ticket_click',
+    const params = {
       concert_id: el.dataset.concertId || '',
       concert_title: el.dataset.concertTitle || '',
       concert_category: el.dataset.concertCategory || '',
       concert_price: el.dataset.concertPrice || ''
-    });
+    };
+    window.dataLayer.push({ event: 'ticket_click', ...params });
+    gtag('event', 'ticket_click', params);
   });
 });
 
