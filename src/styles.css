@@ -316,6 +316,17 @@ nav a:hover { color: var(--dark); background: var(--line); }
   display: block;
 }
 
+/* Make the whole card tappable, not just the title text: the anchor's
+   ::after stretches over the entire .concert-item (its positioned
+   ancestor). .concert-right sits above it (z-index) so the "Квитки" button
+   keeps its own click target to the ticket site instead of being swallowed
+   by the card-wide link. Standard "stretched link" pattern. */
+a.concert-title::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
 .concert-desc {
   font-size: 13px;
   font-weight: 300;
@@ -338,6 +349,8 @@ nav a:hover { color: var(--dark); background: var(--line); }
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .concert-price-label {
