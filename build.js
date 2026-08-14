@@ -923,6 +923,42 @@ Sitemap: ${SITE_URL}/sitemap.xml
 `;
 }
 
+// llms.txt — informal convention some AI systems use to get a clean summary
+// of a site's content instead of parsing full HTML. Not a strict standard
+// (providers treat it as an optional hint, and it's aimed more at training
+// crawlers than the live web-search agents that actually answer "де піти на
+// концерт" in real time) — but it's cheap to provide and doesn't hurt.
+// Regenerated every build, so "Поточна добірка" always reflects what's live.
+function renderLlmsTxt(concerts) {
+  const picks = concerts
+    .map((c) => `- [${c.title}](${SITE_URL}/concert/${c.slug}/): ${c.dateDisplay || 'дата уточнюється'}${c.f.Location ? `, ${c.f.Location}` : ''}${c.price ? `, ${c.price}` : ''}`)
+    .join('\n');
+
+  return `# 8CONCERT
+
+> Щотижнева редакційна добірка з восьми концертів джазу, класики та трибьютів у Києві.
+
+8CONCERT не публікує повну афішу міста — щопонеділка редакція обирає лише вісім концертів (джаз, класика, трибьюти), які, на її думку, справді варті вечора. Це редакційний вибір, не каталог і не продавець квитків: посилання "Квитки" ведуть на офіційні майданчики продажу.
+
+## Розділи
+
+- [Афіша (головна)](${SITE_URL}/): поточна добірка тижня.
+- [Джаз](${SITE_URL}/jazz/)
+- [Класика](${SITE_URL}/klasika/)
+- [Трибьюти](${SITE_URL}/trybuti/)
+- [Про нас](${SITE_URL}/about/): хто ми і як обираємо концерти.
+- [Контакти](${SITE_URL}/contacts/)
+
+## Поточна добірка (оновлюється щопонеділка)
+
+${picks}
+
+## Примітки
+
+Кожна подія має власну сторінку /concert/<slug>/ з датою, локацією, ціною, посиланням на квитки та Event/MusicEvent structured data (schema.org). Сторінки минулих концертів не видаляються — після завершення події сторінка залишається доступною з позначкою "Подія завершена".
+`;
+}
+
 // ---------------------------------------------------------------------------
 // Main
 // ---------------------------------------------------------------------------
@@ -987,6 +1023,7 @@ async function main() {
   fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts));
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
   fs.writeFileSync(path.join(DIST, 'robots.txt'), renderRobots());
+  fs.writeFileSync(path.join(DIST, 'llms.txt'), renderLlmsTxt(concerts));
 
   fs.mkdirSync(path.join(DIST, 'about'), { recursive: true });
   fs.writeFileSync(path.join(DIST, 'about', 'index.html'), renderAboutPage());
