@@ -528,7 +528,7 @@ function renderHomepage(concerts) {
 <div class="hero">
   <div class="hero-left">
     <div class="hero-label">Редакційна добірка</div>
-    <h1 class="hero-title">Вісім вечорів,<br>які варто <em>прожити</em></h1>
+    <h1 class="hero-title">Концерти Києва —<br>вісім вечорів, які варто <em>прожити</em></h1>
     <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та трибьютів у Києві — для тих, хто цінує особливі моменти.</p>
   </div>
   <div class="hero-right">
