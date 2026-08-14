@@ -157,7 +157,15 @@ nav a {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-  justify-content: flex-end;
+  justify-content: flex-start;
+}
+
+/* Its own row between the quote strip and the tabs — above "8 подій" rather
+   than sharing a line with the tab labels (cramped on narrow/in-app
+   viewports) or living disconnected up in the hero. */
+.filter-row {
+  padding: 16px 48px;
+  border-bottom: 1px solid var(--line);
 }
 
 .genre-pill {
@@ -195,22 +203,6 @@ nav a {
   row-gap: 8px;
   padding: 0 48px;
   border-bottom: 1px solid var(--line);
-}
-
-/* Genre pills live in the tabs row now (next to what they actually filter)
-   instead of up in the hero, disconnected from the list — pinned right via
-   margin-left:auto, and free to wrap onto their own line on narrow screens
-   via .tabs-bar's flex-wrap rather than needing a separate mobile rule. */
-.tabs-genres {
-  margin-left: auto;
-  padding: 10px 0;
-}
-
-/* Under the hero subtitle — only shown on mobile (see MOBILE block below),
-   hidden by default here so it doesn't double up with .tabs-genres on
-   desktop. */
-.hero-genres-mobile {
-  display: none;
 }
 
 .tab {
@@ -699,12 +691,7 @@ footer {
   nav a { display: none; }
   .hero { padding: 48px 20px 40px; }
   .tabs-bar { padding: 0 20px; }
-  .tabs-genres { display: none; }
-  .hero-genres-mobile {
-    display: flex;
-    justify-content: flex-start;
-    margin-top: 20px;
-  }
+  .filter-row { padding: 14px 20px; }
   /* The big serif "01/02/..." numeral used to sit in its own 56px column,
      eating a chunk of the narrow mobile width for a purely decorative
      element. Single column now; the number becomes a small round badge
