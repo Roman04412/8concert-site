@@ -82,11 +82,20 @@ const SITE = {
   // зараз тут загальний https://www.facebook.com, який Rocky попросив
   // поставити як тимчасове посилання.
   facebookUrl: 'https://www.facebook.com/profile.php?id=100070742635481',
-  aboutParagraphs: [
-    '8CONCERT — щотижнева редакційна добірка концертів Києва для тих, хто цінує особливі вечори: джаз, класика, трибьюти.',
-    'Ми не продаємо квитки самі — обираємо найцікавіші події тижня і ведемо на офіційні майданчики продажу, де ви купуєте квиток напряму в організатора.',
-    'Добірка оновлюється щопонеділка. Якщо хочете, щоб ми розглянули ваш концерт для афіші — напишіть нам.',
-  ],
+  // Multi-paragraph — blank lines mark paragraph breaks, same convention as
+  // the Airtable "Snippet" field. renderAboutPage() feeds this straight into
+  // renderBodyParagraphs() so it gets the same magazine-style lead+body
+  // treatment as concert pages (first paragraph highlighted, rest as plain
+  // body copy) instead of a flat list of identical-looking paragraphs.
+  aboutText: `Ми не публікуємо повну афішу Києва — це зробили б за нас десятки інших сайтів. Натомість щотижня, щопонеділка, ми відбираємо лише вісім концертів: джаз, класика, трибьюти улюбленим музикантам і виконавцям — ті події, які, на нашу думку, справді варті вашого вечора.
+
+8concert — це редакційна добірка, а не каталог. Кожен концерт у списку хтось із команди особисто прослухав, перевірив і вважає вартим уваги. Ми не женемось за кількістю — обираємо якість. Тому що музика — найкоротший шлях між двома серцями, і провести вечір варто там, де це відчувається по-справжньому.
+
+Наразі ми зосереджені на Києві — місті з дивовижною концертною сценою, яку легко проґавити серед сотень афіш і реклами. Ми допомагаємо не проґавити.
+
+Якщо ви цінуєте особливі моменти, живу музику і не хочете гортати нескінченні списки в пошуках "того самого" концерту — просто заглядайте до нас щопонеділка. Повна афіша і квитки — завжди на 8concert.com.
+
+Зроблено з любов'ю до музики. 🎵`,
 };
 
 // Static category landing pages (/jazz/, /klasika/, /trybuti/) — the genre
@@ -787,8 +796,8 @@ function renderAboutPage() {
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / Про нас</nav>
 <article class="concert-page">
-  <h1 class="concert-title">Про 8CONCERT</h1>
-  ${SITE.aboutParagraphs.map((p) => `<p class="concert-desc" style="font-size:15px;margin-bottom:16px">${escapeHtml(p)}</p>`).join('')}
+  <h1 class="concert-title">8CONCERT — вісім вечорів, які варто прожити</h1>
+  ${renderBodyParagraphs(SITE.aboutText)}
   <a href="${SITE.telegramUrl || '/contacts/'}" class="btn-ticket" style="margin-top:8px" ${SITE.telegramUrl ? 'target="_blank" rel="noopener"' : ''}>Зв'язатися з нами →</a>
 </article>`;
 
