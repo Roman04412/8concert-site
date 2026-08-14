@@ -26,12 +26,12 @@ applyHashTab();
 window.addEventListener('hashchange', applyHashTab);
 
 // --- Genre filter --------------------------------------------------------
-// Tapping a pill ISOLATES that genre (the other two turn off) — one tap to
-// filter down to just "Джаз", not three. Tapping the only active pill again
-// resets to "show everything" (all three active). Previously pills were
-// independent toggles defaulting to all-active, so the first tap on a genre
-// removed it instead of isolating it — backwards from what people expect
-// and needed several taps to get a single-genre view.
+// Each pill is its own independent on/off switch, all three start active
+// (= show everything). Tap a pill to toggle just that genre — to get back
+// to "show everything" you turn the others back on individually, same
+// mechanism both directions. (Tried an "isolate on tap, tap again to reset
+// all" version — turned out to be less predictable than this plain toggle,
+// since the "tap again resets everything" part wasn't obvious.)
 
 function pillCategory(el) {
   // strip the leading emoji, keep the Ukrainian genre word
@@ -78,17 +78,9 @@ function refreshVisibility() {
   });
 }
 
-const genrePills = Array.from(document.querySelectorAll('.genre-pill'));
-genrePills.forEach((p) => {
+document.querySelectorAll('.genre-pill').forEach((p) => {
   p.addEventListener('click', () => {
-    const activeCount = genrePills.filter((x) => x.classList.contains('active')).length;
-    const isSoleActive = p.classList.contains('active') && activeCount === 1;
-
-    if (isSoleActive) {
-      genrePills.forEach((x) => x.classList.add('active'));
-    } else {
-      genrePills.forEach((x) => x.classList.toggle('active', x === p));
-    }
+    p.classList.toggle('active');
     refreshVisibility();
   });
 });
