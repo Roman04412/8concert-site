@@ -1,17 +1,18 @@
 # 8concert.com — статична збірка
 
-Що змінилось відносно старої версії (`8concert-3.html`):
+Сайт — статичний генератор (`build.js`), який під час кожної збірки тягне дані з Airtable і пише готовий HTML у `dist/`. Нічого не фетчиться в браузері, тому Airtable-токен ніколи не потрапляє у вихідний код, який бачать відвідувачі.
 
-- Дані з Airtable тепер тягнуться **під час збірки** (Node-скрипт `build.js`), а не в браузері. Токен більше ніде не світиться у вихідному коді сайту.
-- Кожен концерт отримав власну сторінку `/concert/<slug>/` з унікальним `<title>`, description і розміткою `schema.org/Event` (JSON-LD) — це потрібно, щоб Google міг проіндексувати кожну подію окремо і показати event rich result у видачі.
-- Головна сторінка віддає вже готовий HTML з картками концертів (не порожній div + fetch), плюс `sitemap.xml` і `robots.txt`.
-- На кнопці "Квитки" вже стоїть `dataLayer.push('ticket_click', ...)` — заготовка під GTM/GA4/Meta Pixel для наступного кроку (трекінг реклами).
+## Що вже зроблено
 
-## ⚠️ Перше, що треба зробити
-
-Токен Airtable з файлу `8concert-3.html`, який ви завантажили, вже був у відкритому вигляді в HTML — якщо сайт хоч раз був опублікований у такому вигляді, вважайте токен скомпрометованим.
-
-**Перевипустіть (rotate) токен в Airtable** (Developer Hub → Personal access tokens → Revoke → створити новий, з правами тільки `data.records:read` на потрібну базу) і впишіть новий у змінні середовища нижче. Старий видаліть.
+- Дані — з Airtable, під час збірки (build-time), токен лише в змінних середовища.
+- Кожен концерт має власну сторінку `/concert/<slug>/` з унікальним title/description і `schema.org/Event` (JSON-LD): дата, час (з правильним часовим поясом Києва, EET/EEST), локація, ціна, картинка.
+- Категорійні сторінки `/jazz/`, `/klasika/`, `/trybuti/` — окремі URL під кожен жанр (потрібно для індексації запитів типу "джаз Київ").
+- Головна: `sitemap.xml`, `robots.txt`, JSON-LD Organization/WebSite/ItemList, favicon + apple-touch-icon.
+- Картинки концертів скачуються з Airtable і кладуться в `dist/images/` під час збірки — Airtable-посилання на файли підписані й протухають за кілька годин, хотлінкати їх напряму не можна.
+- Минулі концерти (дата в минулому) автоматично зникають з головної.
+- Вкладка "Цей тиждень" показує тільки події поточного тижня (пн–нд), "Сьогодні ввечері" — тільки сьогоднішні, "8 подій" — весь добірний пул.
+- Кнопка "Квитки" вже шле `dataLayer.push('ticket_click', ...)` — заготовка під GTM/GA4/Meta Pixel.
+- Автоматична щоденна пересборка (див. нижче) — вкладки й дати завжди актуальні без ручних дій.
 
 ## Локальний запуск
 
@@ -22,51 +23,51 @@ export $(cat .env | xargs)
 npm run build
 ```
 
-Результат — у папці `dist/`. Відкрийте `dist/index.html` у браузері або підніміть локальний сервер:
+Результат — у `dist/`. Перегляд:
 
 ```bash
 npx serve dist
 ```
 
-`dist/` у цьому проєкті вже містить демо-збірку на **тестових** даних (я не мав доступу до вашого Airtable з цього середовища) — щоб побачити реальні концерти, запустіть `npm run build` зі своїми змінними середовища.
+Без мережі/токена можна перевірити сам генератор на тестових даних:
 
-## Деплой (Vercel, найпростіше)
+```bash
+node -e "import('./scripts/dev-mock-fetch.mjs').then(() => import('./build.js'))"
+```
 
-1. Заведіть репозиторій на GitHub, запуште туди цю папку.
-2. На vercel.com → New Project → виберіть репозиторій.
-3. Framework Preset: "Other". Build Command: `npm run build`. Output Directory: `dist`.
-4. Settings → Environment Variables: додайте `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID`, `SITE_URL` (=`https://8concert.com`).
-5. Deploy. Прив'яжіть домен 8concert.com у Settings → Domains.
+## Продакшн: Netlify
 
-Netlify працює так само (Build command `npm run build`, Publish directory `dist`, env vars у Site settings).
+Сайт живе на Netlify, підключений напряму до цього GitHub-репозиторію (Site settings → Build & deploy → Continuous deployment). Кожен `git push` у `main` запускає нову збірку.
 
-## Щотижневе оновлення афіші
+- Build command: `npm run build` (з `netlify.toml`)
+- Publish directory: `dist`
+- Env vars: `AIRTABLE_TOKEN`, `AIRTABLE_BASE_ID`, `AIRTABLE_TABLE_ID` — у Site settings → Environment variables (значення `AIRTABLE_TOKEN` НЕ позначайте як "secret" — інакше воно не резолвиться в білді, це відомий баг конектора)
+- Домен `8concert.com` прив'язаний у Domain management
 
-Білд треба перезапускати щоразу, як міняються дані в Airtable (інакше сайт покаже стару афішу). Найпростіше:
+## Автоматичне оновлення афіші
 
-- **Vercel/Netlify Deploy Hook** + Airtable Automation: у Airtable зробіть автоматизацію "коли змінилась таблиця → POST-запит на Deploy Hook URL". Тоді сайт перезбирається сам одразу після редагування таблиці.
-- Або cron: GitHub Actions раз на день викликає той самий Deploy Hook.
+Airtable Free-план не підтримує "Run a script"/webhook-автоматизації, тому пересборка тригериться інакше: `netlify/functions/daily-rebuild.mjs` — Netlify Scheduled Function, яка щодня о 03:00 UTC (06:00 Київ) сама б'є по Build Hook сайту. Нічого з боку Airtable налаштовувати не треба.
 
-Без цього кроку вкладка "Сьогодні ввечері" з часом розійдеться з реальністю — вона обчислюється на момент збірки.
-
-## SEO — що ще варто зробити
-
-- Зареєструвати домен у [Google Search Console](https://search.google.com/search-console) і надіслати `sitemap.xml`.
-- В Airtable завести поле `Date` як справжній тип **Date**, а не текст — зараз дата парситься з тексту типу "15 серпня" на найкращу спробу, і якщо формат "з'їде", сторінка концерту втратить `startDate` в розмітці (а без цього Google не покаже rich result по події).
-- Додати нормальні картинки афіш (поле `Image` в Airtable) — зараз OG-preview і сторінки без зображень, а це і для соцмереж, і для CTR у видачі важливо.
-- Наповнити `hello@8concert.com` в футері реальною поштою або прибрати.
+Щоб оновити афішу негайно, а не чекати до ранку — Netlify Dashboard → Deploys → Trigger deploy → Deploy site.
 
 ## Структура проєкту
 
 ```
-build.js          — генератор сайту (запускається на кожен деплой)
-src/styles.css    — стилі (винесено з оригінального файлу без змін)
-src/client.js     — клієнтський JS: перемикання табів, dataLayer.push на клік по квитку
-scripts/dev-mock-fetch.mjs — заглушка Airtable-запиту для локального тесту без мережі/токена
-.env.example      — які змінні середовища потрібні
-dist/             — згенерований сайт (не редагувати руками, перезаписується при білді)
+build.js                             — генератор сайту (запускається на кожен деплой)
+src/styles.css                       — стилі
+src/client.js                        — клієнтський JS: таби, фільтр жанрів, dataLayer.push
+assets/                              — favicon.ico, apple-touch-icon.png, icon-*.png
+netlify/functions/daily-rebuild.mjs  — щоденний тригер пересборки
+scripts/dev-mock-fetch.mjs           — заглушка Airtable-запиту для локального тесту без мережі/токена
+.env.example                         — які змінні середовища потрібні
+netlify.toml                         — build command, publish dir, functions dir
+dist/                                — згенерований сайт (не редагувати руками, перезаписується при білді, в git не потрапляє)
 ```
 
-## Наступний крок (тобі згадали окремо)
+## Відомі обмеження / що варто зробити далі
 
-GTM/GA4 + Google Ads conversion + Meta Pixel/Conversions API поверх `ticket_click`, який вже шлеться в `dataLayer`. Знадобляться: ID контейнера GTM, Pixel ID Meta, доступ до Google Ads акаунту.
+- В Airtable поле `Date` краще тримати як справжній тип **Date** (build.js розуміє і текст типу "15 серпня", і нативний ISO-формат, і навіть якщо не розпізнає — просто не покаже startDate в розмітці, подія не зникне).
+- Поле `Time` — Airtable міг типізувати його як **Duration**, а не текст (типова поведінка при створенні нової колонки з часом) — build.js це вже враховує, конвертує число секунд назад у ЧЧ:ММ.
+- Наповнити `hello@8concert.com` в футері реальною поштою або прибрати; додати `Instagram`, якщо буде акаунт.
+- GTM/GA4 + Google Ads conversion + Meta Pixel/Conversions API поверх `ticket_click` з `dataLayer` — контейнер ще не підключено, самі events вже йдуть.
+- Форма підписки на розсилку (Netlify Forms) — обговорювалась, ще не зроблена.

@@ -2,25 +2,31 @@
 /**
  * Static-site generator for 8concert.com
  *
- * Runs at build time (locally, in CI, or as the "build command" on
- * Vercel/Netlify). Fetches the concert list from Airtable using a token
- * that lives ONLY in the build environment (env var), then writes plain
- * HTML into dist/ — nothing is fetched from the browser, so nothing
- * sensitive ships to visitors.
+ * Runs at build time (locally, or as Netlify's "build command"). Fetches the
+ * concert list from Airtable using a token that lives ONLY in the build
+ * environment (env var), then writes plain HTML into dist/ — nothing is
+ * fetched from the browser, so nothing sensitive ships to visitors.
  *
  * Output:
  *   dist/index.html                    – homepage, concerts already baked in
  *   dist/concert/<slug>/index.html     – one SEO page per concert (JSON-LD Event)
- *   dist/sitemap.xml
- *   dist/robots.txt
+ *   dist/jazz|klasika|trybuti/         – category landing pages
+ *   dist/about/, dist/contacts/
+ *   dist/sitemap.xml, dist/robots.txt
  *   dist/styles.css, dist/client.js    – copied from src/
+ *   dist/favicon.ico, dist/*.png       – copied from assets/
+ *   dist/images/<slug>.<ext>           – concert images, downloaded from
+ *                                         Airtable's (temporary) attachment
+ *                                         URLs and self-hosted so they don't
+ *                                         expire between deploys
  *
  * Env vars required:
  *   AIRTABLE_TOKEN
  *   AIRTABLE_BASE_ID
  *   AIRTABLE_TABLE_ID
  * Optional:
- *   SITE_URL   (default https://8concert.com)
+ *   SITE_URL       (default https://8concert.com)
+ *   DISPLAY_COUNT  (default 8 — how many upcoming concerts to feature)
  */
 
 import fs from 'node:fs';
@@ -37,10 +43,8 @@ const DISPLAY_COUNT = Number(process.env.DISPLAY_COUNT || 8);
 const FETCH_LIMIT = 100; // Airtable's max per request without pagination — plenty of headroom
 
 const DIST = path.join(__dirname, 'dist');
-// styles.css / client.js live next to build.js at the repo root (not in a
-// src/ subfolder) — GitHub's drag-and-drop web uploader flattens folders,
-// so this matches what actually ends up in the repo.
-const SRC = __dirname;
+const SRC = path.join(__dirname, 'src');       // styles.css, client.js
+const ASSETS = path.join(__dirname, 'assets'); // favicon + touch icons
 
 // TODO: замініть на реальні контакти/соцмережі — зараз це чернетка-заглушка,
 // сторінки /about/ і /contacts/ вже підключені й попадуть у sitemap.
@@ -780,7 +784,7 @@ async function main() {
   fs.copyFileSync(path.join(SRC, 'styles.css'), path.join(DIST, 'styles.css'));
   fs.copyFileSync(path.join(SRC, 'client.js'), path.join(DIST, 'client.js'));
   for (const asset of ['favicon.ico', 'apple-touch-icon.png', 'icon-32.png', 'icon-192.png', 'icon-512.png']) {
-    fs.copyFileSync(path.join(SRC, asset), path.join(DIST, asset));
+    fs.copyFileSync(path.join(ASSETS, asset), path.join(DIST, asset));
   }
 
   for (const c of concerts) {
