@@ -352,6 +352,32 @@ a.concert-title::after {
   margin-bottom: 8px;
 }
 
+/* Magazine-style body copy on individual concert pages: a larger "lead-in"
+   paragraph up top (like a standfirst/dek), set off with a warm left rule,
+   followed by normal-weight body paragraphs. Only used on .concert-page,
+   not on cards — .concert-desc there is untouched. */
+.concert-lead {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 21px;
+  font-weight: 500;
+  font-style: italic;
+  line-height: 1.5;
+  color: var(--dark);
+  border-left: 3px solid var(--warm);
+  padding-left: 18px;
+  margin: 20px 0 20px;
+}
+
+.concert-body-text {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--brown);
+  margin-bottom: 16px;
+  max-width: 640px;
+}
+
 .concert-meta {
   font-size: 12px;
   font-weight: 400;
@@ -559,9 +585,43 @@ footer {
   .hero-right { align-items: flex-start; }
   .hero-genres { justify-content: flex-start; }
   .tabs-bar { padding: 0 20px; }
-  .concert-item { grid-template-columns: 56px 1fr; padding: 24px 20px; gap: 16px; }
+  /* The big serif "01/02/..." numeral used to sit in its own 56px column,
+     eating a chunk of the narrow mobile width for a purely decorative
+     element. Single column now; the number becomes a small round badge
+     over the thumbnail (when there is one) or a small muted label above
+     the tags (when there isn't) instead of a wide dedicated gutter. */
+  .concert-item { grid-template-columns: 1fr; padding: 24px 20px; gap: 4px; }
   .concert-right { display: none; }
+
+  .concert-num {
+    font-size: 13px;
+    font-style: normal;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  .concert-item.has-image .concert-num {
+    position: absolute;
+    top: 24px;
+    left: 20px;
+    width: 34px;
+    height: 34px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-style: italic;
+    color: var(--cream);
+    background: rgba(28,22,18,0.6);
+    backdrop-filter: blur(3px);
+    border-radius: 50%;
+    pointer-events: none;
+  }
   .quote-strip { padding: 28px 20px; }
   footer { grid-template-columns: 1fr; padding: 40px 20px; }
   .breadcrumb, .concert-page { padding-left: 20px; padding-right: 20px; }
+  .concert-lead { font-size: 18px; padding-left: 14px; }
+  .concert-body-text { font-size: 14.5px; max-width: none; }
 }

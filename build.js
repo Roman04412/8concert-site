@@ -339,7 +339,7 @@ function renderConcertCard(c, { linkTitle }) {
     : `<div class="concert-title">${escapeHtml(title)}</div>`;
 
   return `
-      <div class="concert-item" data-category="${escapeHtml(f.Category || '')}">
+      <div class="concert-item${image ? ' has-image' : ''}" data-category="${escapeHtml(f.Category || '')}">
         <div class="concert-num">${num}</div>
         <div class="concert-info">
           ${image ? `<img class="concert-thumb" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
@@ -550,6 +550,38 @@ function renderHomepage(concerts) {
   });
 }
 
+// Splits a concert's Snippet text into a magazine-style layout: a larger
+// italic "lead" paragraph up top, followed by normal body paragraphs. If the
+// Airtable field has real blank-line paragraph breaks, we use those. If it's
+// one unbroken block (the common case), we pull out just the first sentence
+// as the lead so long snippets still get a "standfirst" instead of one grey
+// wall of text.
+function renderBodyParagraphs(snippet) {
+  if (!snippet) return '';
+  const paragraphs = snippet.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  if (paragraphs.length === 0) return '';
+
+  let lead;
+  let rest;
+  if (paragraphs.length > 1) {
+    [lead, ...rest] = paragraphs;
+  } else {
+    const single = paragraphs[0];
+    const sentenceMatch = single.match(/^.+?[.!?…](?=\s|$)/);
+    if (sentenceMatch && sentenceMatch[0].length < single.length) {
+      lead = sentenceMatch[0].trim();
+      rest = [single.slice(sentenceMatch[0].length).trim()].filter(Boolean);
+    } else {
+      lead = single;
+      rest = [];
+    }
+  }
+
+  const leadHtml = `<p class="concert-lead">${escapeHtml(lead)}</p>`;
+  const restHtml = rest.map((p) => `<p class="concert-body-text">${escapeHtml(p)}</p>`).join('');
+  return leadHtml + restHtml;
+}
+
 function renderConcertPage(c) {
   const { f, title, desc, snippet, price, isFree, link, slug, isoDate, dateDisplay, startDateTime, record, image } = c;
 
@@ -585,7 +617,7 @@ function renderConcertPage(c) {
     ${f.Category ? `<span class="tag">${escapeHtml(f.Category)}</span>` : ''}
   </div>
   <h1 class="concert-title">${escapeHtml(title)}</h1>
-  ${snippet ? `<p class="concert-desc">${escapeHtml(snippet)}</p>` : ''}
+  ${renderBodyParagraphs(snippet)}
   <div class="concert-meta">
     ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
     ${f.Location ? `<span>📍 ${escapeHtml(f.Location)}</span>` : ''}
