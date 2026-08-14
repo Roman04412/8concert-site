@@ -499,6 +499,32 @@ a.concert-title::after {
   border: 1.5px solid var(--warm);
 }
 
+.btn-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 9px 16px;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  color: var(--brown);
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+.btn-share svg {
+  width: 15px;
+  height: 15px;
+}
+
+@media (hover: hover) {
+  .btn-share:hover { border-color: var(--warm); color: var(--warm); }
+}
+
 @media (hover: hover) {
   .btn-free:hover { background: rgba(196,149,106,0.1); }
 }

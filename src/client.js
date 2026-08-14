@@ -106,3 +106,37 @@ document.querySelectorAll('[data-ticket-link]').forEach(el => {
     });
   });
 });
+
+// --- Share button (concert pages) ---------------------------------------
+// Prefers the native share sheet (navigator.share — mobile Safari/Chrome,
+// and Chrome desktop as of recent versions); falls back to "copy link" on
+// browsers that don't support it (mainly desktop Safari/Firefox). No
+// third-party share widget/SDK, so nothing external is loaded or tracked.
+document.querySelectorAll('[data-share]').forEach((btn) => {
+  const label = btn.querySelector('.btn-share-label');
+  const defaultLabel = label ? label.textContent : '';
+
+  btn.addEventListener('click', async () => {
+    const title = btn.dataset.shareTitle || document.title;
+    const url = btn.dataset.shareUrl || window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, url });
+      } catch (err) {
+        // AbortError when the user just closes the native share sheet — not an error.
+      }
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      if (label) {
+        label.textContent = 'Посилання скопійовано ✓';
+        setTimeout(() => { label.textContent = defaultLabel; }, 2000);
+      }
+    } catch (err) {
+      window.prompt('Скопіюйте посилання:', url);
+    }
+  });
+});

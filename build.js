@@ -80,7 +80,7 @@ const SITE = {
   // TODO: заміните на реальну сторінку 8CONCERT у Facebook, коли вона буде —
   // зараз тут загальний https://www.facebook.com, який Rocky попросив
   // поставити як тимчасове посилання.
-  facebookUrl: 'https://www.facebook.com',
+  facebookUrl: 'https://www.facebook.com/profile.php?id=100070742635481',
   aboutParagraphs: [
     '8CONCERT — щотижнева редакційна добірка концертів Києва для тих, хто цінує особливі вечори: джаз, класика, трибьюти.',
     'Ми не продаємо квитки самі — обираємо найцікавіші події тижня і ведемо на офіційні майданчики продажу, де ви купуєте квиток напряму в організатора.',
@@ -460,6 +460,7 @@ function siteHeader() {
 
 // Small inline monoline icons — no icon font/library dependency, no
 // third-party embed/tracker (unlike Facebook's own share/like widgets).
+const ICON_SHARE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><line x1="8.2" y1="10.7" x2="15.8" y2="6.3"/><line x1="8.2" y1="13.3" x2="15.8" y2="17.7"/></svg>`;
 const ICON_INSTAGRAM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>`;
 const ICON_FACEBOOK = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.53 17.52 2 12 2S2 6.53 2 12.06c0 5 3.66 9.13 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.81 8.44-4.94 8.44-9.94z"/></svg>`;
 
@@ -707,6 +708,15 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
 </section>`
     : '';
 
+  // Web Share API on supporting browsers (mostly mobile — opens the native
+  // share sheet), "copy link" fallback everywhere else. See src/client.js.
+  // No third-party share SDK/pixel — just the browser's own API.
+  const shareHtml = `
+  <button type="button" class="btn-share" data-share
+     data-share-title="${escapeHtml(title)}" data-share-url="${SITE_URL}/concert/${slug}/">
+    ${ICON_SHARE}<span class="btn-share-label">Поділитися</span>
+  </button>`;
+
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(title)}</nav>
 <article class="concert-page">
@@ -721,6 +731,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     ${f.Location ? `<span>📍 ${escapeHtml(f.Location)}</span>` : ''}
   </div>
   ${ctaHtml}
+  ${shareHtml}
 </article>${relatedHtml}`;
 
   return pageShell({
