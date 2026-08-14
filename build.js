@@ -108,7 +108,7 @@ const SITE = {
   // renderBodyParagraphs() so it gets the same magazine-style lead+body
   // treatment as concert pages (first paragraph highlighted, rest as plain
   // body copy) instead of a flat list of identical-looking paragraphs.
-  aboutText: `Ми не публікуємо повну афішу Києва — це зробили б за нас десятки інших сайтів. Натомість ми постійно відбираємо лише вісім концертів: джаз, класика, трибьюти улюбленим музикантам і виконавцям — ті події, які, на нашу думку, справді варті вашого вечора.
+  aboutText: `Ми не публікуємо повну афішу Києва — це зробили б за нас десятки інших сайтів. Натомість ми постійно відбираємо лише вісім концертів: джаз, класика, триб'юти улюбленим музикантам і виконавцям — ті події, які, на нашу думку, справді варті вашого вечора.
 
 8concert — це редакційна добірка, а не каталог. Кожен концерт у списку хтось із команди особисто прослухав, перевірив і вважає вартим уваги. Ми не женемось за кількістю — обираємо якість. Тому що музика — найкоротший шлях між двома серцями, і провести вечір варто там, де це відчувається по-справжньому.
 
@@ -122,7 +122,24 @@ const SITE = {
 // Static category landing pages (/jazz/, /klasika/, /trybuti/) — the genre
 // filter on the homepage is client-side JS only, so without these pages
 // Google has no crawlable URL to rank for "джаз Київ" / "класика Київ" /
-// "трибьюти Київ" style queries.
+// "триб'юти Київ" style queries.
+// Normalizes category names for matching so a spelling difference
+// (e.g. Airtable still has the old "Трибьюти" spelling while the site
+// now displays the correct "Триб'юти") never breaks category filtering.
+function normalizeCategoryKey(s) {
+  return String(s || '').toLowerCase().replace(/[\u0027\u2019\u02bc\u044c]/g, '');
+}
+
+// Maps a raw Airtable Category value to the canonical, correctly-spelled
+// display name (matched via normalizeCategoryKey so an old/misspelled
+// Airtable value still renders correctly everywhere it's shown). Falls
+// back to the raw value for any category not in CATEGORIES.
+function displayCategory(raw) {
+  const norm = normalizeCategoryKey(raw);
+  const match = CATEGORIES.find((cat) => normalizeCategoryKey(cat.name) === norm);
+  return match ? match.name : (raw || '');
+}
+
 const CATEGORIES = [
   {
     name: 'Джаз',
@@ -139,11 +156,11 @@ const CATEGORIES = [
     intro: 'Концерти класичної музики в Києві: симфонічні оркестри, камерні вечори та виконання світових хітів у класичній обробці.',
   },
   {
-    name: 'Трибьюти',
+    name: "Триб'юти",
     slug: 'trybuti',
     emoji: '🎤',
-    title: 'Трибьюти в Києві — афіша концертів',
-    intro: 'Трибьют-шоу та концерти на честь легендарних виконавців у Києві — від симфонічних програм до клубних вечорів.',
+    title: "Триб'юти в Києві — афіша концертів",
+    intro: "Триб'ют-шоу та концерти на честь легендарних виконавців у Києві — від симфонічних програм до клубних вечорів.",
   },
 ];
 
@@ -435,13 +452,13 @@ function renderConcertCard(c, { linkTitle }) {
     : `<div class="concert-title">${escapeHtml(title)}</div>`;
 
   return `
-      <div class="concert-item${image ? ' has-image' : ''}" data-category="${escapeHtml(f.Category || '')}">
+      <div class="concert-item${image ? ' has-image' : ''}" data-category="${escapeHtml(displayCategory(f.Category))}">
         <div class="concert-num">${num}</div>
         <div class="concert-info">
           ${image ? `<img class="concert-thumb" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
           <div class="concert-tags">
             ${isTop ? '<span class="tag tag-warm">Вибір редакції</span>' : ''}
-            ${f.Category ? `<span class="tag">${escapeHtml(f.Category)}</span>` : ''}
+            ${f.Category ? `<span class="tag">${escapeHtml(displayCategory(f.Category))}</span>` : ''}
           </div>
           ${titleHtml}
           ${desc ? `<div class="concert-desc">${escapeHtml(desc)}</div>` : ''}
@@ -455,7 +472,7 @@ function renderConcertCard(c, { linkTitle }) {
           <div class="concert-price">${isFree ? 'Вільний' : escapeHtml(price) || '—'}</div>
           <a href="${escapeHtml(link)}" class="${isFree ? 'btn-ticket btn-free' : 'btn-ticket'}" target="_blank" rel="noopener sponsored"
              data-ticket-link data-concert-id="${c.record.id}" data-concert-title="${escapeHtml(title)}"
-             data-concert-category="${escapeHtml(f.Category || '')}" data-concert-price="${escapeHtml(price)}">
+             data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(price)}">
             ${isFree ? 'Деталі' : 'Квитки →'}
           </a>
         </div>
@@ -528,7 +545,7 @@ function siteFooter() {
     <div class="footer-genres">
       <span class="footer-genre">Джаз</span>
       <span class="footer-genre">Класика</span>
-      <span class="footer-genre">Трибьюти</span>
+      <span class="footer-genre">Триб'юти</span>
     </div>
     <div class="footer-social">
       ${SITE.instagramUrl ? `<a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener" aria-label="Instagram">${ICON_INSTAGRAM}</a>` : ''}
@@ -603,14 +620,14 @@ function renderHomepage(concerts) {
   const genrePills = `
     <div class="genre-pill active">🎷 Джаз</div>
     <div class="genre-pill active">🎻 Класика</div>
-    <div class="genre-pill active">🎤 Трибьюти</div>`;
+    <div class="genre-pill active">🎤 Триб'юти</div>`;
 
   const content = `
 <div class="hero">
   <div class="hero-left">
     <div class="hero-label">Редакційна добірка</div>
     <h1 class="hero-title">Концерти Києва —<br>вісім вечорів, які варто <em>прожити</em></h1>
-    <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та трибьютів у Києві — для тих, хто цінує особливі моменти.</p>
+    <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та триб'ютів у Києві — для тих, хто цінує особливі моменти.</p>
   </div>
 </div>
 
@@ -664,7 +681,7 @@ function renderHomepage(concerts) {
 
   return pageShell({
     title: '8CONCERT — Вісім вечорів, які варто прожити | Афіша концертів Києва',
-    description: 'Щотижнева редакційна добірка з восьми концертів джазу, класики та трибьютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.',
+    description: "Щотижнева редакційна добірка з восьми концертів джазу, класики та триб'ютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.",
     canonical: `${SITE_URL}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
@@ -745,7 +762,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
       name: f.Location || 'Київ',
       address: { '@type': 'PostalAddress', addressLocality: 'Київ', addressCountry: 'UA' },
     },
-    ...(f.Category ? { genre: f.Category } : {}),
+    ...(f.Category ? { genre: displayCategory(f.Category) } : {}),
     ...(image ? { image: [absUrl(image)] } : {}),
     ...(performerName ? { performer: { '@type': 'PerformingGroup', name: performerName } } : {}),
     offers: {
@@ -771,7 +788,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>
   <a href="${escapeHtml(link)}" class="btn-ticket" style="margin-top:16px" target="_blank" rel="noopener sponsored"
      data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}"
-     data-concert-category="${escapeHtml(f.Category || '')}" data-concert-price="${escapeHtml(price)}">
+     data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(price)}">
     ${isFree ? 'Деталі та реєстрація →' : 'Купити квитки →'}
   </a>`;
 
@@ -799,7 +816,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
 <article class="concert-page">
   ${image ? `<img class="concert-page-image" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
   <div class="concert-tags">
-    ${f.Category ? `<span class="tag">${escapeHtml(f.Category)}</span>` : ''}
+    ${f.Category ? `<span class="tag">${escapeHtml(displayCategory(f.Category))}</span>` : ''}
   </div>
   <h1 class="concert-title">${escapeHtml(title)}</h1>
   ${renderBodyParagraphs(snippet)}
@@ -864,7 +881,7 @@ function renderContactsPage() {
 
 function renderCategoryPage(cat, concerts) {
   const items = concerts
-    .filter((c) => c.f.Category === cat.name)
+    .filter((c) => normalizeCategoryKey(c.f.Category) === normalizeCategoryKey(cat.name))
     .map((c, index) => ({
       ...c,
       num: String(index + 1).padStart(2, '0'),
@@ -946,16 +963,16 @@ function renderLlmsTxt(concerts) {
 
   return `# 8CONCERT
 
-> Щотижнева редакційна добірка з восьми концертів джазу, класики та трибьютів у Києві.
+> Щотижнева редакційна добірка з восьми концертів джазу, класики та триб'ютів у Києві.
 
-8CONCERT не публікує повну афішу міста — редакція постійно обирає лише вісім концертів (джаз, класика, трибьюти), які, на її думку, справді варті вечора. Це редакційний вибір, не каталог і не продавець квитків: посилання "Квитки" ведуть на офіційні майданчики продажу.
+8CONCERT не публікує повну афішу міста — редакція постійно обирає лише вісім концертів (джаз, класика, триб'юти), які, на її думку, справді варті вечора. Це редакційний вибір, не каталог і не продавець квитків: посилання "Квитки" ведуть на офіційні майданчики продажу.
 
 ## Розділи
 
 - [Афіша (головна)](${SITE_URL}/): поточна добірка тижня.
 - [Джаз](${SITE_URL}/jazz/)
 - [Класика](${SITE_URL}/klasika/)
-- [Трибьюти](${SITE_URL}/trybuti/)
+- [Триб'юти](${SITE_URL}/trybuti/)
 - [Про нас](${SITE_URL}/about/): хто ми і як обираємо концерти.
 - [Контакти](${SITE_URL}/contacts/)
 
