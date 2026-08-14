@@ -594,12 +594,29 @@ function renderHomepage(concerts) {
     ? concerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
     : '<div class="loading">Незабаром тут з\'являться найкращі вечори Києва</div>';
 
+  // The genre pills need to sit in different structural spots depending on
+  // viewport: next to the tabs on desktop (where they're pinned right, close
+  // to the list they filter), but under the hero subtitle on mobile (in the
+  // tabs row there's already 3 tab labels + 3 pills competing for a ~360px
+  // line, and margin-left:auto pins the wrapped pill group flush right,
+  // which looked broken instead of just dropping to a clean new line).
+  // Since the two spots are different DOM parents, CSS alone can't relocate
+  // one element between them — so there are two copies, each hidden by CSS
+  // outside its own breakpoint, and client.js keeps their .active state in
+  // sync by genre name so a resize (or a device that crosses the breakpoint)
+  // never leaves them disagreeing about which genres are active.
+  const genrePills = `
+    <div class="genre-pill active">🎷 Джаз</div>
+    <div class="genre-pill active">🎻 Класика</div>
+    <div class="genre-pill active">🎤 Трибьюти</div>`;
+
   const content = `
 <div class="hero">
   <div class="hero-left">
     <div class="hero-label">Редакційна добірка</div>
     <h1 class="hero-title">Концерти Києва —<br>вісім вечорів, які варто <em>прожити</em></h1>
     <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та трибьютів у Києві — для тих, хто цінує особливі моменти.</p>
+    <div class="hero-genres hero-genres-mobile">${genrePills}</div>
   </div>
 </div>
 
@@ -612,11 +629,7 @@ function renderHomepage(concerts) {
   <button class="tab active" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
   <button class="tab" onclick="switchTab(this,'week')" id="week">Цей тиждень</button>
   <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
-  <div class="hero-genres tabs-genres">
-    <div class="genre-pill active">🎷 Джаз</div>
-    <div class="genre-pill active">🎻 Класика</div>
-    <div class="genre-pill active">🎤 Трибьюти</div>
-  </div>
+  <div class="hero-genres tabs-genres">${genrePills}</div>
 </div>
 
 <div id="tab-top8">${top8Html}</div>

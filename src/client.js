@@ -78,9 +78,19 @@ function refreshVisibility() {
   });
 }
 
+// There are two copies of each pill in the DOM (one shown in the tabs row
+// on desktop, one under the hero subtitle on mobile — see build.js), so a
+// click on either one needs to flip .active on BOTH, matched by genre name.
+// Otherwise resizing across the 768px breakpoint (or a tablet that can hit
+// either layout) could leave the two copies disagreeing about which genres
+// are active.
 document.querySelectorAll('.genre-pill').forEach((p) => {
   p.addEventListener('click', () => {
-    p.classList.toggle('active');
+    const cat = pillCategory(p);
+    const nowActive = !p.classList.contains('active');
+    document.querySelectorAll('.genre-pill').forEach((twin) => {
+      if (pillCategory(twin) === cat) twin.classList.toggle('active', nowActive);
+    });
     refreshVisibility();
   });
 });

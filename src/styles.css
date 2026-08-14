@@ -206,6 +206,13 @@ nav a {
   padding: 10px 0;
 }
 
+/* Under the hero subtitle — only shown on mobile (see MOBILE block below),
+   hidden by default here so it doesn't double up with .tabs-genres on
+   desktop. */
+.hero-genres-mobile {
+  display: none;
+}
+
 .tab {
   font-size: 12px;
   font-weight: 500;
@@ -692,7 +699,12 @@ footer {
   nav a { display: none; }
   .hero { padding: 48px 20px 40px; }
   .tabs-bar { padding: 0 20px; }
-  .tabs-genres { justify-content: flex-start; }
+  .tabs-genres { display: none; }
+  .hero-genres-mobile {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 20px;
+  }
   /* The big serif "01/02/..." numeral used to sit in its own 56px column,
      eating a chunk of the narrow mobile width for a purely decorative
      element. Single column now; the number becomes a small round badge
