@@ -40,6 +40,27 @@ const BASE_ID = process.env.AIRTABLE_BASE_ID;
 const TABLE_ID = process.env.AIRTABLE_TABLE_ID;
 const SITE_URL = (process.env.SITE_URL || 'https://8concert.com').replace(/\/$/, '');
 const GA_MEASUREMENT_ID = 'G-W5L8STRVBJ'; // 8CONCERT GA4 property
+// Plerdy — heatmaps/click tracking/session recordings, complements GA4
+// (which only tells you traffic counts, not what people actually do on the
+// page: do they scroll past the first 3 cards, do the genre pills get used,
+// does the share button get clicked). Public site-verification snippet,
+// same category as the GA4 ID above — fine to have in page source.
+const PLERDY_SNIPPET = `<!-- BEGIN PLERDY CODE -->
+<script data-plerdy_code='1'>
+(function(w,d){
+  if(w.__plerdyCode)return;
+  w.__plerdyCode=1;
+  w._protocol=w.location.protocol=="https:"?"https://":"http://";
+  w._site_hash_code="135a92626586c1b939bc5c828ac957ac";
+  w._suid=80057;
+  var s=d.createElement("script");
+  s.async=true;
+  s.referrerPolicy="strict-origin-when-cross-origin";
+  s.src="https://a.plerdy.com/public/js/click/main.js?v="+Math.random();
+  d.head.appendChild(s);
+})(window,document);
+</script>
+<!-- END PLERDY CODE -->`;
 const DISPLAY_COUNT = Number(process.env.DISPLAY_COUNT || 8);
 const FETCH_LIMIT = 100; // Airtable's max per request without pagination — plenty of headroom
 
@@ -476,6 +497,7 @@ ${bodyExtraHead}
 ${headerHtml}
 ${contentHtml}
 <script src="/client.js" defer></script>
+${PLERDY_SNIPPET}
 </body>
 </html>`;
 }
