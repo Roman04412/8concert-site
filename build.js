@@ -352,11 +352,27 @@ function parseTimeField(raw) {
   return match ? `${match[1].padStart(2, '0')}:${match[2]}` : null;
 }
 
+// Google requires Offer.price to be a plain number for structured data to be
+// valid — our Price field is free text like "450 грн" or "від 650 грн"
+// ("from 650 UAH", used when a ticket tier starts at that price). Rather
+// than asking the editor to keep a second numeric field in sync, pull the
+// first number out of whatever's already there. Returns undefined (key
+// omitted from the JSON-LD) if the text has no digits at all, instead of
+// emitting a wrong/fake price.
+function parsePriceValue(priceStr) {
+  if (!priceStr) return undefined;
+  const match = String(priceStr).replace(/\u00A0/g, ' ').match(/\d[\d\s]*/);
+  if (!match) return undefined;
+  const digits = match[0].replace(/\s/g, '');
+  return digits || undefined;
+}
+
 function buildConcertData(record) {
   const f = record.fields;
   const price = f.Price || '';
   const link = f.Link || '#';
   const isFree = price.toLowerCase().includes('вільний') || price.toLowerCase().includes('безкоштовн');
+  const priceNumeric = isFree ? '0' : parsePriceValue(price);
   const snippet = f.Snippet || '';
   const desc = snippet ? snippet.slice(0, 90) + (snippet.length > 90 ? '...' : '') : '';
   const title = f.Title || 'Назва уточнюється';
@@ -371,7 +387,7 @@ function buildConcertData(record) {
   const startDateTime = isoDate && timeDisplay ? `${isoDate}T${timeDisplay}:00${kyivOffset(isoDate)}` : isoDate;
   const image = extractImageUrl(f.Image);
 
-  return { record, f, price, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, startDateTime, image };
+  return { record, f, price, priceNumeric, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, startDateTime, image };
 }
 
 // Only filters out events we're CONFIDENT have already happened (a successfully
@@ -654,11 +670,18 @@ function renderRelatedConcert(c) {
 }
 
 function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
-  const { f, title, desc, snippet, price, isFree, link, slug, isoDate, dateDisplay, startDateTime, record, image } = c;
+  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, record, image } = c;
 
+  // MusicEvent (a subtype of Event) — every listing on this site is a
+  // concert, so the more specific type is accurate and Google explicitly
+  // supports it for the same Event rich result. "Performer" is only
+  // included when the Airtable "Performer" field is actually filled in:
+  // guessing it from the title would be wrong for tribute nights (the
+  // performer is the local tribute act, not the artist being covered), and
+  // inaccurate structured data is worse than none.
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Event',
+    '@type': 'MusicEvent',
     name: title,
     description: snippet || desc || title,
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
@@ -671,10 +694,11 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     },
     ...(f.Category ? { genre: f.Category } : {}),
     ...(image ? { image: [absUrl(image)] } : {}),
+    ...(f.Performer ? { performer: { '@type': 'PerformingGroup', name: f.Performer } } : {}),
     offers: {
       '@type': 'Offer',
       url: link,
-      price: isFree ? '0' : undefined,
+      ...(priceNumeric ? { price: priceNumeric } : {}),
       priceCurrency: 'UAH',
       availability: 'https://schema.org/InStock',
     },
