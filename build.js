@@ -46,6 +46,31 @@ const DIST = path.join(__dirname, 'dist');
 const SRC = path.join(__dirname, 'src');       // styles.css, client.js
 const ASSETS = path.join(__dirname, 'assets'); // favicon + touch icons
 
+// Persistent, git-committed history — NOT wiped between builds like dist/ is.
+// archive.json accumulates every concert record we've ever fetched from
+// Airtable (keyed by record id). images/ holds the self-hosted copy of each
+// one's picture. Both exist so that once a concert falls out of this week's
+// curated 8 (because its date has passed), its page and image keep working
+// forever instead of 404ing — see renderConcertPage's "past event" handling.
+const ARCHIVE_PATH = path.join(__dirname, 'data', 'archive.json');
+const IMAGE_ARCHIVE_DIR = path.join(__dirname, 'data', 'images');
+
+function loadArchive() {
+  try {
+    const raw = fs.readFileSync(ARCHIVE_PATH, 'utf8');
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+function saveArchive(archiveMap) {
+  fs.mkdirSync(path.dirname(ARCHIVE_PATH), { recursive: true });
+  // Sort by key so the diff is stable/readable in git history.
+  const sorted = Object.fromEntries(Object.keys(archiveMap).sort().map((k) => [k, archiveMap[k]]));
+  fs.writeFileSync(ARCHIVE_PATH, JSON.stringify(sorted, null, 2) + '\n');
+}
+
 // TODO: замініть на реальні контакти/соцмережі — зараз це чернетка-заглушка,
 // сторінки /about/ і /contacts/ вже підключені й попадуть у sitemap.
 const SITE = {
@@ -268,7 +293,26 @@ const IMAGE_EXT_BY_CONTENT_TYPE = {
 // rebuild. Download each image once at build time and self-host it in
 // dist/images/ instead, so the URL baked into the HTML is our own domain's
 // and never expires between deploys.
-async function downloadImage(url, slug, destDir) {
+// Airtable's attachment URLs are temporary signed links that expire a few
+// hours after being issued, and dist/ is wiped and rebuilt from scratch on
+// every deploy — so a naive "download into dist/images/" would work on the
+// build right after an image is added, then silently break on every build
+// after that. To survive rebuilds (and to keep working once a concert is
+// past and no longer being fetched from Airtable at all), downloaded images
+// are cached once in the git-committed data/images/ folder and just copied
+// from there on every subsequent build; the network fetch only ever happens
+// the first time a given concert's image is seen.
+async function resolveImage(url, slug, destDir) {
+  fs.mkdirSync(IMAGE_ARCHIVE_DIR, { recursive: true });
+
+  const cached = fs.existsSync(IMAGE_ARCHIVE_DIR)
+    ? fs.readdirSync(IMAGE_ARCHIVE_DIR).find((f) => f.startsWith(`${slug}.`))
+    : null;
+  if (cached) {
+    fs.copyFileSync(path.join(IMAGE_ARCHIVE_DIR, cached), path.join(destDir, cached));
+    return `/images/${cached}`;
+  }
+
   if (!url) return '';
   try {
     const res = await fetch(url);
@@ -277,10 +321,11 @@ async function downloadImage(url, slug, destDir) {
     const ext = IMAGE_EXT_BY_CONTENT_TYPE[contentType] || 'jpg';
     const filename = `${slug}.${ext}`;
     const buf = Buffer.from(await res.arrayBuffer());
-    fs.writeFileSync(path.join(destDir, filename), buf);
+    fs.writeFileSync(path.join(IMAGE_ARCHIVE_DIR, filename), buf); // persists across builds
+    fs.writeFileSync(path.join(destDir, filename), buf);           // this build's dist/
     return `/images/${filename}`;
   } catch (err) {
-    console.warn(`Warning: couldn't download image for "${slug}" (${err.message}). Card will render without an image.`);
+    console.warn(`Warning: couldn't get image for "${slug}" (${err.message}). Card will render without an image.`);
     return '';
   }
 }
@@ -582,7 +627,19 @@ function renderBodyParagraphs(snippet) {
   return leadHtml + restHtml;
 }
 
-function renderConcertPage(c) {
+// Compact link-card for the "Інші концерти в Києві" strip shown at the
+// bottom of past-event pages — deliberately much lighter than the full
+// renderConcertCard (no image/desc/tags), just enough to give the visitor
+// somewhere to go and to pass internal link equity to the current afisha.
+function renderRelatedConcert(c) {
+  return `
+      <a class="related-item" href="/concert/${c.slug}/">
+        <span class="related-item-title">${escapeHtml(c.title)}</span>
+        ${c.dateDisplay ? `<span class="related-item-date">📅 ${escapeHtml(c.dateDisplay)}</span>` : ''}
+      </a>`;
+}
+
+function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   const { f, title, desc, snippet, price, isFree, link, slug, isoDate, dateDisplay, startDateTime, record, image } = c;
 
   const jsonLd = {
@@ -609,6 +666,34 @@ function renderConcertPage(c) {
     },
   };
 
+  // Past events keep their page (never 404 — see main()'s pastPages), but
+  // swap the "buy tickets" CTA for an honest "this already happened" notice
+  // plus a way back into the current afisha, instead of pointing people at a
+  // ticket link that's no longer valid.
+  const ctaHtml = isPast
+    ? `
+  <div class="concert-ended">
+    <span class="tag tag-ended">Подія завершена</span>
+    <p class="concert-ended-note">Ця подія вже відбулася. Актуальну афішу дивіться нижче.</p>
+  </div>`
+    : `
+  <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>
+  <a href="${escapeHtml(link)}" class="btn-ticket" style="margin-top:16px" target="_blank" rel="noopener sponsored"
+     data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}"
+     data-concert-category="${escapeHtml(f.Category || '')}" data-concert-price="${escapeHtml(price)}">
+    ${isFree ? 'Деталі та реєстрація →' : 'Купити квитки →'}
+  </a>`;
+
+  const related = otherConcerts.filter((oc) => oc.slug !== slug).slice(0, 4);
+  const relatedHtml = isPast && related.length
+    ? `
+<section class="related-concerts">
+  <h2 class="related-title">Інші концерти в Києві</h2>
+  <div class="related-list">${related.map(renderRelatedConcert).join('')}
+  </div>
+</section>`
+    : '';
+
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(title)}</nav>
 <article class="concert-page">
@@ -622,13 +707,8 @@ function renderConcertPage(c) {
     ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
     ${f.Location ? `<span>📍 ${escapeHtml(f.Location)}</span>` : ''}
   </div>
-  <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>
-  <a href="${escapeHtml(link)}" class="btn-ticket" style="margin-top:16px" target="_blank" rel="noopener sponsored"
-     data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}"
-     data-concert-category="${escapeHtml(f.Category || '')}" data-concert-price="${escapeHtml(price)}">
-    ${isFree ? 'Деталі та реєстрація →' : 'Купити квитки →'}
-  </a>
-</article>`;
+  ${ctaHtml}
+</article>${relatedHtml}`;
 
   return pageShell({
     title: `${title} — 8CONCERT`,
@@ -762,21 +842,37 @@ async function main() {
   console.log(`Got ${records.length} record(s).`);
 
   const todayStr = new Date().toISOString().slice(0, 10);
-  const allConcerts = records.map(buildConcertData);
 
-  const pastCount = allConcerts.filter((c) => isPastEvent(c, todayStr)).length;
-  if (pastCount) {
-    console.log(`Skipping ${pastCount} concert(s) with a date in the past.`);
-  }
+  // Merge this week's fetch into the permanent archive (keyed by Airtable
+  // record id). Fresh data always wins for records still in Airtable; once a
+  // record is removed from Airtable (or its date passes) it just keeps its
+  // last-known fields here forever, instead of disappearing.
+  const archiveMap = loadArchive();
+  for (const r of records) archiveMap[r.id] = r;
+  saveArchive(archiveMap);
 
-  const concerts = allConcerts
-    .filter((c) => !isPastEvent(c, todayStr))
+  const freshIds = new Set(records.map((r) => r.id));
+  const allKnown = Object.values(archiveMap).map(buildConcertData);
+
+  // Curated homepage set: unchanged behaviour — only concerts still present
+  // in this week's Airtable fetch, not yet past, capped at DISPLAY_COUNT.
+  const concerts = allKnown
+    .filter((c) => freshIds.has(c.record.id) && !isPastEvent(c, todayStr))
     .slice(0, DISPLAY_COUNT)
     .map((c, index) => ({
       ...c,
       num: String(index + 1).padStart(2, '0'),
       isTop: index < 2 || c.f.Status === 'Топ',
     }));
+
+  // Every concert we've ever archived whose date has passed gets to keep its
+  // page — "Не видаляти минулі концерти": no 404s, Google keeps whatever
+  // authority/traffic the page earned by artist/event name. This includes
+  // records still sitting in Airtable past their date AND ones already
+  // removed from the table, as long as we archived them at some point.
+  const pastPages = allKnown.filter((c) => isPastEvent(c, todayStr));
+
+  console.log(`Curated this week: ${concerts.length}. Past pages kept alive: ${pastPages.length}.`);
 
   const noDateCount = concerts.filter((c) => !c.isoDate).length;
   if (noDateCount) {
@@ -792,14 +888,13 @@ async function main() {
 
   const imagesDir = path.join(DIST, 'images');
   fs.mkdirSync(imagesDir, { recursive: true });
-  for (const c of concerts) {
-    if (c.image) {
-      c.image = await downloadImage(c.image, c.slug, imagesDir);
-    }
+  const allPages = [...concerts, ...pastPages];
+  for (const c of allPages) {
+    c.image = await resolveImage(c.image, c.slug, imagesDir);
   }
 
   fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts));
-  fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(concerts));
+  fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
   fs.writeFileSync(path.join(DIST, 'robots.txt'), renderRobots());
 
   fs.mkdirSync(path.join(DIST, 'about'), { recursive: true });
@@ -822,10 +917,15 @@ async function main() {
   for (const c of concerts) {
     const dir = path.join(DIST, 'concert', c.slug);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c));
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: concerts }));
+  }
+  for (const c of pastPages) {
+    const dir = path.join(DIST, 'concert', c.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: concerts }));
   }
 
-  console.log(`Done. Wrote ${concerts.length + 3 + CATEGORIES.length} HTML page(s) to dist/.`);
+  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length} HTML page(s) to dist/.`);
 }
 
 main().catch((err) => {

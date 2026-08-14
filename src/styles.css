@@ -303,6 +303,69 @@ nav a {
   background: rgba(196,149,106,0.12);
 }
 
+.tag-ended {
+  color: var(--muted);
+  background: var(--line);
+}
+
+/* Shown instead of the ticket CTA on past-event pages: the page itself
+   stays live (never 404s — see build.js main()), only the call-to-action
+   changes, since the original ticket link is no longer valid. */
+.concert-ended {
+  margin-top: 24px;
+  padding: 18px 20px;
+  background: var(--tag-bg);
+  border-radius: 8px;
+}
+
+.concert-ended-note {
+  font-size: 14px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.related-concerts {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 48px 60px;
+}
+
+.related-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--dark);
+  margin-bottom: 14px;
+}
+
+.related-list {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--line);
+}
+
+.related-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  text-decoration: none;
+  color: var(--dark);
+}
+
+.related-item-title {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.related-item-date {
+  font-size: 12px;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 .concert-thumb {
   width: 100%;
   max-height: 180px;
@@ -621,7 +684,7 @@ footer {
   }
   .quote-strip { padding: 28px 20px; }
   footer { grid-template-columns: 1fr; padding: 40px 20px; }
-  .breadcrumb, .concert-page { padding-left: 20px; padding-right: 20px; }
+  .breadcrumb, .concert-page, .related-concerts { padding-left: 20px; padding-right: 20px; }
   .concert-lead { font-size: 18px; padding-left: 14px; }
   .concert-body-text { font-size: 14.5px; max-width: none; }
 }
