@@ -76,7 +76,11 @@ function saveArchive(archiveMap) {
 const SITE = {
   contactEmail: 'hello@8concert.com',
   telegramUrl: 'https://t.me/Roman0044',
-  instagramUrl: '',  // напр. 'https://instagram.com/8concert'
+  instagramUrl: 'https://www.instagram.com/8_concert/',
+  // TODO: заміните на реальну сторінку 8CONCERT у Facebook, коли вона буде —
+  // зараз тут загальний https://www.facebook.com, який Rocky попросив
+  // поставити як тимчасове посилання.
+  facebookUrl: 'https://www.facebook.com',
   aboutParagraphs: [
     '8CONCERT — щотижнева редакційна добірка концертів Києва для тих, хто цінує особливі вечори: джаз, класика, трибьюти.',
     'Ми не продаємо квитки самі — обираємо найцікавіші події тижня і ведемо на офіційні майданчики продажу, де ви купуєте квиток напряму в організатора.',
@@ -454,6 +458,11 @@ function siteHeader() {
 </header>`;
 }
 
+// Small inline monoline icons — no icon font/library dependency, no
+// third-party embed/tracker (unlike Facebook's own share/like widgets).
+const ICON_INSTAGRAM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>`;
+const ICON_FACEBOOK = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.53 17.52 2 12 2S2 6.53 2 12.06c0 5 3.66 9.13 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.81 8.44-4.94 8.44-9.94z"/></svg>`;
+
 function siteFooter() {
   return `<footer>
   <div>
@@ -463,6 +472,10 @@ function siteFooter() {
       <span class="footer-genre">Джаз</span>
       <span class="footer-genre">Класика</span>
       <span class="footer-genre">Трибьюти</span>
+    </div>
+    <div class="footer-social">
+      ${SITE.instagramUrl ? `<a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener" aria-label="Instagram">${ICON_INSTAGRAM}</a>` : ''}
+      ${SITE.facebookUrl ? `<a href="${escapeHtml(SITE.facebookUrl)}" target="_blank" rel="noopener" aria-label="Facebook">${ICON_FACEBOOK}</a>` : ''}
     </div>
   </div>
   <div>

@@ -583,6 +583,26 @@ footer {
   text-transform: uppercase;
 }
 
+.footer-social {
+  display: flex;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.footer-social a {
+  display: inline-flex;
+  color: var(--brown);
+}
+
+.footer-social svg {
+  width: 19px;
+  height: 19px;
+}
+
+@media (hover: hover) {
+  .footer-social a:hover { color: var(--warm); }
+}
+
 .footer-col-title {
   font-size: 10px;
   font-weight: 700;
