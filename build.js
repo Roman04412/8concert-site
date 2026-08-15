@@ -1352,10 +1352,26 @@ async function main() {
   const freshIds = new Set(records.map((r) => r.id));
   const allKnown = Object.values(archiveMap).map(buildConcertData);
 
-  // Every fresh (still in Airtable), not-yet-past record — this is broader
-  // than the homepage's curated 8: Airtable can (and often does) have more
-  // upcoming concerts than we feature on the homepage at once.
-  const freshUpcoming = allKnown.filter((c) => freshIds.has(c.record.id) && !isPastEvent(c, todayStr));
+  // Every fresh (still in Airtable), not-yet-past record with at least a
+  // title — this is broader than the homepage's curated 8: Airtable can
+  // (and often does) have more upcoming concerts than we feature on the
+  // homepage at once. Records with no Title filled in yet are treated as
+  // unfinished drafts (e.g. a row Rocky started adding in Airtable but
+  // hasn't finished) and stay invisible on the site — no page, no
+  // homepage slot, no "Назва уточнюється" placeholder card — until a
+  // title is filled in.
+  const freshUpcoming = allKnown
+    .filter((c) => freshIds.has(c.record.id) && !isPastEvent(c, todayStr) && Boolean(c.f.Title))
+    // Soonest first. allKnown's own order is just archive.json's key order
+    // (alphabetical by Airtable record id, for stable git diffs — see
+    // saveArchive), which has nothing to do with event date, so without an
+    // explicit sort here the homepage's "curated 8" would appear in a
+    // effectively random order instead of chronological.
+    .sort((a, b) => {
+      if (!a.isoDate) return 1;
+      if (!b.isoDate) return -1;
+      return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
+    });
 
   // Curated homepage set: unchanged behaviour — the first DISPLAY_COUNT of
   // freshUpcoming, numbered for the homepage/category cards.
