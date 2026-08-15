@@ -187,7 +187,6 @@ const VENUES = [
     pros: ['Панорама центру Києва', 'Атмосферний захід сонця', 'Зручне розташування в центрі'],
     cons: ['Відкритий простір залежить від погоди', 'На популярних концертах може бути багато людей'],
     locationMatch: ['дах цум'],
-    setting: 'outdoor',
   },
   {
     slug: 'terasa-river-mall',
@@ -206,7 +205,6 @@ const VENUES = [
     address: 'Торговий центр River Mall',
     phone: '044 299 0007',
     locationMatch: ['river mall'],
-    setting: 'outdoor',
   },
   {
     slug: 'terasa-gulliver',
@@ -224,7 +222,6 @@ const VENUES = [
     cons: ['Міський шум', 'Залежність від погоди', 'Частина програм — радше кросовер, ніж академічна класика'],
     address: 'Тераса ТРЦ Gulliver',
     locationMatch: ['gulliver'],
-    setting: 'outdoor',
   },
   {
     slug: 'terasa-d12',
@@ -243,7 +240,6 @@ const VENUES = [
     address: 'Галерея Д12',
     phone: '093 973 3373',
     locationMatch: ['д12', 'd12', 'галерея д12'],
-    setting: 'outdoor',
   },
   {
     slug: 'terasa-toronto-kyiv',
@@ -262,7 +258,6 @@ const VENUES = [
     address: 'Toronto-Kyiv Complex',
     phone: '063 992 9029',
     locationMatch: ['toronto-kyiv', 'toronto kyiv', 'торонто-київ'],
-    setting: 'outdoor',
   },
   {
     slug: 'kontserty-bilya-lavry',
@@ -281,7 +276,6 @@ const VENUES = [
     address: 'Києво-Печерська лавра',
     phone: '044 406 6300',
     locationMatch: ['лавра', 'печерська лавра', 'києво-печерська'],
-    setting: 'outdoor',
   },
   {
     slug: 'unit-city',
@@ -299,7 +293,6 @@ const VENUES = [
     cons: ['Це не традиційний концертний майданчик', 'Акустика може відрізнятися від спеціалізованої концертної зали', 'Кількість музичних подій залежить від актуальної програми'],
     address: 'UNIT.City, вул. Дорогожицька, Київ',
     locationMatch: ['unit.city', 'unit.\u0441ity', 'unit city', 'unit \u0441ity'],
-    setting: 'outdoor',
   },
   {
     slug: 'kyivska-troyanda',
@@ -317,7 +310,6 @@ const VENUES = [
     cons: ['Невеликий майданчик — кількість місць обмежена', 'Не всі музичні події проходять регулярно', 'Формат більше для камерних концертів, ніж масштабних оркестрових шоу'],
     address: 'вул. Михайла Грушевського, 1В, Київ',
     locationMatch: ["ки\u0457вська троянда"],
-    setting: 'indoor',
   },
   {
     slug: 'botanichnyi-sad-hryshka',
@@ -335,7 +327,6 @@ const VENUES = [
     cons: ['Залежність від погоди', 'До окремих концертних зон потрібно йти територією саду', 'На популярні події краще брати квитки заздалегідь', 'Акустика open air не така, як у спеціалізованій залі'],
     address: 'Національний ботанічний сад ім. М. М. Гришка, Тимірязєвська, 1, Київ',
     locationMatch: ['ботан\u0456чний сад', 'сад троянд', 'гришка'],
-    setting: 'outdoor',
   },
   {
     slug: 'peppers-club',
@@ -348,13 +339,11 @@ const VENUES = [
     paragraphs: [
       "Pepper's Club — культовий музичний паб у центрі Києва, який зібрав навколо себе шанувальників блюзу, року та живої музики загалом. Заклад розташований на вул. Князів Острозьких, 8, корпус 7 — у будівлі, де колись були приміщення заводу «Арсенал», тож історична промислова атмосфера тут поєднується з сучасною клубною сценою.",
       "Формат — не лише блюз і рок: тут регулярно проходять джазові вечори, поп-концерти, джем-сейшени, стендап-шоу і навіть трансляції спортивних подій. Понад 40 столиків на 4-10 місць і простора fan-зона дозволяють вмістити чималу компанію, а на сцені — професійний звук d&b audiotechnik і мікрофони Shure, тож про якість звучання тут дбають серйозно.",
-      "Влітку у Pepper's Club працює ще й літня сцена просто неба — тож частина подій може проходити не в основному залі, а на вулиці. Формат конкретного концерту (зала чи літня сцена) варто уточнювати в афіші події або в організаторів перед візитом.",
     ],
     pros: ['Культовий статус і насичена афіша щотижня', 'Професійне звукове обладнання', 'Джем-сейшени та можливість почути живу імпровізацію', 'Затишна клубна атмосфера в історичній будівлі', 'Багато столиків — легше знайти місце компанією', 'Кухня та бар прямо в залі'],
     cons: ['У розпал вечора може бути гучно й людно', 'Формат клубу, не концертної зали — акустика відповідна', 'На популярні події краще бронювати столик заздалегідь', 'Центр міста — з парковкою можуть бути складнощі'],
     address: "Pepper's Club, вул. Князів Острозьких, 8, корпус 7, Київ",
     locationMatch: ["pepper's club", 'peppers club', 'pepper club', 'pepper s club'],
-    setting: 'indoor',
   },
 ];
 
@@ -1199,95 +1188,22 @@ function renderVenueCard(venue) {
 }
 
 function renderVenuesIndexPage(venues) {
-  const outdoorVenues = venues.filter((v) => v.setting === 'outdoor');
-  const indoorVenues = venues.filter((v) => v.setting !== 'outdoor');
-
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / Місця</nav>
 <div class="hero" style="padding-bottom:24px">
   <div class="hero-left">
     <div class="hero-label">Гід по майданчиках</div>
-    <h1 class="hero-title">Де в Києві слухають музику наживо</h1>
-    <p class="hero-sub">Дахи, тераси, зали й паби, де регулярно проходять концерти з нашої добірки — з плюсами, мінусами і афішею кожного місця.</p>
+    <h1 class="hero-title">Де в Києві слухають музику просто неба</h1>
+    <p class="hero-sub">Дахи, тераси і мальовничі локації, де регулярно проходять концерти з нашої добірки — з плюсами, мінусами і афішею кожного місця.</p>
   </div>
 </div>
-<a href="/mistsya/romantychni-vechory/" class="venue-article-teaser">
-  <div class="venue-article-teaser-label">Добірка</div>
-  <div class="venue-article-teaser-title">5 затишних місць Києва для романтичного вечора →</div>
-</a>
-<h2 class="venues-section-title">🌇 Просто неба</h2>
-<div class="venue-grid">${outdoorVenues.map(renderVenueCard).join('')}</div>
-<h2 class="venues-section-title">🏠 У приміщенні</h2>
-<div class="venue-grid">${indoorVenues.map(renderVenueCard).join('')}</div>
+<div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
 `;
 
   return pageShell({
-    title: 'Місця — де в Києві слухають концерти наживо | 8CONCERT',
-    description: 'Гід по концертних майданчиках Києва: дах ЦУМ, тераси River Mall, Gulliver, Д12, Toronto-Kyiv, концерти біля Києво-Печерської лаври та затишні зали й паби.',
+    title: 'Місця — де в Києві слухають концерти просто неба | 8CONCERT',
+    description: 'Гід по відкритих концертних майданчиках Києва: дах ЦУМ, тераси River Mall, Gulliver, Д12, Toronto-Kyiv та концерти біля Києво-Печерської лаври.',
     canonical: `${SITE_URL}/mistsya/`,
-    headerHtml: siteHeader(),
-    contentHtml: content + siteFooter(),
-  });
-}
-
-function renderRomanticVenuesPage(venues) {
-  const bySlug = Object.fromEntries(venues.map((v) => [v.slug, v]));
-  const picks = [
-    {
-      slug: 'dah-tsum',
-      angle: "Захід сонця над дахами історичного центру і камерний джазовий гурт за кілька метрів від вас — важко придумати більш кінематографічний початок вечора для двох.",
-    },
-    {
-      slug: 'terasa-d12',
-      angle: "Найінтимніший формат з усієї добірки: невеликий простір, вид на старий Київ і камерна програма — тут не загубитись у натовпі, а справді почути одне одного між номерами.",
-    },
-    {
-      slug: 'botanichnyi-sad-hryshka',
-      angle: "Сад троянд увечері, жива музика і запах зелені навколо — локація, яка робить романтичною навіть звичайну прогулянку, а з концертом наживо це вже готове побачення.",
-    },
-    {
-      slug: 'kyivska-troyanda',
-      angle: "Камерний павільйон у центрі, поруч із Маріїнським парком: можна почати з концерту, а закінчити вечір повільною прогулянкою парком удвох.",
-    },
-    {
-      slug: 'kontserty-bilya-lavry',
-      angle: "Найбільш мальовничі декорації Києва — підсвічена архітектура Лаври ввечері перетворює навіть звичайний оркестровий концерт на подію, яку варто запам'ятати.",
-    },
-  ];
-
-  const sectionsHtml = picks
-    .map((pick, i) => {
-      const v = bySlug[pick.slug];
-      if (!v) return '';
-      return `
-  <section class="romantic-pick">
-    <div class="romantic-pick-num">${String(i + 1).padStart(2, '0')}</div>
-    <div class="romantic-pick-body">
-      <h2 class="romantic-pick-title"><a href="/mistsya/${v.slug}/">${escapeHtml(v.name)}</a></h2>
-      <p class="romantic-pick-angle">${escapeHtml(pick.angle)}</p>
-      <a href="/mistsya/${v.slug}/" class="romantic-pick-card">
-        <img class="romantic-pick-image" src="/images/venues/${v.image}" alt="${escapeHtml(v.name)}" loading="lazy">
-        <span class="romantic-pick-cta">Детальніше про майданчик →</span>
-      </a>
-    </div>
-  </section>`;
-    })
-    .join('');
-
-  const content = `
-<nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / Романтичні вечори</nav>
-<article class="concert-page">
-  <div class="concert-tags"><span class="tag tag-warm">Добірка</span></div>
-  <h1 class="concert-title">5 затишних місць Києва для романтичного вечора</h1>
-  <p class="concert-desc" style="font-size:15px;line-height:1.7;margin-bottom:14px">Не кожен концерт підходить для побачення — комусь потрібен великий звук і натовп, а комусь тихий столик, краєвид і музика, під яку легко розмовляти. Зібрали п'ять майданчиків з нашої афіші, які найкраще працюють саме для вечора удвох: від даху ЦУМ на заході сонця до Саду троянд у Ботанічному саду.</p>
-  ${sectionsHtml}
-  <p class="concert-desc" style="font-size:15px;line-height:1.7;margin-top:8px">Повний список майданчиків, де регулярно проходять концерти з нашої добірки — на сторінці <a href="/mistsya/">«Місця»</a>. А актуальну афішу тижня дивіться на <a href="/">головній</a>.</p>
-</article>`;
-
-  return pageShell({
-    title: "5 затишних місць Києва для романтичного вечора | 8CONCERT",
-    description: "Куди піти на побачення в Києві: дах ЦУМ, тераса Д12, Сад троянд у Ботанічному саду, «Київська троянда» та концерти біля Лаври — найатмосферніші майданчики для вечора удвох.",
-    canonical: `${SITE_URL}/mistsya/romantychni-vechory/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
   });
@@ -1367,7 +1283,6 @@ function renderSitemap(concerts) {
     `${SITE_URL}/about/`,
     `${SITE_URL}/contacts/`,
     `${SITE_URL}/mistsya/`,
-    `${SITE_URL}/mistsya/romantychni-vechory/`,
     ...CATEGORIES.map((cat) => `${SITE_URL}/${cat.slug}/`),
     ...VENUES.map((v) => `${SITE_URL}/mistsya/${v.slug}/`),
     ...concerts.map((c) => `${SITE_URL}/concert/${c.slug}/`),
@@ -1551,8 +1466,6 @@ async function main() {
   });
   fs.mkdirSync(path.join(DIST, 'mistsya'), { recursive: true });
   fs.writeFileSync(path.join(DIST, 'mistsya', 'index.html'), renderVenuesIndexPage(VENUES));
-  fs.mkdirSync(path.join(DIST, 'mistsya', 'romantychni-vechory'), { recursive: true });
-  fs.writeFileSync(path.join(DIST, 'mistsya', 'romantychni-vechory', 'index.html'), renderRomanticVenuesPage(VENUES));
   const venuesImagesDir = path.join(DIST, 'images', 'venues');
   fs.mkdirSync(venuesImagesDir, { recursive: true });
   for (const venue of VENUES) {
@@ -1584,7 +1497,7 @@ async function main() {
     fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: concerts }));
   }
 
-  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 2 + VENUES.length} HTML page(s) to dist/.`);
+  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 1 + VENUES.length} HTML page(s) to dist/.`);
 }
 
 main().catch((err) => {

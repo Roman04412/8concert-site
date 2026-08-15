@@ -785,103 +785,6 @@ footer {
 .venue-pros li::before { content: '+'; position: absolute; left: 0; color: var(--warm); font-weight: 700; }
 .venue-cons li::before { content: '−'; position: absolute; left: 0; color: var(--muted); font-weight: 700; }
 
-.venues-section-title {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--dark);
-  margin: 40px 0 4px;
-}
-
-.venue-article-teaser {
-  display: block;
-  margin: 24px 0 8px;
-  padding: 18px 22px;
-  background: var(--tag-bg);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  text-decoration: none;
-  color: inherit;
-}
-
-.venue-article-teaser-label {
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--warm);
-  margin-bottom: 6px;
-}
-
-.venue-article-teaser-title {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 19px;
-  color: var(--dark);
-}
-
-.romantic-pick {
-  display: grid;
-  grid-template-columns: 56px 1fr;
-  gap: 20px;
-  margin: 36px 0;
-  padding-top: 28px;
-  border-top: 1px solid var(--line);
-}
-
-.romantic-pick:first-of-type { border-top: none; padding-top: 8px; }
-
-.romantic-pick-num {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-style: italic;
-  font-size: 34px;
-  color: var(--rose);
-  line-height: 1;
-}
-
-.romantic-pick-title { margin: 0 0 8px; }
-.romantic-pick-title a {
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 22px;
-  font-weight: 400;
-  color: var(--dark);
-  text-decoration: none;
-}
-.romantic-pick-title a:hover { color: var(--warm); }
-
-.romantic-pick-angle {
-  font-size: 15px;
-  line-height: 1.7;
-  color: var(--dark);
-  margin-bottom: 14px;
-}
-
-.romantic-pick-card {
-  display: block;
-  position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  text-decoration: none;
-}
-
-.romantic-pick-image {
-  display: block;
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-}
-
-.romantic-pick-cta {
-  position: absolute;
-  left: 16px;
-  bottom: 14px;
-  background: var(--cream);
-  color: var(--dark);
-  font-size: 13px;
-  font-weight: 600;
-  padding: 8px 14px;
-  border-radius: 6px;
-}
-
 /* MOBILE */
 @media (max-width: 768px) {
   header { padding: 0 20px; }
@@ -930,9 +833,4 @@ footer {
   .concert-body-text { font-size: 14.5px; max-width: none; }
   .venue-grid { grid-template-columns: 1fr; padding: 8px 20px 40px; gap: 18px; }
   .venue-proscons { grid-template-columns: 1fr; gap: 16px; }
-  .venues-section-title { padding: 0 20px; }
-  .venue-article-teaser { margin-left: 20px; margin-right: 20px; }
-  .romantic-pick { grid-template-columns: 40px 1fr; gap: 12px; }
-  .romantic-pick-num { font-size: 26px; }
-  .romantic-pick-title a { font-size: 19px; }
 }
