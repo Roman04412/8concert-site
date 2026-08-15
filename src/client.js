@@ -79,6 +79,7 @@ function refreshVisibility() {
       if (show) visibleCount += 1;
     });
     toggleEmptyState(container, items.length, visibleCount);
+    renumberVisible(container);
   });
 
   const top8 = document.getElementById('tab-top8');
@@ -103,6 +104,7 @@ function refreshVisibility() {
     });
 
     toggleEmptyState(top8, core.length + extra.length, visibleCore + visibleExtra);
+    renumberVisible(top8);
   }
 }
 
@@ -113,6 +115,22 @@ function toggleEmptyState(container, itemCount, visibleCount) {
   } else if (emptyState) {
     emptyState.style.display = 'none';
   }
+}
+
+// The "01/02/..." badge is baked in at build time assuming every card is
+// visible. Once a genre filter hides some of them, those baked-in numbers
+// leave gaps (03, 07, 08...) instead of counting the cards actually on
+// screen. Renumber whatever's left, in DOM order, every time visibility
+// changes — same numbers reappear when the filter is cleared, since this
+// only ever touches the visible set.
+function renumberVisible(container) {
+  let n = 0;
+  container.querySelectorAll('.concert-item').forEach((item) => {
+    if (item.style.display === 'none') return;
+    n += 1;
+    const badge = item.querySelector('.concert-num');
+    if (badge) badge.textContent = String(n).padStart(2, '0');
+  });
 }
 
 document.querySelectorAll('.genre-pill').forEach((p) => {
