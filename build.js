@@ -505,6 +505,7 @@ ${ogImage ? `<meta property="og:image" content="${escapeHtml(absUrl(ogImage))}">
 ${ogImage ? `<meta name="twitter:image" content="${escapeHtml(absUrl(ogImage))}">` : ''}
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="icon" href="/icon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles.css">
 ${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
