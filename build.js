@@ -187,6 +187,7 @@ const VENUES = [
     pros: ['Панорама центру Києва', 'Атмосферний захід сонця', 'Зручне розташування в центрі'],
     cons: ['Відкритий простір залежить від погоди', 'На популярних концертах може бути багато людей'],
     locationMatch: ['дах цум'],
+    setting: 'outdoor',
   },
   {
     slug: 'terasa-river-mall',
@@ -205,6 +206,7 @@ const VENUES = [
     address: 'Торговий центр River Mall',
     phone: '044 299 0007',
     locationMatch: ['river mall'],
+    setting: 'outdoor',
   },
   {
     slug: 'terasa-gulliver',
@@ -222,6 +224,7 @@ const VENUES = [
     cons: ['Міський шум', 'Залежність від погоди', 'Частина програм — радше кросовер, ніж академічна класика'],
     address: 'Тераса ТРЦ Gulliver',
     locationMatch: ['gulliver'],
+    setting: 'outdoor',
   },
   {
     slug: 'terasa-d12',
@@ -240,6 +243,7 @@ const VENUES = [
     address: 'Галерея Д12',
     phone: '093 973 3373',
     locationMatch: ['д12', 'd12', 'галерея д12'],
+    setting: 'outdoor',
   },
   {
     slug: 'terasa-toronto-kyiv',
@@ -258,6 +262,7 @@ const VENUES = [
     address: 'Toronto-Kyiv Complex',
     phone: '063 992 9029',
     locationMatch: ['toronto-kyiv', 'toronto kyiv', 'торонто-київ'],
+    setting: 'outdoor',
   },
   {
     slug: 'kontserty-bilya-lavry',
@@ -276,6 +281,7 @@ const VENUES = [
     address: 'Києво-Печерська лавра',
     phone: '044 406 6300',
     locationMatch: ['лавра', 'печерська лавра', 'києво-печерська'],
+    setting: 'outdoor',
   },
   {
     slug: 'unit-city',
@@ -293,6 +299,7 @@ const VENUES = [
     cons: ['Це не традиційний концертний майданчик', 'Акустика може відрізнятися від спеціалізованої концертної зали', 'Кількість музичних подій залежить від актуальної програми'],
     address: 'UNIT.City, вул. Дорогожицька, Київ',
     locationMatch: ['unit.city', 'unit.\u0441ity', 'unit city', 'unit \u0441ity'],
+    setting: 'outdoor',
   },
   {
     slug: 'kyivska-troyanda',
@@ -310,6 +317,7 @@ const VENUES = [
     cons: ['Невеликий майданчик — кількість місць обмежена', 'Не всі музичні події проходять регулярно', 'Формат більше для камерних концертів, ніж масштабних оркестрових шоу'],
     address: 'вул. Михайла Грушевського, 1В, Київ',
     locationMatch: ["ки\u0457вська троянда"],
+    setting: 'indoor',
   },
   {
     slug: 'botanichnyi-sad-hryshka',
@@ -327,6 +335,7 @@ const VENUES = [
     cons: ['Залежність від погоди', 'До окремих концертних зон потрібно йти територією саду', 'На популярні події краще брати квитки заздалегідь', 'Акустика open air не така, як у спеціалізованій залі'],
     address: 'Національний ботанічний сад ім. М. М. Гришка, Тимірязєвська, 1, Київ',
     locationMatch: ['ботан\u0456чний сад', 'сад троянд', 'гришка'],
+    setting: 'outdoor',
   },
   {
     slug: 'peppers-club',
@@ -345,8 +354,46 @@ const VENUES = [
     cons: ['У розпал вечора може бути гучно й людно', 'Формат клубу, не концертної зали — акустика відповідна', 'На популярні події краще бронювати столик заздалегідь', 'Центр міста — з парковкою можуть бути складнощі'],
     address: "Pepper's Club, вул. Князів Острозьких, 8, корпус 7, Київ",
     locationMatch: ["pepper's club", 'peppers club', 'pepper club', 'pepper s club'],
+    setting: 'indoor',
   },
 ];
+
+// Season toggle: two SEO-distinct entry points into the same venue set,
+// filtered by `setting`. Rocky wanted this indexable as real separate
+// pages (own <title>/H1), not a client-side JS tab — mirrors how the
+// genre categories already get their own /jazz/, /klasika/, /trybuti/
+// pages instead of being a filter on one page.
+const SEASONS = [
+  {
+    slug: 'litni-maidanchyky',
+    setting: 'outdoor',
+    icon: '\u2600\ufe0f',
+    navLabel: 'Літні',
+    heroLabel: 'Літній сезон',
+    seoTitle: "Літні майданчики Києва — де слухати музику просто неба | 8CONCERT",
+    metaDescription: "Дахи, тераси і сади Києва, де влітку регулярно проходять концерти: дах ЦУМ, тераси River Mall, Gulliver, Toronto-Kyiv, Сад троянд, UNIT.City та концерти біля Лаври. Афіша, плюси й мінуси кожного майданчика.",
+    h1: 'Де в Києві слухають музику просто неба',
+    intro: 'Поки погода дозволяє, найкращі концерти в Києві відбуваються не в залах, а під відкритим небом — на дахах, терасах і в парках. Ось усі майданчики з нашої добірки, де влітку регулярно грає жива музика.',
+  },
+  {
+    slug: 'zymovi-maidanchyky',
+    setting: 'indoor',
+    icon: '\u2744\ufe0f',
+    navLabel: 'Зимові',
+    heroLabel: 'Холодна пора року',
+    seoTitle: "Де слухати музику взимку в Києві — затишні зали та паби | 8CONCERT",
+    metaDescription: "Затишні концертні майданчики Києва для холодної пори року: музичний паб Pepper's Club, камерний павільйон «Київська троянда» та інші зали в приміщенні. Афіша, плюси й мінуси.",
+    h1: 'Де в Києві слухають музику взимку',
+    intro: 'Коли на вулиці холодно, концерти переїжджають у приміщення — у затишні зали й паби, де тепло, є барна карта і можна сидіти близько до сцени. Ці майданчики з нашої добірки працюють цілий рік, незалежно від погоди за вікном.',
+  },
+];
+
+function renderSeasonToggle(activeSlug) {
+  return `
+<div class="season-toggle">${SEASONS.map((s) => `
+  <a href="/mistsya/${s.slug}/" class="season-toggle-pill${s.slug === activeSlug ? ' active' : ''}">${s.icon} ${escapeHtml(s.navLabel)}</a>`).join('')}
+</div>`;
+}
 
 function findVenueConcerts(venue, allConcerts) {
   const keys = venue.locationMatch.map((k) => k.toLowerCase());
@@ -1214,17 +1261,43 @@ function renderVenuesIndexPage(venues) {
 <div class="hero" style="padding-bottom:24px">
   <div class="hero-left">
     <div class="hero-label">Гід по майданчиках</div>
-    <h1 class="hero-title">Де в Києві слухають музику просто неба</h1>
-    <p class="hero-sub">Дахи, тераси і мальовничі локації, де регулярно проходять концерти з нашої добірки — з плюсами, мінусами і афішею кожного місця.</p>
+    <h1 class="hero-title">Де в Києві слухають музику наживо</h1>
+    <p class="hero-sub">Дахи, тераси, зали й паби, де регулярно проходять концерти з нашої добірки — з плюсами, мінусами і афішею кожного місця. Оберіть сезон або перегляньте весь список нижче.</p>
   </div>
 </div>
+${renderSeasonToggle(null)}
 <div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
 `;
 
   return pageShell({
-    title: 'Місця — де в Києві слухають концерти просто неба | 8CONCERT',
-    description: 'Гід по відкритих концертних майданчиках Києва: дах ЦУМ, тераси River Mall, Gulliver, Д12, Toronto-Kyiv та концерти біля Києво-Печерської лаври.',
+    title: 'Місця — де в Києві слухають концерти наживо | 8CONCERT',
+    description: 'Гід по концертних майданчиках Києва: дах ЦУМ, тераси River Mall, Gulliver, Д12, Toronto-Kyiv, концерти біля Києво-Печерської лаври та затишні зали й паби. Літні й зимові майданчики окремо.',
     canonical: `${SITE_URL}/mistsya/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
+}
+
+function renderSeasonVenuesPage(season, allVenues) {
+  const venues = allVenues.filter((v) => v.setting === season.setting);
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(season.navLabel)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">${escapeHtml(season.heroLabel)}</div>
+    <h1 class="hero-title">${escapeHtml(season.h1)}</h1>
+    <p class="hero-sub">${escapeHtml(season.intro)}</p>
+  </div>
+</div>
+${renderSeasonToggle(season.slug)}
+<div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
+<p class="concert-desc" style="font-size:14px;margin-top:28px"><a href="/mistsya/" class="venue-link">← Усі майданчики</a></p>
+`;
+
+  return pageShell({
+    title: season.seoTitle,
+    description: season.metaDescription,
+    canonical: `${SITE_URL}/mistsya/${season.slug}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
   });
@@ -1304,6 +1377,7 @@ function renderSitemap(concerts) {
     `${SITE_URL}/about/`,
     `${SITE_URL}/contacts/`,
     `${SITE_URL}/mistsya/`,
+    ...SEASONS.map((s) => `${SITE_URL}/mistsya/${s.slug}/`),
     ...CATEGORIES.map((cat) => `${SITE_URL}/${cat.slug}/`),
     ...VENUES.map((v) => `${SITE_URL}/mistsya/${v.slug}/`),
     ...concerts.map((c) => `${SITE_URL}/concert/${c.slug}/`),
@@ -1487,6 +1561,11 @@ async function main() {
   });
   fs.mkdirSync(path.join(DIST, 'mistsya'), { recursive: true });
   fs.writeFileSync(path.join(DIST, 'mistsya', 'index.html'), renderVenuesIndexPage(VENUES));
+  for (const season of SEASONS) {
+    const seasonDir = path.join(DIST, 'mistsya', season.slug);
+    fs.mkdirSync(seasonDir, { recursive: true });
+    fs.writeFileSync(path.join(seasonDir, 'index.html'), renderSeasonVenuesPage(season, VENUES));
+  }
   const venuesImagesDir = path.join(DIST, 'images', 'venues');
   fs.mkdirSync(venuesImagesDir, { recursive: true });
   for (const venue of VENUES) {
@@ -1518,7 +1597,7 @@ async function main() {
     fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: concerts }));
   }
 
-  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 1 + VENUES.length} HTML page(s) to dist/.`);
+  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 1 + SEASONS.length + VENUES.length} HTML page(s) to dist/.`);
 }
 
 main().catch((err) => {

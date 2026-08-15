@@ -767,6 +767,34 @@ footer {
 }
 .venue-link:hover { color: var(--warm); }
 
+.season-toggle {
+  display: flex;
+  gap: 10px;
+  margin: 8px 0 24px;
+}
+
+.season-toggle-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  color: var(--dark);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.season-toggle-pill.active {
+  background: var(--dark);
+  border-color: var(--dark);
+  color: var(--cream);
+}
+
+.season-toggle-pill:not(.active):hover { border-color: var(--warm); color: var(--warm); }
+
 .venue-proscons ul {
   list-style: none;
   display: flex;
