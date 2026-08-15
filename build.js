@@ -164,6 +164,129 @@ const CATEGORIES = [
   },
 ];
 
+// Venue ("Місця") pages — a curated guide to Kyiv's recurring open-air /
+// rooftop / terrace concert spots. Distinct from CATEGORIES (genre) pages:
+// these are location-focused landing pages meant to rank for "концерти на
+// [venue] Київ" queries and to give past/future concert pages at a given
+// spot somewhere real to link from. locationMatch is matched against each
+// concert's Airtable "Location" field (substring, case-insensitive) to
+// auto-pull related concerts — no manual tagging needed.
+const VENUES = [
+  {
+    slug: 'dah-tsum',
+    name: 'Дах ЦУМ',
+    image: 'dah-tsum.png',
+    category: 'Концертний зал просто неба',
+    tagline: 'Джаз і оркестрові шоу з панорамою центру Києва',
+    seoTitle: 'Концерти на даху ЦУМ у Києві — афіша та огляд майданчика',
+    metaDescription: "Концерти на даху ЦУМ: джазові вечори, Kyiv Mozart Orchestra та біг-бенди з панорамою центру Києва. Афіша, ціни, плюси й мінуси майданчика.",
+    paragraphs: [
+      'Дах ЦУМ — один із найвпізнаваніших форматів літніх концертів у центрі Києва: невелика сцена просто неба на даху центрального універмагу, з видом на дахи і шпилі історичного центру. Формат камерний, тому атмосфера тут завжди ближча до джаз-клубу, ніж до великого відкритого майданчика.',
+      'У програмі — як джазові вечори, так і виступи Kyiv Mozart Orchestra та біг-бендів: тут звучали Jazz in Kyiv Band, Kyiv Jazz Quintet, Aniko Dolidze Big Band і оркестрові програми на честь популярних виконавців.',
+    ],
+    pros: ['Панорама центру Києва', 'Атмосферний захід сонця', 'Зручне розташування в центрі'],
+    cons: ['Відкритий простір залежить від погоди', 'На популярних концертах може бути багато людей'],
+    locationMatch: ['дах цум'],
+  },
+  {
+    slug: 'terasa-river-mall',
+    name: 'Тераса River Mall',
+    image: 'terasa-river-mall.png',
+    category: 'Торговий центр',
+    tagline: 'Симфонічні кавери просто неба з видом на Дніпро',
+    seoTitle: 'Тераса River Mall — концерти просто неба з видом на Дніпро',
+    metaDescription: 'Симфонічні концерти на терасі River Mall: кавер-програми Coldplay, Imagine Dragons, Michael Jackson та інших з панорамою Дніпра. Афіша, плюси й мінуси.',
+    paragraphs: [
+      'Тераса River Mall — один із найпопулярніших майданчиків Києва для симфонічних концертів просто неба. Простору тут вистачає навіть для великих програм, а вид на Дніпро додає видовищності будь-якому вечору.',
+      'Тут регулярно проходять оркестрові програми з музикою Coldplay, Imagine Dragons, Michael Jackson, Metallica, Nirvana та інших популярних виконавців — формат розрахований радше на широку публіку, ніж на академічних цінителів класики.',
+    ],
+    pros: ['Вид на Дніпро', 'Сучасна простора тераса', 'Великий вибір концертних програм'],
+    cons: ['Далі від історичного центру', 'Формат більше про симфонічні кавери, ніж академічну класику'],
+    address: 'Торговий центр River Mall',
+    phone: '044 299 0007',
+    locationMatch: ['river mall'],
+  },
+  {
+    slug: 'terasa-gulliver',
+    name: 'Тераса Gulliver',
+    image: 'terasa-gulliver.png',
+    category: 'Концертний зал',
+    tagline: 'Симфонічні та джазові вечори в самому центрі міста',
+    seoTitle: 'Тераса Gulliver — концерти в центрі Києва',
+    metaDescription: 'Концерти на терасі ТРЦ Gulliver: симфонічні й джазові вечори, програми з музикою Vivaldi, Sting, Lady Gaga, Adele. Афіша, плюси й мінуси майданчика.',
+    paragraphs: [
+      'Тераса Gulliver — ще одна ключова літня сцена в самому центрі Києва. Локація регулярно приймає як симфонічні, так і джазові вечори, тому афіша тут оновлюється частіше, ніж на багатьох інших відкритих майданчиках.',
+      'У програмі трапляються як класичні композитори на кшталт Vivaldi, так і кросовер-версії світових хітів — Sting, Lady Gaga, Adele.',
+    ],
+    pros: ['У самому центрі Києва', 'Панорама міста', 'Регулярна концертна програма'],
+    cons: ['Міський шум', 'Залежність від погоди', 'Частина програм — радше кросовер, ніж академічна класика'],
+    address: 'Тераса ТРЦ Gulliver',
+    locationMatch: ['gulliver'],
+  },
+  {
+    slug: 'terasa-d12',
+    name: 'Тераса Д12',
+    image: 'terasa-d12.png',
+    category: 'Музей / галерея',
+    tagline: 'Камерні концерти з видом на історичний Київ',
+    seoTitle: "Тераса Д12 — камерні концерти з видом на історичний Київ",
+    metaDescription: 'Камерні концерти класики та джазу на терасі Галереї Д12 з видом на історичний центр Києва. Афіша, плюси й мінуси майданчика.',
+    paragraphs: [
+      'Тераса Д12 при однойменній галереї — цікава локація для камерних концертів з видом на історичний Київ. Формат тут менш масовий, ніж на великих терасах ТРЦ, тому це хороший варіант для тих, хто шукає інтимнішу атмосферу вечора.',
+      'Майданчик особливо добре підходить для романтичних літніх вечорів із класичною музикою або джазом — невеликий простір і краєвид працюють на камерність програми.',
+    ],
+    pros: ['Історичний центр Києва', 'Краєвид на старе місто', 'Камерна атмосфера'],
+    cons: ['Програма менш регулярна, ніж на Gulliver чи River Mall', 'Афішу варто перевіряти заздалегідь'],
+    address: 'Галерея Д12',
+    phone: '093 973 3373',
+    locationMatch: ['д12', 'd12', 'галерея д12'],
+  },
+  {
+    slug: 'terasa-toronto-kyiv',
+    name: 'Тераса Toronto-Kyiv',
+    image: 'terasa-toronto-kyiv.png',
+    category: 'Бізнес-парк',
+    tagline: 'Сучасна тераса з панорамою міста для вечірніх концертів',
+    seoTitle: 'Тераса Toronto-Kyiv — концерти в комплексі Toronto-Kyiv',
+    metaDescription: 'Концерти на терасі Toronto-Kyiv Complex: музика Ludovico Einaudi, Yann Tiersen, Coldplay, Imagine Dragons, Michael Jackson, Bruno Mars. Афіша, плюси й мінуси.',
+    paragraphs: [
+      'Тераса комплексу Toronto-Kyiv — ще один помітний майданчик літнього концертного сезону в Києві, з сучасною атмосферою та панорамою міста, яка добре працює у форматі вечірнього концерту.',
+      'У афіші тут з\'являються як неокласика — Ludovico Einaudi, Yann Tiersen, — так і оркестрові версії Coldplay, Imagine Dragons, Michael Jackson та Bruno Mars.',
+    ],
+    pros: ['Сучасна локація', 'Гарний формат для вечірнього концерту', 'Поєднання музики й панорами міста'],
+    cons: ['Це не класична концертна зала — акустика й атмосфера залежать від конкретної програми'],
+    address: 'Toronto-Kyiv Complex',
+    phone: '063 992 9029',
+    locationMatch: ['toronto-kyiv', 'toronto kyiv', 'торонто-київ'],
+  },
+  {
+    slug: 'kontserty-bilya-lavry',
+    name: 'Концерти біля Лаври',
+    image: 'kontserty-bilya-lavry.png',
+    category: 'Музей-заповідник',
+    tagline: 'Найбільш мальовничі оркестрові вечори Києва',
+    seoTitle: 'Концерти біля Києво-Печерської лаври — афіша',
+    metaDescription: 'Літні та ранньоосінні оркестрові концерти біля Києво-Печерської лаври — один із найбільш мальовничих форматів open-air музики в Києві.',
+    paragraphs: [
+      'Літні та ранньоосінні концерти біля Києво-Печерської лаври — один із найбільш мальовничих варіантів для оркестрової музики в Києві: історична архітектура лаври робить будь-яку програму видовищною сама по собі.',
+      'Особливо варто стежити за вересневими концертами: початок осені зазвичай дає комфортнішу температуру для open-air заходів, ніж розпал літа.',
+    ],
+    pros: ['Історична атмосфера', 'Архітектура Лаври', 'Дуже фотогенічна локація'],
+    cons: ['Події проходять не щодня — потрібно стежити за афішею', 'Погода залишається фактором'],
+    address: 'Києво-Печерська лавра',
+    phone: '044 406 6300',
+    locationMatch: ['лавра', 'печерська лавра', 'києво-печерська'],
+  },
+];
+
+function findVenueConcerts(venue, allConcerts) {
+  const keys = venue.locationMatch.map((k) => k.toLowerCase());
+  return allConcerts.filter((c) => {
+    const loc = (c.f.Location || '').toLowerCase();
+    return keys.some((k) => loc.includes(k));
+  });
+}
+
 if (!AIRTABLE_TOKEN || !BASE_ID || !TABLE_ID) {
   console.error(
     'Missing env vars. Set AIRTABLE_TOKEN, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID\n' +
@@ -555,6 +678,7 @@ function siteHeader() {
   <nav>
     <a href="/">Афіша</a>
     <a href="/#today" data-tab-link="today">Сьогодні</a>
+    <a href="/mistsya/">Місця</a>
     <a href="/about/">Про нас</a>
     <a href="/" class="nav-city">Київ</a>
   </nav>
@@ -587,6 +711,7 @@ function siteFooter() {
     <div class="footer-links">
       <a href="/#week" data-tab-link="week">Цей тиждень</a>
       <a href="/#today" data-tab-link="today">Сьогодні</a>
+      <a href="/mistsya/">Місця</a>
       ${CATEGORIES.map((cat) => `<a href="/${cat.slug}/">${escapeHtml(cat.name)}</a>`).join('\n      ')}
     </div>
   </div>
@@ -966,12 +1091,111 @@ function renderCategoryPage(cat, concerts) {
   });
 }
 
+function renderVenueCard(venue) {
+  return `
+      <a href="/mistsya/${venue.slug}/" class="venue-card">
+        <img class="venue-card-image" src="/images/venues/${venue.image}" alt="${escapeHtml(venue.name)}" loading="lazy">
+        <div class="venue-card-body">
+          <div class="venue-card-category">${escapeHtml(venue.category)}</div>
+          <div class="venue-card-name">${escapeHtml(venue.name)}</div>
+          <div class="venue-card-tagline">${escapeHtml(venue.tagline)}</div>
+        </div>
+      </a>`;
+}
+
+function renderVenuesIndexPage(venues) {
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / Місця</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Гід по майданчиках</div>
+    <h1 class="hero-title">Де в Києві слухають музику просто неба</h1>
+    <p class="hero-sub">Дахи, тераси і мальовничі локації, де регулярно проходять концерти з нашої добірки — з плюсами, мінусами і афішею кожного місця.</p>
+  </div>
+</div>
+<div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
+`;
+
+  return pageShell({
+    title: 'Місця — де в Києві слухають концерти просто неба | 8CONCERT',
+    description: 'Гід по відкритих концертних майданчиках Києва: дах ЦУМ, тераси River Mall, Gulliver, Д12, Toronto-Kyiv та концерти біля Києво-Печерської лаври.',
+    canonical: `${SITE_URL}/mistsya/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
+}
+
+function renderVenuePage(venue, allConcerts) {
+  // allConcerts is allKnown (current + archived/past) sorted newest-first by
+  // the caller, so this naturally surfaces the most recent/relevant concerts
+  // at this venue first, whether they're upcoming or already happened.
+  const upcoming = findVenueConcerts(venue, allConcerts).slice(0, 8);
+
+  const prosConsHtml = `
+  <div class="venue-proscons">
+    <div class="venue-pros">
+      <div class="venue-proscons-title">Плюси</div>
+      <ul>${venue.pros.map((p) => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
+    </div>
+    <div class="venue-cons">
+      <div class="venue-proscons-title">Мінуси</div>
+      <ul>${venue.cons.map((p) => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
+    </div>
+  </div>`;
+
+  const infoLine = [venue.address, venue.phone].filter(Boolean).join(' · ');
+
+  const concertsHtml = upcoming.length
+    ? `
+  <section class="related-concerts" style="padding:0;max-width:none;margin-top:8px">
+    <h2 class="related-title">Концерти тут</h2>
+    <div class="related-list">${upcoming.map(renderRelatedConcert).join('')}
+    </div>
+  </section>`
+    : `
+  <div class="loading" style="margin-top:8px">Найближчим часом концертів тут у нашій добірці ще немає. Стежте за афішею — оновлюємо її щодня.</div>`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    name: venue.name,
+    description: venue.tagline,
+    ...(venue.address ? { address: { '@type': 'PostalAddress', name: venue.address, addressLocality: 'Київ', addressCountry: 'UA' } } : {}),
+  };
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(venue.name)}</nav>
+<article class="concert-page">
+  <img class="concert-page-image" src="/images/venues/${venue.image}" alt="${escapeHtml(venue.name)}" loading="lazy">
+  <div class="concert-tags">
+    <span class="tag">${escapeHtml(venue.category)}</span>
+  </div>
+  <h1 class="concert-title">${escapeHtml(venue.name)}</h1>
+  ${venue.paragraphs.map((p) => `<p class="concert-desc" style="font-size:15px;line-height:1.7;margin-bottom:14px">${escapeHtml(p)}</p>`).join('')}
+  ${infoLine ? `<div class="concert-meta"><span>📍 ${escapeHtml(infoLine)}</span></div>` : ''}
+  ${prosConsHtml}
+  ${concertsHtml}
+</article>`;
+
+  return pageShell({
+    title: `${venue.seoTitle} | 8CONCERT`,
+    description: venue.metaDescription,
+    canonical: `${SITE_URL}/mistsya/${venue.slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+    ogImage: `/images/venues/${venue.image}`,
+  });
+}
+
 function renderSitemap(concerts) {
   const urls = [
     `${SITE_URL}/`,
     `${SITE_URL}/about/`,
     `${SITE_URL}/contacts/`,
+    `${SITE_URL}/mistsya/`,
     ...CATEGORIES.map((cat) => `${SITE_URL}/${cat.slug}/`),
+    ...VENUES.map((v) => `${SITE_URL}/mistsya/${v.slug}/`),
     ...concerts.map((c) => `${SITE_URL}/concert/${c.slug}/`),
   ];
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -1111,6 +1335,24 @@ async function main() {
     fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, concerts));
   }
 
+  // "Місця" (venues): soonest-first so each venue page leads with its next
+  // upcoming concert rather than an arbitrary archive order.
+  const venueConcertPool = [...allKnown].sort((a, b) => {
+    if (!a.isoDate) return 1;
+    if (!b.isoDate) return -1;
+    return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
+  });
+  fs.mkdirSync(path.join(DIST, 'mistsya'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'mistsya', 'index.html'), renderVenuesIndexPage(VENUES));
+  const venuesImagesDir = path.join(DIST, 'images', 'venues');
+  fs.mkdirSync(venuesImagesDir, { recursive: true });
+  for (const venue of VENUES) {
+    fs.copyFileSync(path.join(ASSETS, 'venues', venue.image), path.join(venuesImagesDir, venue.image));
+    const dir = path.join(DIST, 'mistsya', venue.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), renderVenuePage(venue, venueConcertPool));
+  }
+
   fs.copyFileSync(path.join(SRC, 'styles.css'), path.join(DIST, 'styles.css'));
   fs.copyFileSync(path.join(SRC, 'client.js'), path.join(DIST, 'client.js'));
   for (const asset of ['favicon.ico', 'apple-touch-icon.png', 'icon-32.png', 'icon-192.png', 'icon-512.png']) {
@@ -1128,7 +1370,7 @@ async function main() {
     fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: concerts }));
   }
 
-  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length} HTML page(s) to dist/.`);
+  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 1 + VENUES.length} HTML page(s) to dist/.`);
 }
 
 main().catch((err) => {
