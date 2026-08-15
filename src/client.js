@@ -55,10 +55,20 @@ function ensureEmptyState(container) {
   return el;
 }
 
+// The homepage's "8 подій" tab carries a hidden backfill pool alongside its
+// 8 curated cards (see build.js's overflowHtml / .concert-item-extra) — every
+// other fresh upcoming concert, in date order. Plain show/hide-by-category
+// works fine for "Цей тиждень"/"Сьогодні ввечері" (they're just filtering
+// whatever's already on screen), but on "8 подій" isolating one genre could
+// otherwise leave you with 2-3 cards even though we know of more upcoming
+// concerts in that genre — this tops the visible set back up to 8 from the
+// backfill pool before falling back to the empty state.
+const TARGET_COUNT = 8;
+
 function refreshVisibility() {
   const active = activeCategories();
 
-  ['tab-top8', 'tab-week', 'tab-today'].forEach((id) => {
+  ['tab-week', 'tab-today'].forEach((id) => {
     const container = document.getElementById(id);
     if (!container) return;
     const items = container.querySelectorAll('.concert-item');
@@ -68,14 +78,41 @@ function refreshVisibility() {
       item.style.display = show ? '' : 'none';
       if (show) visibleCount += 1;
     });
-
-    const emptyState = container.querySelector('.filter-empty');
-    if (items.length > 0 && visibleCount === 0) {
-      ensureEmptyState(container).style.display = 'block';
-    } else if (emptyState) {
-      emptyState.style.display = 'none';
-    }
+    toggleEmptyState(container, items.length, visibleCount);
   });
+
+  const top8 = document.getElementById('tab-top8');
+  if (top8) {
+    const core = top8.querySelectorAll('.concert-item:not(.concert-item-extra)');
+    const extra = top8.querySelectorAll('.concert-item-extra');
+
+    let visibleCore = 0;
+    core.forEach((item) => {
+      const show = active.size > 0 && active.has(item.dataset.category || '');
+      item.style.display = show ? '' : 'none';
+      if (show) visibleCore += 1;
+    });
+
+    let needed = active.size > 0 ? Math.max(0, TARGET_COUNT - visibleCore) : 0;
+    let visibleExtra = 0;
+    extra.forEach((item) => {
+      const matches = active.has(item.dataset.category || '');
+      const show = matches && needed > 0;
+      item.style.display = show ? '' : 'none';
+      if (show) { visibleExtra += 1; needed -= 1; }
+    });
+
+    toggleEmptyState(top8, core.length + extra.length, visibleCore + visibleExtra);
+  }
+}
+
+function toggleEmptyState(container, itemCount, visibleCount) {
+  const emptyState = container.querySelector('.filter-empty');
+  if (itemCount > 0 && visibleCount === 0) {
+    ensureEmptyState(container).style.display = 'block';
+  } else if (emptyState) {
+    emptyState.style.display = 'none';
+  }
 }
 
 document.querySelectorAll('.genre-pill').forEach((p) => {

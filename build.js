@@ -671,14 +671,19 @@ function isPastEvent(concert, todayStr) {
   return Boolean(concert.isoDate) && concert.isoDate < todayStr;
 }
 
-function renderConcertCard(c, { linkTitle }) {
+function renderConcertCard(c, { linkTitle, extra = false }) {
   const { f, num, price, link, isTop, isFree, desc, title, slug, image, dateDisplay } = c;
   const titleHtml = linkTitle
     ? `<a class="concert-title" href="/concert/${slug}/">${escapeHtml(title)}</a>`
     : `<div class="concert-title">${escapeHtml(title)}</div>`;
 
+  // "extra" cards are the genre-filter backfill pool (see client.js
+  // refreshVisibility): concerts beyond the curated 8, baked into the page
+  // already-hidden, revealed by JS when an isolated genre filter would
+  // otherwise leave fewer than 8 cards on screen. Same markup as a normal
+  // card, just starts hidden and flagged so JS can find it.
   return `
-      <div class="concert-item${image ? ' has-image' : ''}" data-category="${escapeHtml(displayCategory(f.Category))}">
+      <div class="concert-item${image ? ' has-image' : ''}${extra ? ' concert-item-extra' : ''}" data-category="${escapeHtml(displayCategory(f.Category))}"${extra ? ' style="display:none"' : ''}>
         <div class="concert-num">${num}</div>
         <div class="concert-info">
           ${image ? `<img class="concert-thumb" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
@@ -810,7 +815,7 @@ function siteFooter() {
 </footer>`;
 }
 
-function renderHomepage(concerts) {
+function renderHomepage(concerts, overflowPool = []) {
   const todayStr = new Date().toISOString().slice(0, 10);
   const { start: weekStart, end: weekEnd } = getWeekBounds();
 
@@ -844,6 +849,21 @@ function renderHomepage(concerts) {
   const top8Html = concerts.length
     ? concerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
     : '<div class="loading">Незабаром тут з\'являться найкращі вечори Києва</div>';
+
+  // Genre-filter backfill pool: every fresh upcoming concert beyond the
+  // curated 8, already numbered and rendered, but hidden by default (see
+  // renderConcertCard's `extra` flag). When someone isolates a single genre
+  // pill and the curated 8 doesn't have 8 concerts in that genre, client.js
+  // reveals cards from here (chronological order, matching genre) until
+  // either 8 cards are on screen or the pool runs out — so "Джаз" always
+  // shows every upcoming jazz concert we know about, not just whichever
+  // ones happened to make this week's front-page 8.
+  const overflowHtml = overflowPool
+    .map((c, index) => renderConcertCard(
+      { ...c, num: String(DISPLAY_COUNT + index + 1).padStart(2, '0'), isTop: false },
+      { linkTitle: true, extra: true },
+    ))
+    .join('');
 
   // One dedicated row for the genre pills, sitting between the quote strip
   // and the tabs — above "8 подій" rather than squeezed into the same row
@@ -880,7 +900,7 @@ function renderHomepage(concerts) {
   <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
 </div>
 
-<div id="tab-top8">${top8Html}</div>
+<div id="tab-top8">${top8Html}${overflowHtml}</div>
 <div id="tab-week" style="display:none">${weekHtml}</div>
 <div id="tab-today" style="display:none">${todayHtml}</div>
 `;
@@ -1436,7 +1456,7 @@ async function main() {
     c.image = await resolveImage(c.image, c.slug, imagesDir);
   }
 
-  fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts));
+  fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts, overflowConcerts));
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
   fs.writeFileSync(path.join(DIST, 'robots.txt'), renderRobots());
   fs.writeFileSync(path.join(DIST, 'llms.txt'), renderLlmsTxt(concerts));
