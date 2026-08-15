@@ -1336,16 +1336,28 @@ async function main() {
   const freshIds = new Set(records.map((r) => r.id));
   const allKnown = Object.values(archiveMap).map(buildConcertData);
 
-  // Curated homepage set: unchanged behaviour — only concerts still present
-  // in this week's Airtable fetch, not yet past, capped at DISPLAY_COUNT.
-  const concerts = allKnown
-    .filter((c) => freshIds.has(c.record.id) && !isPastEvent(c, todayStr))
+  // Every fresh (still in Airtable), not-yet-past record — this is broader
+  // than the homepage's curated 8: Airtable can (and often does) have more
+  // upcoming concerts than we feature on the homepage at once.
+  const freshUpcoming = allKnown.filter((c) => freshIds.has(c.record.id) && !isPastEvent(c, todayStr));
+
+  // Curated homepage set: unchanged behaviour — the first DISPLAY_COUNT of
+  // freshUpcoming, numbered for the homepage/category cards.
+  const concerts = freshUpcoming
     .slice(0, DISPLAY_COUNT)
     .map((c, index) => ({
       ...c,
       num: String(index + 1).padStart(2, '0'),
       isTop: index < 2 || c.f.Status === 'Топ',
     }));
+
+  // Everything fresh+upcoming beyond the curated 8 still gets a real
+  // /concert/<slug>/ page (isPast: false) — just not a spot on the
+  // homepage. Without this, a concert Rocky adds to Airtable that doesn't
+  // make the top 8 has no page at all, so nothing (venue pages included)
+  // can safely link to it. Not shown on the homepage/category pages —
+  // those stay curated to exactly 8 — but real, crawlable, and linkable.
+  const overflowConcerts = freshUpcoming.slice(DISPLAY_COUNT);
 
   // Every concert we've ever archived whose date has passed gets to keep its
   // page — "Не видаляти минулі концерти": no 404s, Google keeps whatever
@@ -1354,7 +1366,7 @@ async function main() {
   // removed from the table, as long as we archived them at some point.
   const pastPages = allKnown.filter((c) => isPastEvent(c, todayStr));
 
-  console.log(`Curated this week: ${concerts.length}. Past pages kept alive: ${pastPages.length}.`);
+  console.log(`Curated this week: ${concerts.length}. Extra upcoming (not on homepage): ${overflowConcerts.length}. Past pages kept alive: ${pastPages.length}.`);
 
   const noDateCount = concerts.filter((c) => !c.isoDate).length;
   if (noDateCount) {
@@ -1370,7 +1382,7 @@ async function main() {
 
   const imagesDir = path.join(DIST, 'images');
   fs.mkdirSync(imagesDir, { recursive: true });
-  const allPages = [...concerts, ...pastPages];
+  const allPages = [...concerts, ...overflowConcerts, ...pastPages];
   for (const c of allPages) {
     c.image = await resolveImage(c.image, c.slug, imagesDir);
   }
@@ -1421,6 +1433,11 @@ async function main() {
   }
 
   for (const c of concerts) {
+    const dir = path.join(DIST, 'concert', c.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: concerts }));
+  }
+  for (const c of overflowConcerts) {
     const dir = path.join(DIST, 'concert', c.slug);
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: concerts }));
