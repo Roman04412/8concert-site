@@ -427,22 +427,13 @@ function renderSeasonToggle(activeSlug) {
 // thin to be a useful page.
 const VENUE_GUIDES = [
   {
-    slug: 'terasy-dlya-klasyky',
+    slug: 'terasy-dlya-dzhazu-i-klasyky',
     venueType: 'тераса',
-    genre: 'класика',
-    seoTitle: 'Найкращі тераси Києва для класичної музики | 8CONCERT',
-    metaDescription: "Тераси Києва, де регулярно проходять концерти класичної музики: River Mall, Gulliver, Д12, Toronto-Kyiv. Афіша, адреси, плюси й мінуси кожного майданчика.",
-    h1: 'Найкращі тераси Києва для класичної музики',
-    intro: 'Класика просто неба — один із найпопулярніших літніх форматів Києва: симфонічні оркестри й камерні ансамблі виконують як академічну програму, так і оркестрові версії світових хітів прямо на терасі серед міста. Ось усі тераси з нашої добірки, де класика звучить регулярно.',
-  },
-  {
-    slug: 'terasy-dlya-dzhazu',
-    venueType: 'тераса',
-    genre: 'джаз',
-    seoTitle: 'Найкращі тераси Києва для джазу | 8CONCERT',
-    metaDescription: 'Тераси Києва, де регулярно проходять джазові концерти: Gulliver і Д12. Афіша, адреси, плюси й мінуси кожного майданчика.',
-    h1: 'Найкращі тераси Києва для джазу',
-    intro: 'Джаз на терасі підходить і для тихого вечора вдвох, і для живої джем-сейшн атмосфери. Ось тераси з нашої добірки, де джаз звучить регулярно.',
+    genres: ['джаз', 'класика'],
+    seoTitle: 'Найкращі тераси Києва для джазу і класики | 8CONCERT',
+    metaDescription: "Тераси Києва, де регулярно проходять концерти джазу та класичної музики: River Mall, Gulliver, Д12, Toronto-Kyiv. Афіша, адреси, плюси й мінуси кожного майданчика.",
+    h1: 'Найкращі тераси Києва для джазу і класики',
+    intro: 'Джаз і класика просто неба — два формати, які найкраще працюють саме на терасі: камерний звук, вечірнє світло і місто навколо. Ось усі тераси з нашої добірки, де регулярно звучить джаз, класика або обидва жанри одразу.',
   },
 ];
 
@@ -455,7 +446,7 @@ function renderVenueGuideLinks() {
 }
 
 function renderVenueGuidePage(guide, allVenues) {
-  const venues = allVenues.filter((v) => v.venueType === guide.venueType && (v.genres || []).includes(guide.genre));
+  const venues = allVenues.filter((v) => v.venueType === guide.venueType && (v.genres || []).some((g) => guide.genres.includes(g)));
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(guide.h1)}</nav>
 <div class="hero" style="padding-bottom:24px">
