@@ -276,6 +276,30 @@ function kyivOffset(isoDate) {
   }
 }
 
+// Google's structured-data check for Event/MusicEvent flags a missing
+// endDate as a (non-critical) recommendation. Airtable never records a real
+// end time, so — only when we actually know a specific start time, never
+// for a bare date — we estimate a typical concert length. This mirrors what
+// most ticketing/aggregator sites do when the true end time isn't
+// published; we deliberately skip it rather than invent a time-of-day we
+// don't have.
+const TYPICAL_CONCERT_DURATION_MS = 2.5 * 60 * 60 * 1000;
+function estimateEndDateTime(startDateTime, timeDisplay) {
+  if (!timeDisplay) return undefined;
+  const m = String(startDateTime).match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}([+-]\d{2}:\d{2})$/);
+  if (!m) return undefined;
+  const offset = m[1];
+  const start = new Date(startDateTime);
+  if (isNaN(start.getTime())) return undefined;
+  const om = offset.match(/^([+-])(\d{2}):(\d{2})$/);
+  const offsetMin = om ? (om[1] === '-' ? -1 : 1) * (parseInt(om[2], 10) * 60 + parseInt(om[3], 10)) : 0;
+  // Shift into "local time represented via UTC getters" so we can read
+  // Y/M/D/H/M/S directly without a second timezone-database lookup.
+  const local = new Date(start.getTime() + TYPICAL_CONCERT_DURATION_MS + offsetMin * 60000);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${local.getUTCFullYear()}-${pad(local.getUTCMonth() + 1)}-${pad(local.getUTCDate())}T${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}:${pad(local.getUTCSeconds())}${offset}`;
+}
+
 // ISO (Mon-Sun) bounds of the current calendar week, as YYYY-MM-DD strings —
 // used to make the "Цей тиждень" tab actually mean "this week" instead of
 // "next 8 concerts whenever they happen to be".
@@ -433,9 +457,14 @@ function buildConcertData(record) {
   // no time, and to nothing at all when there's no date either (existing
   // isoDate-null behaviour is unchanged).
   const startDateTime = isoDate && timeDisplay ? `${isoDate}T${timeDisplay}:00${kyivOffset(isoDate)}` : isoDate;
+  const endDateTime = estimateEndDateTime(startDateTime, timeDisplay);
+  // validFrom: the date our archive first saw this record — see main()'s
+  // _firstSeenDate tracking. Not the same as a real on-sale date (we don't
+  // have that), but it's real data about our own listing, not a guess.
+  const validFrom = record._firstSeenDate;
   const image = extractImageUrl(f.Image);
 
-  return { record, f, price, priceNumeric, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, startDateTime, image };
+  return { record, f, price, priceNumeric, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, image };
 }
 
 // Only filters out events we're CONFIDENT have already happened (a successfully
@@ -736,7 +765,7 @@ function renderRelatedConcert(c) {
 }
 
 function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
-  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, record, image } = c;
+  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, record, image } = c;
 
   // MusicEvent (a subtype of Event) — every listing on this site is a
   // concert, so the more specific type is accurate and Google explicitly
@@ -758,6 +787,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
     ...(startDateTime ? { startDate: startDateTime } : {}),
+    ...(endDateTime ? { endDate: endDateTime } : {}),
     location: {
       '@type': 'Place',
       name: f.Location || 'Київ',
@@ -766,12 +796,19 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     ...(f.Category ? { genre: displayCategory(f.Category) } : {}),
     ...(image ? { image: [absUrl(image)] } : {}),
     ...(performerName ? { performer: { '@type': 'PerformingGroup', name: performerName } } : {}),
+    // Real organizer data isn't tracked in Airtable yet — we're not going
+    // to fabricate a promoter/organizer name just to satisfy the "missing
+    // field" recommendation, since a wrong organizer is worse than an
+    // absent one. Add an "Organizer" column in Airtable and this picks it
+    // up automatically, no code change needed.
+    ...(f.Organizer && f.Organizer.trim() ? { organizer: { '@type': 'Organization', name: f.Organizer.trim() } } : {}),
     offers: {
       '@type': 'Offer',
       url: link,
       ...(priceNumeric ? { price: priceNumeric } : {}),
       priceCurrency: 'UAH',
       availability: 'https://schema.org/InStock',
+      ...(validFrom ? { validFrom } : {}),
     },
   };
 
@@ -1003,7 +1040,17 @@ async function main() {
   // record is removed from Airtable (or its date passes) it just keeps its
   // last-known fields here forever, instead of disappearing.
   const archiveMap = loadArchive();
-  for (const r of records) archiveMap[r.id] = r;
+  // _firstSeenDate is the one field on the archived record that isn't raw
+  // Airtable data — it's the date this build first saw the record, kept
+  // stable across every future overwrite. Used as Offer.validFrom: an
+  // honest "we've had this listing since" instead of a fabricated
+  // on-sale date we have no way of knowing. Records archived before this
+  // feature existed get today's date as their first-seen date, since we
+  // have no earlier record of them.
+  for (const r of records) {
+    const prevFirstSeen = archiveMap[r.id] && archiveMap[r.id]._firstSeenDate;
+    archiveMap[r.id] = { ...r, _firstSeenDate: prevFirstSeen || todayStr };
+  }
   saveArchive(archiveMap);
 
   const freshIds = new Set(records.map((r) => r.id));
