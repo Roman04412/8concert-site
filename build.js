@@ -1177,10 +1177,15 @@ function renderVenuesIndexPage(venues) {
 }
 
 function renderVenuePage(venue, allConcerts) {
-  // allConcerts is allKnown (current + archived/past) sorted newest-first by
-  // the caller, so this naturally surfaces the most recent/relevant concerts
-  // at this venue first, whether they're upcoming or already happened.
-  const upcoming = findVenueConcerts(venue, allConcerts).slice(0, 8);
+  // allConcerts is allPages (only concerts that actually got a /concert/
+  // page written — see main()) sorted soonest-first by the caller. We only
+  // ever show upcoming concerts here, never past ones: a venue page is
+  // meant to help someone decide whether to go, and a list padded with
+  // events that already happened isn't useful for that.
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const upcoming = findVenueConcerts(venue, allConcerts)
+    .filter((c) => !isPastEvent(c, todayStr))
+    .slice(0, 8);
 
   const prosConsHtml = `
   <div class="venue-proscons">
@@ -1386,9 +1391,14 @@ async function main() {
     fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, concerts));
   }
 
-  // "Місця" (venues): soonest-first so each venue page leads with its next
-  // upcoming concert rather than an arbitrary archive order.
-  const venueConcertPool = [...allKnown].sort((a, b) => {
+  // "Місця" (venues): built from allPages, NOT allKnown/allConcerts — only
+  // concerts allPages actually get a /concert/<slug>/ page written this
+  // build (see the loops below and pastPages above). allKnown includes
+  // every fresh Airtable record even ones beyond DISPLAY_COUNT that never
+  // get a page, which was linking venue pages to concerts whose page
+  // didn't exist (404). Sorted soonest-first so each venue page leads with
+  // its next upcoming concert rather than an arbitrary archive order.
+  const venueConcertPool = [...allPages].sort((a, b) => {
     if (!a.isoDate) return 1;
     if (!b.isoDate) return -1;
     return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
