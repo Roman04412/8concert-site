@@ -1143,7 +1143,7 @@ function renderVenuePage(venue, allConcerts) {
     </div>
   </div>`;
 
-  const infoLine = [venue.address, venue.phone].filter(Boolean).join(' · ');
+  const infoLine = venue.address || '';
 
   const concertsHtml = upcoming.length
     ? `
