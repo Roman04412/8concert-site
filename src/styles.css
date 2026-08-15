@@ -759,6 +759,14 @@ footer {
 
 .venue-pros .venue-proscons-title { color: var(--warm); }
 
+.venue-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--warm);
+  text-underline-offset: 2px;
+}
+.venue-link:hover { color: var(--warm); }
+
 .venue-proscons ul {
   list-style: none;
   display: flex;

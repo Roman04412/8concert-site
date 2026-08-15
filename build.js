@@ -338,6 +338,12 @@ function findVenueConcerts(venue, allConcerts) {
   });
 }
 
+function findVenueForLocation(location) {
+  const loc = (location || '').toLowerCase();
+  if (!loc) return null;
+  return VENUES.find((v) => v.locationMatch.some((k) => loc.includes(k.toLowerCase()))) || null;
+}
+
 if (!AIRTABLE_TOKEN || !BASE_ID || !TABLE_ID) {
   console.error(
     'Missing env vars. Set AIRTABLE_TOKEN, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID\n' +
@@ -667,7 +673,12 @@ function renderConcertCard(c, { linkTitle }) {
           ${desc ? `<div class="concert-desc">${escapeHtml(desc)}</div>` : ''}
           <div class="concert-meta">
             ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
-            ${f.Location ? `<span>📍 ${escapeHtml(f.Location)}</span>` : ''}
+            ${f.Location ? (() => {
+              const venue = findVenueForLocation(f.Location);
+              return venue
+                ? `<span>📍 <a href="/mistsya/${venue.slug}/" class="venue-link">${escapeHtml(f.Location)}</a></span>`
+                : `<span>📍 ${escapeHtml(f.Location)}</span>`;
+            })() : ''}
           </div>
         </div>
         <div class="concert-right">
@@ -1036,7 +1047,12 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   ${renderBodyParagraphs(snippet)}
   <div class="concert-meta">
     ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
-    ${f.Location ? `<span>📍 ${escapeHtml(f.Location)}</span>` : ''}
+    ${f.Location ? (() => {
+      const venue = findVenueForLocation(f.Location);
+      return venue
+        ? `<span>📍 <a href="/mistsya/${venue.slug}/" class="venue-link">${escapeHtml(f.Location)}</a></span>`
+        : `<span>📍 ${escapeHtml(f.Location)}</span>`;
+    })() : ''}
   </div>
   ${ctaHtml}
   ${shareHtml}
