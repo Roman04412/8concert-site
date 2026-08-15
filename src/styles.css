@@ -795,6 +795,15 @@ footer {
 
 .season-toggle-pill:not(.active):hover { border-color: var(--warm); color: var(--warm); }
 
+.venue-guides-row {
+  font-size: 13.5px;
+  color: var(--muted);
+  margin: -8px 0 24px;
+  line-height: 1.8;
+}
+
+.venue-guides-label { margin-right: 4px; }
+
 .venue-proscons ul {
   list-style: none;
   display: flex;

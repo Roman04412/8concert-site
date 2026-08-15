@@ -145,22 +145,25 @@ const CATEGORIES = [
     name: 'Джаз',
     slug: 'jazz',
     emoji: '🎷',
-    title: 'Джаз концерти Києва — афіша',
-    intro: 'Джазові концерти Києва цього сезону: джем-сейшени, вечори класичного свінгу та сучасного джазу на терасах і в клубах міста.',
+    title: "Куди піти на джаз у Києві цього тижня — афіша",
+    h1: 'Куди піти на джаз у Києві цього тижня',
+    intro: 'Куди піти на джаз у Києві цього тижня: джем-сейшени, вечори класичного свінгу та сучасного джазу на терасах і в клубах міста.',
   },
   {
     name: 'Класика',
     slug: 'klasika',
     emoji: '🎻',
-    title: 'Класична музика Києва — афіша концертів',
-    intro: 'Концерти класичної музики в Києві: симфонічні оркестри, камерні вечори та виконання світових хітів у класичній обробці.',
+    title: "Куди піти на класику у Києві цього тижня — афіша",
+    h1: 'Куди піти на класику у Києві цього тижня',
+    intro: 'Куди піти на класичну музику в Києві цього тижня: симфонічні оркестри, камерні вечори та виконання світових хітів у класичній обробці.',
   },
   {
     name: "Триб'юти",
     slug: 'trybuti',
     emoji: '🎤',
-    title: "Триб'юти в Києві — афіша концертів",
-    intro: "Триб'ют-шоу та концерти на честь легендарних виконавців у Києві — від симфонічних програм до клубних вечорів.",
+    title: "Куди піти на триб'юти у Києві цього тижня — афіша",
+    h1: "Куди піти на триб'юти у Києві цього тижня",
+    intro: "Куди піти на триб'ют-шоу в Києві цього тижня — концерти на честь легендарних виконавців, від симфонічних програм до клубних вечорів.",
   },
 ];
 
@@ -188,6 +191,8 @@ const VENUES = [
     cons: ['Відкритий простір залежить від погоди', 'На популярних концертах може бути багато людей'],
     locationMatch: ['дах цум'],
     setting: 'outdoor',
+    genres: ['джаз', "триб'юти"],
+    venueType: 'дах',
   },
   {
     slug: 'terasa-river-mall',
@@ -207,6 +212,8 @@ const VENUES = [
     phone: '044 299 0007',
     locationMatch: ['river mall'],
     setting: 'outdoor',
+    genres: ['класика'],
+    venueType: 'тераса',
   },
   {
     slug: 'terasa-gulliver',
@@ -225,6 +232,8 @@ const VENUES = [
     address: 'Тераса ТРЦ Gulliver',
     locationMatch: ['gulliver'],
     setting: 'outdoor',
+    genres: ['джаз', 'класика'],
+    venueType: 'тераса',
   },
   {
     slug: 'terasa-d12',
@@ -244,6 +253,8 @@ const VENUES = [
     phone: '093 973 3373',
     locationMatch: ['д12', 'd12', 'галерея д12'],
     setting: 'outdoor',
+    genres: ['джаз', 'класика'],
+    venueType: 'тераса',
   },
   {
     slug: 'terasa-toronto-kyiv',
@@ -263,6 +274,8 @@ const VENUES = [
     phone: '063 992 9029',
     locationMatch: ['toronto-kyiv', 'toronto kyiv', 'торонто-київ'],
     setting: 'outdoor',
+    genres: ['класика'],
+    venueType: 'тераса',
   },
   {
     slug: 'kontserty-bilya-lavry',
@@ -282,6 +295,8 @@ const VENUES = [
     phone: '044 406 6300',
     locationMatch: ['лавра', 'печерська лавра', 'києво-печерська'],
     setting: 'outdoor',
+    genres: ['класика'],
+    venueType: 'історична локація',
   },
   {
     slug: 'unit-city',
@@ -300,6 +315,8 @@ const VENUES = [
     address: 'UNIT.City, вул. Дорогожицька, Київ',
     locationMatch: ['unit.city', 'unit.\u0441ity', 'unit city', 'unit \u0441ity'],
     setting: 'outdoor',
+    genres: ['класика'],
+    venueType: 'інноваційний парк',
   },
   {
     slug: 'kyivska-troyanda',
@@ -318,6 +335,8 @@ const VENUES = [
     address: 'вул. Михайла Грушевського, 1В, Київ',
     locationMatch: ["ки\u0457вська троянда"],
     setting: 'indoor',
+    genres: ['класика'],
+    venueType: 'павільйон',
   },
   {
     slug: 'botanichnyi-sad-hryshka',
@@ -336,6 +355,8 @@ const VENUES = [
     address: 'Національний ботанічний сад ім. М. М. Гришка, Тимірязєвська, 1, Київ',
     locationMatch: ['ботан\u0456чний сад', 'сад троянд', 'гришка'],
     setting: 'outdoor',
+    genres: ['джаз', 'класика'],
+    venueType: 'сад',
   },
   {
     slug: 'peppers-club',
@@ -355,6 +376,8 @@ const VENUES = [
     address: "Pepper's Club, вул. Князів Острозьких, 8, корпус 7, Київ",
     locationMatch: ["pepper's club", 'peppers club', 'pepper club', 'pepper s club'],
     setting: 'indoor',
+    genres: ['джаз'],
+    venueType: 'паб',
   },
 ];
 
@@ -393,6 +416,66 @@ function renderSeasonToggle(activeSlug) {
 <div class="season-toggle">${SEASONS.map((s) => `
   <a href="/mistsya/${s.slug}/" class="season-toggle-pill${s.slug === activeSlug ? ' active' : ''}">${s.icon} ${escapeHtml(s.navLabel)}</a>`).join('')}
 </div>`;
+}
+
+// Genre x venue-type SEO guides ("Найкращі тераси для класики" etc.) —
+// venue.genres is a factual read of what each venue's own paragraphs
+// already say it hosts (not a new claim), so these pages only ever list
+// venues we can actually back up. Kept as a short, reviewable list rather
+// than an auto-generated matrix of every venueType x genre combo, since
+// several combos (e.g. "дахи для триб'ютів" - just Дах ЦУМ) would be too
+// thin to be a useful page.
+const VENUE_GUIDES = [
+  {
+    slug: 'terasy-dlya-klasyky',
+    venueType: 'тераса',
+    genre: 'класика',
+    seoTitle: 'Найкращі тераси Києва для класичної музики | 8CONCERT',
+    metaDescription: "Тераси Києва, де регулярно проходять концерти класичної музики: River Mall, Gulliver, Д12, Toronto-Kyiv. Афіша, адреси, плюси й мінуси кожного майданчика.",
+    h1: 'Найкращі тераси Києва для класичної музики',
+    intro: 'Класика просто неба — один із найпопулярніших літніх форматів Києва: симфонічні оркестри й камерні ансамблі виконують як академічну програму, так і оркестрові версії світових хітів прямо на терасі серед міста. Ось усі тераси з нашої добірки, де класика звучить регулярно.',
+  },
+  {
+    slug: 'terasy-dlya-dzhazu',
+    venueType: 'тераса',
+    genre: 'джаз',
+    seoTitle: 'Найкращі тераси Києва для джазу | 8CONCERT',
+    metaDescription: 'Тераси Києва, де регулярно проходять джазові концерти: Gulliver і Д12. Афіша, адреси, плюси й мінуси кожного майданчика.',
+    h1: 'Найкращі тераси Києва для джазу',
+    intro: 'Джаз на терасі підходить і для тихого вечора вдвох, і для живої джем-сейшн атмосфери. Ось тераси з нашої добірки, де джаз звучить регулярно.',
+  },
+];
+
+function renderVenueGuideLinks() {
+  return `
+<div class="venue-guides-row">
+  <span class="venue-guides-label">Тематичні добірки:</span>
+  ${VENUE_GUIDES.map((g) => `<a href="/mistsya/${g.slug}/" class="venue-link">${escapeHtml(g.h1)}</a>`).join(' · ')}
+</div>`;
+}
+
+function renderVenueGuidePage(guide, allVenues) {
+  const venues = allVenues.filter((v) => v.venueType === guide.venueType && (v.genres || []).includes(guide.genre));
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(guide.h1)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Добірка</div>
+    <h1 class="hero-title">${escapeHtml(guide.h1)}</h1>
+    <p class="hero-sub">${escapeHtml(guide.intro)}</p>
+  </div>
+</div>
+<div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
+<p class="concert-desc" style="font-size:14px;margin-top:28px"><a href="/mistsya/" class="venue-link">← Усі майданчики</a></p>
+`;
+
+  return pageShell({
+    title: guide.seoTitle,
+    description: guide.metaDescription,
+    canonical: `${SITE_URL}/mistsya/${guide.slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
 }
 
 function findVenueConcerts(venue, allConcerts) {
@@ -1226,7 +1309,7 @@ function renderCategoryPage(cat, concerts) {
 <div class="hero" style="padding-bottom:24px">
   <div class="hero-left">
     <div class="hero-label">Редакційна добірка</div>
-    <h1 class="hero-title">${cat.emoji} ${escapeHtml(cat.name)} у Києві</h1>
+    <h1 class="hero-title">${cat.emoji} ${escapeHtml(cat.h1)}</h1>
     <p class="hero-sub">${escapeHtml(cat.intro)}</p>
   </div>
 </div>
@@ -1266,6 +1349,7 @@ function renderVenuesIndexPage(venues) {
   </div>
 </div>
 ${renderSeasonToggle(null)}
+${renderVenueGuideLinks()}
 <div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
 `;
 
@@ -1378,6 +1462,7 @@ function renderSitemap(concerts) {
     `${SITE_URL}/contacts/`,
     `${SITE_URL}/mistsya/`,
     ...SEASONS.map((s) => `${SITE_URL}/mistsya/${s.slug}/`),
+    ...VENUE_GUIDES.map((g) => `${SITE_URL}/mistsya/${g.slug}/`),
     ...CATEGORIES.map((cat) => `${SITE_URL}/${cat.slug}/`),
     ...VENUES.map((v) => `${SITE_URL}/mistsya/${v.slug}/`),
     ...concerts.map((c) => `${SITE_URL}/concert/${c.slug}/`),
@@ -1566,6 +1651,11 @@ async function main() {
     fs.mkdirSync(seasonDir, { recursive: true });
     fs.writeFileSync(path.join(seasonDir, 'index.html'), renderSeasonVenuesPage(season, VENUES));
   }
+  for (const guide of VENUE_GUIDES) {
+    const guideDir = path.join(DIST, 'mistsya', guide.slug);
+    fs.mkdirSync(guideDir, { recursive: true });
+    fs.writeFileSync(path.join(guideDir, 'index.html'), renderVenueGuidePage(guide, VENUES));
+  }
   const venuesImagesDir = path.join(DIST, 'images', 'venues');
   fs.mkdirSync(venuesImagesDir, { recursive: true });
   for (const venue of VENUES) {
@@ -1597,7 +1687,7 @@ async function main() {
     fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: concerts }));
   }
 
-  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 1 + SEASONS.length + VENUES.length} HTML page(s) to dist/.`);
+  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 1 + SEASONS.length + VENUE_GUIDES.length + VENUES.length} HTML page(s) to dist/.`);
 }
 
 main().catch((err) => {
