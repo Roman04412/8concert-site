@@ -379,6 +379,31 @@ const VENUES = [
     genres: ['джаз'],
     venueType: 'паб',
   },
+  {
+    slug: 'andriivska-tserkva',
+    name: 'Андріївська церква',
+    image: 'andriivska-tserkva.png',
+    category: "Пам'ятка архітектури",
+    tagline: 'Класична музика під барочними склепіннями на Андріївському узвозі',
+    seoTitle: 'Концерти в Андріївській церкві Києва — афіша, акустика, адреса',
+    metaDescription: 'Концерти класичної музики в Андріївській церкві на Андріївському узвозі: унікальна акустика барокового храму Растреллі. Афіша, адреса, плюси й мінуси майданчика.',
+    paragraphs: [
+      'Андріївська церква — одна з найвпізнаваніших пам\'яток Києва: барокову споруду звели у 1744-1754 роках за проєктом Франческо Бартоломео Растреллі (сам архітектор до Києва не приїжджав, задум втілював Іван Мічурін), а освятили лише 1767 року, вже за часів Катерини II. Храм стоїть на Андріївській горі — за переказом з "Повісті минулих літ", саме тут апостол Андрій встановив хрест на землях майбутньої Русі.',
+      "Церкву цінують не лише за архітектуру: тут унікальна акустика, тому храм регулярно приймає концерти класичної музики — від Баха до барокових програм, зокрема в рамках афіші Національного будинку музики. Це один із небагатьох майданчиків Києва, де класика звучить у автентичному просторі XVIII століття, а не в сучасній залі.",
+    ],
+    pros: ["Унікальна акустика барокового храму", "Знакова пам'ятка архітектури Растреллі", "Атмосфера Андріївського узвозу навколо", "Історичний центр Києва"],
+    cons: [
+      "Навесні чи пізньої осені в церкві буває холодно — це неопалюване приміщення, і за час концерту можна добряче промерзнути, тож варто одягатись тепліше, ніж здається доречним на вулиці",
+      "Формат передбачає тишу і повагу до сакрального простору — не підійде для гучного чи розважального вечора",
+      "Кількість місць обмежена",
+      "Розклад концертів менш регулярний, ніж на терасах — афішу варто перевіряти заздалегідь",
+    ],
+    address: 'Андріївська церква, Андріївський узвіз, 23, Київ',
+    locationMatch: ["андріївська церква", "андреевская церковь", "андріївський узвіз"],
+    setting: 'indoor',
+    genres: ['класика'],
+    venueType: 'церква',
+  },
 ];
 
 // Season toggle: two SEO-distinct entry points into the same venue set,
@@ -528,6 +553,16 @@ function escapeHtml(str) {
   return String(str ?? '').replace(/[&<>"']/g, (c) => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
   }[c]));
+}
+
+// Airtable field names are exact-match — if a column ever gets typed as
+// "organizer" instead of "Organizer" (or any other casing slip), f.Organizer
+// silently reads as undefined and the value never shows up, with no error
+// anywhere to point at why. Case-insensitive lookup so a typo'd column
+// header doesn't quietly swallow real data.
+function fieldCI(fields, name) {
+  const key = Object.keys(fields).find((k) => k.toLowerCase() === name.toLowerCase());
+  return key ? fields[key] : undefined;
 }
 
 // og:image / twitter:image / JSON-LD "image" all require an ABSOLUTE url per
@@ -1159,7 +1194,11 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     // field" recommendation, since a wrong organizer is worse than an
     // absent one. Add an "Organizer" column in Airtable and this picks it
     // up automatically, no code change needed.
-    ...(f.Organizer && f.Organizer.trim() ? { organizer: { '@type': 'Organization', name: f.Organizer.trim() } } : {}),
+    ...((() => {
+      const organizerRaw = fieldCI(f, 'Organizer');
+      const organizerName = typeof organizerRaw === 'string' ? organizerRaw.trim() : '';
+      return organizerName ? { organizer: { '@type': 'Organization', name: organizerName } } : {};
+    })()),
     offers: {
       '@type': 'Offer',
       url: link,
