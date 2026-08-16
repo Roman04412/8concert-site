@@ -435,6 +435,18 @@ const VENUE_GUIDES = [
     h1: 'Найкращі тераси Києва для джазу і класики',
     intro: 'Джаз і класика просто неба — два формати, які найкраще працюють саме на терасі: камерний звук, вечірнє світло і місто навколо. Ось усі тераси з нашої добірки, де регулярно звучить джаз, класика або обидва жанри одразу.',
   },
+  {
+    slug: 'dakhy-kyieva',
+    venueType: 'дах',
+    // No genres filter — unlike the terrace guide, this one isn't
+    // narrowed by genre yet. Right now it's just Дах ЦУМ; the page
+    // exists so there's already an indexed, ranking URL for "дахи Києва
+    // для концертів" by the time more rooftop venues get added here.
+    seoTitle: 'Найкращі дахи Києва для концертів просто неба | 8CONCERT',
+    metaDescription: "Дахи Києва, де проходять концерти просто неба: дах ЦУМ та інші майданчики, які додаються в міру розширення добірки. Афіша, адреси, плюси й мінуси.",
+    h1: 'Найкращі дахи Києва для концертів',
+    intro: 'Дах — один із найатмосферніших форматів літнього концерту в Києві: місто внизу, небо над головою і музика між ними. Список поповнюємо в міру того, як знаходимо нові дахові майданчики з живою музикою.',
+  },
 ];
 
 function renderVenueGuideLinks() {
@@ -446,7 +458,7 @@ function renderVenueGuideLinks() {
 }
 
 function renderVenueGuidePage(guide, allVenues) {
-  const venues = allVenues.filter((v) => v.venueType === guide.venueType && (v.genres || []).some((g) => guide.genres.includes(g)));
+  const venues = allVenues.filter((v) => v.venueType === guide.venueType && (!guide.genres || (v.genres || []).some((g) => guide.genres.includes(g))));
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(guide.h1)}</nav>
 <div class="hero" style="padding-bottom:24px">

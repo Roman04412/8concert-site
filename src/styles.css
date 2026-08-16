@@ -770,6 +770,7 @@ footer {
 .season-toggle {
   display: flex;
   gap: 10px;
+  padding: 0 48px;
   margin: 8px 0 24px;
 }
 
@@ -798,6 +799,7 @@ footer {
 .venue-guides-row {
   font-size: 13.5px;
   color: var(--muted);
+  padding: 0 48px;
   margin: -8px 0 24px;
   line-height: 1.8;
 }
@@ -869,5 +871,6 @@ footer {
   .concert-lead { font-size: 18px; padding-left: 14px; }
   .concert-body-text { font-size: 14.5px; max-width: none; }
   .venue-grid { grid-template-columns: 1fr; padding: 8px 20px 40px; gap: 18px; }
+  .season-toggle, .venue-guides-row { padding: 0 20px; }
   .venue-proscons { grid-template-columns: 1fr; gap: 16px; }
 }
