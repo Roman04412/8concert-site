@@ -1674,7 +1674,7 @@ function siteFooter() {
 </footer>`;
 }
 
-function renderHomepage(concerts, overflowPool = []) {
+function renderHomepage(concerts, overflowPool = [], allUpcoming = []) {
   const todayStr = new Date().toISOString().slice(0, 10);
   const { start: weekStart, end: weekEnd } = getWeekBounds();
 
@@ -1719,10 +1719,22 @@ function renderHomepage(concerts, overflowPool = []) {
   // ones happened to make this week's front-page 8.
   const overflowHtml = overflowPool
     .map((c, index) => renderConcertCard(
-      { ...c, num: String(DISPLAY_COUNT + index + 1).padStart(2, '0'), isTop: false },
+      { ...c, num: String(concerts.length + index + 1).padStart(2, '0'), isTop: false },
       { linkTitle: true, extra: true },
     ))
     .join('');
+
+  // "Всі події" — literally everything fresh and upcoming, curated or not,
+  // in chronological order. Unlike the "8 подій" pool this needs no
+  // backfill mechanism: it already contains every concert we know about.
+  const allHtml = allUpcoming.length
+    ? allUpcoming
+      .map((c, index) => renderConcertCard(
+        { ...c, num: String(index + 1).padStart(2, '0'), isTop: Boolean(c.f.Status) },
+        { linkTitle: true },
+      ))
+      .join('')
+    : '<div class="loading">Незабаром тут з\'являться концерти Києва</div>';
 
   // One dedicated row for the genre pills, sitting between the quote strip
   // and the tabs — above "8 подій" rather than squeezed into the same row
@@ -1757,11 +1769,13 @@ function renderHomepage(concerts, overflowPool = []) {
   <button class="tab active" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
   <button class="tab" onclick="switchTab(this,'week')" id="week">Цей тиждень</button>
   <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
+  <button class="tab" onclick="switchTab(this,'all')" id="all">Всі події</button>
 </div>
 
 <div id="tab-top8">${top8Html}${overflowHtml}</div>
 <div id="tab-week" style="display:none">${weekHtml}</div>
 <div id="tab-today" style="display:none">${todayHtml}</div>
+<div id="tab-all" style="display:none">${allHtml}</div>
 `;
 
   const jsonLd = {
@@ -2303,23 +2317,25 @@ async function main() {
       return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
     });
 
-  // Curated homepage set: unchanged behaviour — the first DISPLAY_COUNT of
-  // freshUpcoming, numbered for the homepage/category cards.
+  // Curated homepage set: every fresh upcoming concert Rocky has marked
+  // with a Status in Airtable ("Топ" or "Вибір редакції") — that field is
+  // now the sole gate for "8 подій"/featured placement, replacing the old
+  // "just take the soonest 8" rule. freshUpcoming is already sorted
+  // chronologically, so this stays in date order.
   const concerts = freshUpcoming
-    .slice(0, DISPLAY_COUNT)
+    .filter((c) => Boolean(c.f.Status))
     .map((c, index) => ({
       ...c,
       num: String(index + 1).padStart(2, '0'),
-      isTop: index < 2 || c.f.Status === 'Топ',
+      isTop: true,
     }));
 
-  // Everything fresh+upcoming beyond the curated 8 still gets a real
-  // /concert/<slug>/ page (isPast: false) — just not a spot on the
-  // homepage. Without this, a concert Rocky adds to Airtable that doesn't
-  // make the top 8 has no page at all, so nothing (venue pages included)
-  // can safely link to it. Not shown on the homepage/category pages —
-  // those stay curated to exactly 8 — but real, crawlable, and linkable.
-  const overflowConcerts = freshUpcoming.slice(DISPLAY_COUNT);
+  // Everything else fresh+upcoming — no Status set in Airtable — still gets
+  // a real /concert/<slug>/ page (isPast: false) and shows up in the "Всі
+  // події" tab, just not in the curated/featured set. Without this, a
+  // concert Rocky adds to Airtable that isn't marked with a Status has no
+  // page at all, so nothing (venue pages included) can safely link to it.
+  const overflowConcerts = freshUpcoming.filter((c) => !c.f.Status);
 
   // Every concert we've ever archived whose date has passed gets to keep its
   // page — "Не видаляти минулі концерти": no 404s, Google keeps whatever
@@ -2349,7 +2365,7 @@ async function main() {
     c.image = await resolveImage(c.image, c.slug, imagesDir);
   }
 
-  fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts, overflowConcerts));
+  fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts, overflowConcerts, freshUpcoming));
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
   fs.writeFileSync(path.join(DIST, 'robots.txt'), renderRobots());
   fs.writeFileSync(path.join(DIST, 'llms.txt'), renderLlmsTxt(concerts));
@@ -2362,7 +2378,7 @@ async function main() {
 
   for (const cat of CATEGORIES) {
     fs.mkdirSync(path.join(DIST, cat.slug), { recursive: true });
-    fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, concerts));
+    fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, freshUpcoming));
   }
 
   // "Місця" (venues): built from allPages, NOT allKnown/allConcerts — only
