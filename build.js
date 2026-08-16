@@ -875,7 +875,7 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
         <div class="concert-right">
           ${isFree ? '<div class="concert-price-label">Вхід</div>' : ''}
           <div class="concert-price">${isFree ? 'Вільний' : escapeHtml(price) || '—'}</div>
-          <a href="${escapeHtml(link)}" class="${isFree ? 'btn-ticket btn-free' : 'btn-ticket'}" target="_blank" rel="noopener sponsored"
+          <a href="${escapeHtml(link)}" class="${isFree ? 'btn-ticket btn-free' : 'btn-ticket'}" target="_blank" rel="noopener noreferrer sponsored"
              data-ticket-link data-concert-id="${c.record.id}" data-concert-title="${escapeHtml(title)}"
              data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(price)}">
             ${isFree ? 'Деталі' : 'Квитки →'}
@@ -1221,7 +1221,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   </div>`
     : `
   <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>
-  <a href="${escapeHtml(link)}" class="btn-ticket" style="margin-top:16px" target="_blank" rel="noopener sponsored"
+  <a href="${escapeHtml(link)}" class="btn-ticket" style="margin-top:16px" target="_blank" rel="noopener noreferrer sponsored"
      data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}"
      data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(price)}">
     ${isFree ? 'Деталі та реєстрація →' : 'Купити квитки →'}
