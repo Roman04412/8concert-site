@@ -1132,6 +1132,22 @@ const VENUE_GUIDES = [
     h1: 'Найкращі дахи Києва для концертів',
     intro: 'Дах — один із найатмосферніших форматів літнього концерту в Києві: місто внизу, небо над головою і музика між ними. Список поповнюємо в міру того, як знаходимо нові дахові майданчики з живою музикою.',
   },
+  {
+    slug: 'hoteli-dlya-klasychnoi-muzyky',
+    slugs: ['fairmont-grand-hotel', 'premier-palace', 'hilton-kyiv', 'intercontinental-kyiv'],
+    seoTitle: 'Готелі Києва з концертами класичної музики | 8CONCERT',
+    metaDescription: 'Готелі Києва, де проходять концерти класичної музики: Fairmont, Premier Palace, Hilton, InterContinental. Афіша, зали, акустика, плюси й мінуси кожного майданчика.',
+    h1: 'Готелі Києва з концертами класичної музики',
+    intro: 'Не найочевидніший формат для класики, але в кількох готелях Києва є зали з хорошою акустикою, де регулярно чи час від часу звучить класична музика. Ось усі готельні майданчики з нашої добірки — з чесними плюсами й мінусами.',
+  },
+  {
+    slug: 'teatry-kyieva-z-kontsertamy-klasyky',
+    venueTypes: ['оперний театр', 'драматичний театр'],
+    seoTitle: 'Театри Києва з концертами класичної музики | 8CONCERT',
+    metaDescription: 'Театри й оперні сцени Києва, де можна почути класичну музику: Національна опера, Київська опера, Театр Франка, Театр Лесі Українки. Афіша, зали, акустика.',
+    h1: 'Театри Києва, де звучить класична музика',
+    intro: 'Оперні та драматичні театри Києва — це не лише вистави: тут регулярно або вибірково звучить і класична музика, часто в залах із визнаною акустикою. Ось усі театральні майданчики з нашої добірки.',
+  },
 ];
 
 function renderVenueGuideLinks() {
@@ -1143,7 +1159,20 @@ function renderVenueGuideLinks() {
 }
 
 function renderVenueGuidePage(guide, allVenues) {
-  const venues = allVenues.filter((v) => v.venueType === guide.venueType && (!guide.genres || (v.genres || []).some((g) => guide.genres.includes(g))));
+  // Most guides filter allVenues by venueType (or venueTypes, for guides
+  // spanning more than one category, like theatres = drama + opera). A
+  // guide can instead give an explicit `slugs` list when the grouping
+  // isn't a clean venueType match (e.g. "hotels" — Hilton/InterContinental
+  // are tagged 'концертний зал' rather than 'готель' because their own
+  // cards are framed around the concert halls, not the hotel itself).
+  const venues = guide.slugs
+    ? guide.slugs.map((s) => allVenues.find((v) => v.slug === s)).filter(Boolean)
+    : allVenues.filter((v) => {
+        const types = guide.venueTypes || (guide.venueType ? [guide.venueType] : []);
+        const typeMatch = types.length === 0 || types.includes(v.venueType);
+        const genreMatch = !guide.genres || (v.genres || []).some((g) => guide.genres.includes(g));
+        return typeMatch && genreMatch;
+      });
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(guide.h1)}</nav>
 <div class="hero" style="padding-bottom:24px">
