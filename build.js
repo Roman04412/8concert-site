@@ -1893,15 +1893,31 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     ...(f.Category ? { genre: displayCategory(f.Category) } : {}),
     ...(image ? { image: [absUrl(image)] } : {}),
     ...(performerName ? { performer: { '@type': 'PerformingGroup', name: performerName } } : {}),
-    // Real organizer data isn't tracked in Airtable yet — we're not going
-    // to fabricate a promoter/organizer name just to satisfy the "missing
-    // field" recommendation, since a wrong organizer is worse than an
-    // absent one. Add an "Organizer" column in Airtable and this picks it
-    // up automatically, no code change needed.
+    // Organizer name comes from Airtable's "organizer" field — never
+    // fabricated (a wrong name is worse than none). Google Search Console
+    // flags a missing "url" on organizer as a minor structured-data issue;
+    // we don't track each promoter's own website separately, but the
+    // concert's own ticket link is sold by that same organizer, so its
+    // origin (e.g. https://concert.ua) is a real, verifiable URL to use
+    // here rather than inventing one. Falls back to omitting url if the
+    // link isn't a valid absolute URL.
     ...((() => {
       const organizerRaw = fieldCI(f, 'Organizer');
       const organizerName = typeof organizerRaw === 'string' ? organizerRaw.trim() : '';
-      return organizerName ? { organizer: { '@type': 'Organization', name: organizerName } } : {};
+      if (!organizerName) return {};
+      let organizerUrl;
+      try {
+        organizerUrl = new URL(link).origin;
+      } catch (err) {
+        organizerUrl = undefined;
+      }
+      return {
+        organizer: {
+          '@type': 'Organization',
+          name: organizerName,
+          ...(organizerUrl ? { url: organizerUrl } : {}),
+        },
+      };
     })()),
     offers: {
       '@type': 'Offer',
