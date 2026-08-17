@@ -167,6 +167,12 @@ const CATEGORIES = [
   },
 ];
 
+// Slugs for the time-scope SEO pages (/vsi-podii/, /tsey-tyzhden/,
+// /sogodni-vvecheri/) — see renderScopePage/buildScopePages further down.
+// Kept as a flat list here (rather than only inside buildScopePages) so
+// renderSitemap can list them without needing freshUpcoming.
+const SCOPE_PAGE_SLUGS = ['vsi-podii', 'tsey-tyzhden', 'sogodni-vvecheri'];
+
 // Venue ("Місця") pages — a curated guide to Kyiv's recurring open-air /
 // rooftop / terrace concert spots. Distinct from CATEGORIES (genre) pages:
 // these are location-focused landing pages meant to rank for "концерти на
@@ -1312,6 +1318,27 @@ function formatDateDisplay(isoDate) {
   return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
 }
 
+// Full "17 серпня" style date, without the "Сьогодні"/"Завтра" substitution
+// formatDateDisplay does — used on the /sogodni-vvecheri/ SEO page, where
+// the point of the page IS today's date, so writing "Сьогодні ввечері:
+// Сьогодні" would be a bug, not a feature.
+function formatFullDateDisplay(isoDate) {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const sameYear = y === new Date().getFullYear();
+  return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
+}
+
+// "17–23 серпня" / "28 серпня – 3 вересня" style range for the
+// /tsey-tyzhden/ SEO page title, H1 and meta description — spans the month
+// name only once when the week doesn't cross a month boundary.
+function formatWeekRangeDisplay(startIso, endIso) {
+  const [, sm, sd] = startIso.split('-').map(Number);
+  const [, em, ed] = endIso.split('-').map(Number);
+  if (sm === em) return `${sd}–${ed} ${UA_MONTHS[em - 1]}`;
+  return `${sd} ${UA_MONTHS[sm - 1]} – ${ed} ${UA_MONTHS[em - 1]}`;
+}
+
 // Kyiv flips between EET (+2) and EEST (+3) twice a year (DST), so the
 // correct UTC offset for a given date can't be hardcoded. Let the JS Intl
 // API (backed by the full IANA tz database) resolve it instead of
@@ -1620,7 +1647,7 @@ function siteHeader() {
   <a href="/" class="logo">8<span>CONCERT</span></a>
   <nav>
     <a href="/">Афіша</a>
-    <a href="/#today" data-tab-link="today">Сьогодні</a>
+    <a href="/sogodni-vvecheri/">Сьогодні</a>
     <a href="/mistsya/">Місця</a>
     <a href="/about/">Про нас</a>
     <a href="/" class="nav-city">Київ</a>
@@ -1652,8 +1679,9 @@ function siteFooter() {
   <div>
     <div class="footer-col-title">Афіша</div>
     <div class="footer-links">
-      <a href="/#week" data-tab-link="week">Цей тиждень</a>
-      <a href="/#today" data-tab-link="today">Сьогодні</a>
+      <a href="/vsi-podii/">Всі події</a>
+      <a href="/tsey-tyzhden/">Цей тиждень</a>
+      <a href="/sogodni-vvecheri/">Сьогодні</a>
       <a href="/mistsya/">Місця</a>
       ${CATEGORIES.map((cat) => `<a href="/${cat.slug}/">${escapeHtml(cat.name)}</a>`).join('\n      ')}
     </div>
@@ -1767,9 +1795,9 @@ function renderHomepage(concerts, overflowPool = [], allUpcoming = []) {
 
 <div class="tabs-bar">
   <button class="tab active" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
-  <button class="tab" onclick="switchTab(this,'week')" id="week">Цей тиждень</button>
-  <button class="tab" onclick="switchTab(this,'today')" id="today">Сьогодні ввечері</button>
-  <button class="tab" onclick="switchTab(this,'all')" id="all">Всі події</button>
+  <a class="tab" href="/tsey-tyzhden/" onclick="switchTab(this,'week');return false;" id="week">Цей тиждень</a>
+  <a class="tab" href="/sogodni-vvecheri/" onclick="switchTab(this,'today');return false;" id="today">Сьогодні ввечері</a>
+  <a class="tab" href="/vsi-podii/" onclick="switchTab(this,'all');return false;" id="all">Всі події</a>
 </div>
 
 <div id="tab-top8">${top8Html}${overflowHtml}</div>
@@ -2088,6 +2116,119 @@ function renderCategoryPage(cat, concerts) {
   });
 }
 
+// Time/scope-based listing pages (/vsi-podii/, /tsey-tyzhden/,
+// /sogodni-vvecheri/) — same idea as CATEGORIES' /jazz/ /klasika/
+// /trybuti/ pages just above, but sliced by date range instead of genre.
+// The homepage's "Цей тиждень" / "Сьогодні ввечері" / "Всі події" tabs are
+// client-side JS toggles on a single URL (see client.js switchTab), so
+// without a dedicated page for each, Google has nothing separate to rank
+// for "концерти Київ сьогодні" / "концерти Київ цього тижня" / "афіша
+// концертів Києва" style searches — every tab's content lives under the
+// same canonical "/" URL and title. These pages give each time-based
+// search intent its own crawlable URL, title, meta description and H1.
+//
+// Built from the full freshUpcoming pool (passed in as `items`, already
+// date-filtered by the caller), not the capped 8-event curated set — same
+// reasoning as why renderCategoryPage takes freshUpcoming: a thin,
+// near-empty SEO landing page ranks worse than no page at all.
+function renderScopePage({ slug, breadcrumbLabel, title, description, h1, intro, items, emptyMessage }) {
+  const numbered = items.map((c, index) => ({
+    ...c,
+    num: String(index + 1).padStart(2, '0'),
+    isTop: Boolean(c.f.Status),
+  }));
+
+  const listHtml = numbered.length
+    ? numbered.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : `<div class="loading">${escapeHtml(emptyMessage)}</div>`;
+
+  const jsonLd = numbered.length ? {
+    '@context': 'https://schema.org',
+    '@graph': [{
+      '@type': 'ItemList',
+      name: `${title} — 8CONCERT`,
+      itemListElement: numbered.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${SITE_URL}/concert/${c.slug}/`,
+        name: c.title,
+      })),
+    }],
+  } : null;
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(breadcrumbLabel)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Редакційна добірка</div>
+    <h1 class="hero-title">${escapeHtml(h1)}</h1>
+    <p class="hero-sub">${escapeHtml(intro)}</p>
+  </div>
+</div>
+<div class="category-list">${listHtml}</div>
+`;
+
+  return pageShell({
+    title: `${title} | 8CONCERT`,
+    description,
+    canonical: `${SITE_URL}/${slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+  });
+}
+
+// Builds the three renderScopePage() configs from freshUpcoming — kept as
+// one function so main() doesn't need to duplicate the week/today date-math
+// that renderHomepage's tabs already do.
+function buildScopePages(freshUpcoming) {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const { start: weekStart, end: weekEnd } = getWeekBounds();
+  const weekLabel = formatWeekRangeDisplay(weekStart, weekEnd);
+  const todayLabel = formatFullDateDisplay(todayStr);
+
+  const allItems = freshUpcoming;
+  const weekItems = freshUpcoming.filter((c) => !c.isoDate || (c.isoDate >= weekStart && c.isoDate <= weekEnd));
+  const todayItems = freshUpcoming.filter((c) => c.isoDate === todayStr);
+
+  return [
+    {
+      slug: 'vsi-podii',
+      breadcrumbLabel: 'Всі події',
+      title: 'Усі концерти Києва — повна афіша джазу, класики та триб\'ютів',
+      description: 'Повний список найближчих концертів Києва з нашої афіші: джаз, класика та триб\'юти з усіх майданчиків міста. Дати, ціни й посилання на квитки — оновлюємо щодня.',
+      h1: 'Усі концерти Києва',
+      intro: `Тут — ${pluralEvents(allItems.length)}, які ми знайшли на найближчий час у Києві: не лише вісім обраних редакцією, а повний список джазу, класики й триб'ютів з усіх майданчиків.`,
+      items: allItems,
+      emptyMessage: 'Найближчим часом нових концертів ще не додали. Загляньте трохи пізніше ✨',
+    },
+    {
+      slug: 'tsey-tyzhden',
+      breadcrumbLabel: 'Цей тиждень',
+      title: `Концерти Києва цього тижня (${weekLabel}) — афіша`,
+      description: `Куди піти на концерт у Києві цього тижня, ${weekLabel}: джаз, класика та триб'юти. Актуальна афіша з датами, цінами й посиланнями на квитки.`,
+      h1: `Концерти Києва цього тижня — ${weekLabel}`,
+      intro: weekItems.length
+        ? `Афіша на ${weekLabel} — ${pluralEvents(weekItems.length)} джазу, класики й триб'ютів, які ми знайшли на цьому тижні в Києві.`
+        : `На ${weekLabel} нових концертів ще не додали.`,
+      items: weekItems,
+      emptyMessage: 'На цьому тижні нових концертів ще не додали. Загляньте трохи пізніше ✨',
+    },
+    {
+      slug: 'sogodni-vvecheri',
+      breadcrumbLabel: 'Сьогодні',
+      title: `Концерти Києва сьогодні ввечері (${todayLabel}) — афіша`,
+      description: `Куди піти сьогодні ввечері в Києві, ${todayLabel}: концерти джазу, класики та триб'ютів, які відбудуться сьогодні.`,
+      h1: `Концерти Києва сьогодні ввечері — ${todayLabel}`,
+      intro: todayItems.length
+        ? `Сьогодні, ${todayLabel}, у Києві — ${pluralEvents(todayItems.length)} з нашої афіші.`
+        : `Сьогодні, ${todayLabel}, у нашій афіші поки тихо — перевірте афішу тижня.`,
+      items: todayItems,
+      emptyMessage: 'Сьогодні ввечері — тиша. Перевірте афішу тижня ✨',
+    },
+  ];
+}
+
 function renderVenueCard(venue) {
   return `
       <a href="/mistsya/${venue.slug}/" class="venue-card">
@@ -2227,6 +2368,7 @@ function renderSitemap(concerts) {
     ...SEASONS.map((s) => `${SITE_URL}/mistsya/${s.slug}/`),
     ...VENUE_GUIDES.map((g) => `${SITE_URL}/mistsya/${g.slug}/`),
     ...CATEGORIES.map((cat) => `${SITE_URL}/${cat.slug}/`),
+    ...SCOPE_PAGE_SLUGS.map((slug) => `${SITE_URL}/${slug}/`),
     ...VENUES.map((v) => `${SITE_URL}/mistsya/${v.slug}/`),
     ...concerts.map((c) => `${SITE_URL}/concert/${c.slug}/`),
   ];
@@ -2403,6 +2545,11 @@ async function main() {
     fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, freshUpcoming));
   }
 
+  for (const page of buildScopePages(freshUpcoming)) {
+    fs.mkdirSync(path.join(DIST, page.slug), { recursive: true });
+    fs.writeFileSync(path.join(DIST, page.slug, 'index.html'), renderScopePage(page));
+  }
+
   // "Місця" (venues): built from allPages, NOT allKnown/allConcerts — only
   // concerts allPages actually get a /concert/<slug>/ page written this
   // build (see the loops below and pastPages above). allKnown includes
@@ -2458,7 +2605,7 @@ async function main() {
     fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: concerts }));
   }
 
-  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + 1 + SEASONS.length + VENUE_GUIDES.length + VENUES.length} HTML page(s) to dist/.`);
+  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + SCOPE_PAGE_SLUGS.length + 1 + SEASONS.length + VENUE_GUIDES.length + VENUES.length} HTML page(s) to dist/.`);
 }
 
 main().catch((err) => {
