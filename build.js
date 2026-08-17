@@ -2318,24 +2318,30 @@ async function main() {
     });
 
   // Curated homepage set: every fresh upcoming concert Rocky has marked
-  // with a Status in Airtable ("Топ" or "Вибір редакції") — that field is
-  // now the sole gate for "8 подій"/featured placement, replacing the old
-  // "just take the soonest 8" rule. freshUpcoming is already sorted
-  // chronologically, so this stays in date order.
-  const concerts = freshUpcoming
-    .filter((c) => Boolean(c.f.Status))
+  // with a Status in Airtable ("Топ" or "Вибір редакції") qualifies for
+  // "8 подій", capped at DISPLAY_COUNT and taken soonest-first (no
+  // priority between the two Status values — freshUpcoming is already
+  // sorted chronologically, so a plain slice keeps date order). If more
+  // than DISPLAY_COUNT records are marked, the rest fall through to
+  // overflow same as an unmarked record would.
+  const statusUpcoming = freshUpcoming.filter((c) => Boolean(c.f.Status));
+  const concerts = statusUpcoming
+    .slice(0, DISPLAY_COUNT)
     .map((c, index) => ({
       ...c,
       num: String(index + 1).padStart(2, '0'),
       isTop: true,
     }));
 
-  // Everything else fresh+upcoming — no Status set in Airtable — still gets
-  // a real /concert/<slug>/ page (isPast: false) and shows up in the "Всі
+  // Everything else fresh+upcoming — unmarked records, plus any
+  // Status-marked ones beyond the DISPLAY_COUNT cap above — still gets a
+  // real /concert/<slug>/ page (isPast: false) and shows up in the "Всі
   // події" tab, just not in the curated/featured set. Without this, a
-  // concert Rocky adds to Airtable that isn't marked with a Status has no
-  // page at all, so nothing (venue pages included) can safely link to it.
-  const overflowConcerts = freshUpcoming.filter((c) => !c.f.Status);
+  // concert Rocky adds to Airtable that doesn't make the curated set has
+  // no page at all, so nothing (venue pages included) can safely link to
+  // it.
+  const curatedIds = new Set(concerts.map((c) => c.record.id));
+  const overflowConcerts = freshUpcoming.filter((c) => !curatedIds.has(c.record.id));
 
   // Every concert we've ever archived whose date has passed gets to keep its
   // page — "Не видаляти минулі концерти": no 404s, Google keeps whatever
