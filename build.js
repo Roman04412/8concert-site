@@ -2481,6 +2481,37 @@ async function main() {
       return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
     });
 
+  // Every concert we've ever archived whose date has passed gets to keep its
+  // page — "Не видаляти минулі концерти": no 404s, Google keeps whatever
+  // authority/traffic the page earned by artist/event name. This includes
+  // records still sitting in Airtable past their date AND ones already
+  // removed from the table, as long as we archived them at some point.
+  const pastPages = allKnown.filter((c) => isPastEvent(c, todayStr));
+
+  fs.rmSync(DIST, { recursive: true, force: true });
+  fs.mkdirSync(DIST, { recursive: true });
+  const imagesDir = path.join(DIST, 'images');
+  fs.mkdirSync(imagesDir, { recursive: true });
+
+  // Resolve images on freshUpcoming/pastPages BEFORE the curated "concerts"
+  // array is built below. "concerts" is a spread-copy of a slice of
+  // freshUpcoming (`.map((c) => ({ ...c, ... }))`), not the same object
+  // references — mutating `.image` on a later copy of a curated concert
+  // never reached back into the freshUpcoming original it was copied from.
+  // That silently broke images specifically for Status-tagged (curated)
+  // concerts on every page that renders straight from freshUpcoming
+  // instead of from the curated set: /vsi-podii/, /tsey-tyzhden/,
+  // /sogodni-vvecheri/, /jazz/, /klasika/, /trybuti/, and the homepage's
+  // own "Цей тиждень"/"Сьогодні ввечері"/"Всі події" tabs — they'd show
+  // the raw (temporary, expiring) Airtable attachment URL instead of the
+  // self-hosted one, and it would 404/fail to load once Airtable's link
+  // expired. Resolving here, once, on the shared objects, means every
+  // downstream array (concerts' copies included) inherits the already-
+  // resolved path.
+  for (const c of [...freshUpcoming, ...pastPages]) {
+    c.image = await resolveImage(c.image, c.slug, imagesDir);
+  }
+
   // Curated homepage set: every fresh upcoming concert Rocky has marked
   // with a Status in Airtable ("Топ" or "Вибір редакції") qualifies for
   // "8 подій", capped at DISPLAY_COUNT and taken soonest-first (no
@@ -2507,13 +2538,6 @@ async function main() {
   const curatedIds = new Set(concerts.map((c) => c.record.id));
   const overflowConcerts = freshUpcoming.filter((c) => !curatedIds.has(c.record.id));
 
-  // Every concert we've ever archived whose date has passed gets to keep its
-  // page — "Не видаляти минулі концерти": no 404s, Google keeps whatever
-  // authority/traffic the page earned by artist/event name. This includes
-  // records still sitting in Airtable past their date AND ones already
-  // removed from the table, as long as we archived them at some point.
-  const pastPages = allKnown.filter((c) => isPastEvent(c, todayStr));
-
   console.log(`Curated this week: ${concerts.length}. Extra upcoming (not on homepage): ${overflowConcerts.length}. Past pages kept alive: ${pastPages.length}.`);
 
   const noDateCount = concerts.filter((c) => !c.isoDate).length;
@@ -2525,15 +2549,7 @@ async function main() {
     );
   }
 
-  fs.rmSync(DIST, { recursive: true, force: true });
-  fs.mkdirSync(DIST, { recursive: true });
-
-  const imagesDir = path.join(DIST, 'images');
-  fs.mkdirSync(imagesDir, { recursive: true });
   const allPages = [...concerts, ...overflowConcerts, ...pastPages];
-  for (const c of allPages) {
-    c.image = await resolveImage(c.image, c.slug, imagesDir);
-  }
 
   fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts, overflowConcerts, freshUpcoming));
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
