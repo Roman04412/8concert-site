@@ -1943,10 +1943,20 @@ function renderBodyParagraphs(snippet) {
 // bottom of past-event pages — deliberately much lighter than the full
 // renderConcertCard (no image/desc/tags), just enough to give the visitor
 // somewhere to go and to pass internal link equity to the current afisha.
-function renderRelatedConcert(c) {
+// showLocation defaults to true — the "Інші концерти в Києві" strip on a
+// past event's page shows each item's own venue so it's clear these are
+// *other* concerts around Kyiv, not more events at the venue on the page
+// above (without this, a visitor could easily assume every link below
+// happens at that same venue too). renderVenuePage passes showLocation:
+// false for its "Концерти тут" list, where every item is already at that
+// venue by definition and repeating it on each line would just be noise.
+function renderRelatedConcert(c, { showLocation = true } = {}) {
   return `
       <a class="related-item" href="/concert/${c.slug}/">
-        <span class="related-item-title">${escapeHtml(c.title)}</span>
+        <span class="related-item-main">
+          <span class="related-item-title">${escapeHtml(c.title)}</span>
+          ${showLocation && c.f && c.f.Location ? `<span class="related-item-location">📍 ${escapeHtml(c.f.Location)}</span>` : ''}
+        </span>
         ${c.dateDisplay ? `<span class="related-item-date">📅 ${escapeHtml(c.dateDisplay)}</span>` : ''}
       </a>`;
 }
@@ -2381,7 +2391,7 @@ function renderVenuePage(venue, allConcerts) {
     ? `
   <section class="related-concerts" style="padding:0;max-width:none;margin-top:8px">
     <h2 class="related-title">Концерти тут</h2>
-    <div class="related-list">${upcoming.map(renderRelatedConcert).join('')}
+    <div class="related-list">${upcoming.map((c) => renderRelatedConcert(c, { showLocation: false })).join('')}
     </div>
   </section>`
     : `
