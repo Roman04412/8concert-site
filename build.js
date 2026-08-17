@@ -1706,17 +1706,23 @@ function renderHomepage(concerts, overflowPool = [], allUpcoming = []) {
   const todayStr = new Date().toISOString().slice(0, 10);
   const { start: weekStart, end: weekEnd } = getWeekBounds();
 
-  // "Цей тиждень" only shows concerts that actually fall within the current
-  // Mon–Sun week (unparseable dates are kept rather than hidden — see the
-  // isPastEvent comment above for the same reasoning). Anything with a known
-  // date outside this window belongs to a later week, not this one.
-  const weekConcerts = concerts.filter((c) => !c.isoDate || (c.isoDate >= weekStart && c.isoDate <= weekEnd));
-  const todayConcerts = concerts.filter((c) => c.isoDate === todayStr);
+  // "Цей тиждень" / "Сьогодні ввечері" filter from allUpcoming (every fresh
+  // concert we know about), not just the curated top-8 `concerts` pool —
+  // otherwise these tabs would only ever show whichever of the 8 curated
+  // picks happen to land this week, hiding real concerts the site already
+  // has full pages for. Same pool the dedicated /tsey-tyzhden/ and
+  // /sogodni-vvecheri/ SEO pages use (see buildScopePages), so clicking a
+  // tab and visiting its URL directly show the same concerts. Unparseable
+  // dates are kept rather than hidden — see the isPastEvent comment above
+  // for the same reasoning. Anything with a known date outside this window
+  // belongs to a later week, not this one.
+  const weekConcerts = allUpcoming.filter((c) => !c.isoDate || (c.isoDate >= weekStart && c.isoDate <= weekEnd));
+  const todayConcerts = allUpcoming.filter((c) => c.isoDate === todayStr);
 
   const renumber = (list) => list.map((c, index) => ({
     ...c,
     num: String(index + 1).padStart(2, '0'),
-    isTop: index < 2 || c.f.Status === 'Топ',
+    isTop: Boolean(c.f.Status),
   }));
 
   const weekList = renumber(weekConcerts);
