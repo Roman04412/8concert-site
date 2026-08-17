@@ -326,8 +326,12 @@ nav a {
 }
 
 .related-concerts {
+  /* Left-aligned to match .concert-page above it, which also caps at
+     720px but never centers itself — the site has no global centered
+     container, everything just gets 48px of left/right padding. Centering
+     only this block made it visually drift to the right of the content
+     above it on wide screens. */
   max-width: 720px;
-  margin: 0 auto;
   padding: 0 48px 60px;
 }
 

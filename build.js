@@ -2047,7 +2047,27 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     ${isFree ? 'Деталі та реєстрація →' : 'Купити квитки →'}
   </a>`;
 
-  const related = otherConcerts.filter((oc) => oc.slug !== slug).slice(0, 4);
+  // Prefer other concerts at the SAME venue (matched via the shared VENUES
+  // list when possible, falling back to a loose text match on the raw
+  // Location string for venues without their own card) so a visitor
+  // reading about a past event sees what's coming up at that same place
+  // first. Generic "other concerts in Kyiv" fill any remaining slots up to
+  // 4, same as before — each item still shows its own 📍 location, so a
+  // mixed list never implies they're all at the same venue.
+  const thisLocation = f.Location || '';
+  const thisVenue = thisLocation ? findVenueForLocation(thisLocation) : null;
+  const isSameVenue = (oc) => {
+    const ocLocation = (oc.f && oc.f.Location) || '';
+    if (!ocLocation) return false;
+    if (thisVenue) return findVenueForLocation(ocLocation) === thisVenue;
+    const a = thisLocation.toLowerCase();
+    const b = ocLocation.toLowerCase();
+    return Boolean(a && b) && (a.includes(b) || b.includes(a));
+  };
+  const candidatePool = otherConcerts.filter((oc) => oc.slug !== slug);
+  const sameVenue = candidatePool.filter(isSameVenue);
+  const others = candidatePool.filter((oc) => !isSameVenue(oc));
+  const related = [...sameVenue, ...others].slice(0, 4);
   const relatedHtml = isPast && related.length
     ? `
 <section class="related-concerts">
@@ -2690,7 +2710,10 @@ async function main() {
   for (const c of pastPages) {
     const dir = path.join(DIST, 'concert', c.slug);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: concerts }));
+    // freshUpcoming (not just the curated `concerts`) so a same-venue match
+    // can be found even when that upcoming concert isn't one of the 8
+    // featured on the homepage.
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: freshUpcoming }));
   }
 
   console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + SCOPE_PAGE_SLUGS.length + 1 + SEASONS.length + VENUE_GUIDES.length + VENUES.length} HTML page(s) to dist/.`);
