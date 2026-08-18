@@ -2094,7 +2094,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   <h2 class="related-title">Концерти тут</h2>
   <div class="related-list">${sameVenue.slice(0, 4).map((c) => renderRelatedConcert(c, { showLocation: false })).join('')}
   </div>
-  ${thisVenue ? `<p class="concert-desc" style="font-size:14px;margin-top:16px"><a href="/mistsya/${thisVenue.slug}/" class="venue-link">Усі концерти в ${escapeHtml(thisVenue.name)} →</a></p>` : ''}
+  ${thisVenue ? `<p class="concert-desc" style="font-size:14px;margin-top:16px"><a href="/mistsya/${thisVenue.slug}/" class="venue-link">${escapeHtml(thisVenue.seoTitle)} →</a></p>` : ''}
 </section>`
     : '';
 
