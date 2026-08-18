@@ -2067,6 +2067,11 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   const candidatePool = otherConcerts.filter((oc) => oc.slug !== slug);
   const sameVenue = candidatePool.filter(isSameVenue);
   const others = candidatePool.filter((oc) => !isSameVenue(oc));
+
+  // Past-event pages: same-venue matches first, then generic "other
+  // concerts in Kyiv" fill up to 4 — each item still shows its own 📍
+  // location (see renderRelatedConcert), so a mixed list never implies
+  // they're all at the same venue.
   const related = [...sameVenue, ...others].slice(0, 4);
   const relatedHtml = isPast && related.length
     ? `
@@ -2074,6 +2079,22 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   <h2 class="related-title">Інші концерти в Києві</h2>
   <div class="related-list">${related.map(renderRelatedConcert).join('')}
   </div>
+</section>`
+    : '';
+
+  // Upcoming-event pages: a "Концерти тут" strip listing only OTHER
+  // upcoming events at this exact venue (no generic Kyiv fallback — if
+  // there's nothing else on there isn't a section at all, rather than
+  // padding it with unrelated concerts). Every item is already known to
+  // share this venue, so showLocation is off, same as on the venue's own
+  // page. Links to the full venue page when we have a matching card.
+  const venueEventsHtml = !isPast && sameVenue.length
+    ? `
+<section class="related-concerts">
+  <h2 class="related-title">Концерти тут</h2>
+  <div class="related-list">${sameVenue.slice(0, 4).map((c) => renderRelatedConcert(c, { showLocation: false })).join('')}
+  </div>
+  ${thisVenue ? `<p class="concert-desc" style="font-size:14px;margin-top:16px"><a href="/mistsya/${thisVenue.slug}/" class="venue-link">Усі концерти в ${escapeHtml(thisVenue.name)} →</a></p>` : ''}
 </section>`
     : '';
 
@@ -2106,7 +2127,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   </div>
   ${ctaHtml}
   ${shareHtml}
-</article>${relatedHtml}`;
+</article>${relatedHtml}${venueEventsHtml}`;
 
   return pageShell({
     title: `${title} — 8CONCERT`,
@@ -2697,15 +2718,18 @@ async function main() {
     fs.copyFileSync(path.join(ASSETS, asset), path.join(DIST, asset));
   }
 
+  // freshUpcoming (not just the curated `concerts`) so the "Концерти тут"
+  // same-venue strip can find a match even when that other concert isn't
+  // one of the 8 featured on the homepage.
   for (const c of concerts) {
     const dir = path.join(DIST, 'concert', c.slug);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: concerts }));
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: freshUpcoming }));
   }
   for (const c of overflowConcerts) {
     const dir = path.join(DIST, 'concert', c.slug);
     fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: concerts }));
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: freshUpcoming }));
   }
   for (const c of pastPages) {
     const dir = path.join(DIST, 'concert', c.slug);
