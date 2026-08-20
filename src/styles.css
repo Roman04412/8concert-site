@@ -896,3 +896,17 @@ footer {
   .season-toggle, .venue-guides-row { padding: 0 20px; }
   .venue-proscons { grid-template-columns: 1fr; gap: 16px; }
 }
+
+
+/* Show "Місця" on mobile header, top-right opposite the logo */
+@media (max-width: 768px) {
+    nav a[href="/mistsya/"] {
+      display: inline-block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+      padding: 7px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+}
