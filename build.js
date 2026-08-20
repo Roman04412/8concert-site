@@ -2125,7 +2125,8 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
         : `<span>📍 ${escapeHtml(f.Location)}</span>`;
     })() : ''}
   </div>
-  ${ctaHtml}
+${thisVenue && thisVenue.paragraphs && thisVenue.paragraphs[0] ? `<p class="concert-desc" style="font-size:14.5px;line-height:1.7;margin-top:16px;max-width:640px">${escapeHtml(thisVenue.paragraphs[0])}</p>` : ''}
+${ctaHtml}
   ${shareHtml}
 </article>${relatedHtml}${venueEventsHtml}`;
 
@@ -2362,6 +2363,7 @@ function renderVenuesIndexPage(venues) {
     <div class="hero-label">Гід по майданчиках</div>
     <h1 class="hero-title">Де в Києві слухають музику наживо</h1>
     <p class="hero-sub">Дахи, тераси, зали й паби, де регулярно проходять концерти з нашої добірки — з плюсами, мінусами і афішею кожного місця. Оберіть сезон або перегляньте весь список нижче.</p>
+    <p class="hero-sub">У добірці — ${venues.length} концертних майданчиків Києва: дахи бізнес-центрів і готелів, літні тераси та сади, камерні зали філармонії й консерваторії, затишні клуби та паби. Для кожного місця ми пишемо плюси й мінуси — акустику, вид, зручність дістатися — і показуємо, які концерти там заплановані найближчим часом; майданчики з афішею на найближчий час — зверху списку.</p>
   </div>
 </div>
 ${renderSeasonToggle(null)}
