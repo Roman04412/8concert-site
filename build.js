@@ -2691,12 +2691,24 @@ async function main() {
     if (!b.isoDate) return -1;
     return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
   });
+  // Venues with at least one upcoming (non-past) concert in our current
+  // listings float to the top of "Місця" — a visitor is more likely to
+  // care about a venue they could actually go to soon than one with
+  // nothing currently booked. Stable sort keeps the original curated
+  // order within each group (has-events / no-events).
+  const todayStrForVenues = new Date().toISOString().slice(0, 10);
+  const venuesSorted = [...VENUES].sort((a, b) => {
+    const aHas = findVenueConcerts(a, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues));
+    const bHas = findVenueConcerts(b, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues));
+    if (aHas === bHas) return 0;
+    return aHas ? -1 : 1;
+  });
   fs.mkdirSync(path.join(DIST, 'mistsya'), { recursive: true });
-  fs.writeFileSync(path.join(DIST, 'mistsya', 'index.html'), renderVenuesIndexPage(VENUES));
+  fs.writeFileSync(path.join(DIST, 'mistsya', 'index.html'), renderVenuesIndexPage(venuesSorted));
   for (const season of SEASONS) {
     const seasonDir = path.join(DIST, 'mistsya', season.slug);
     fs.mkdirSync(seasonDir, { recursive: true });
-    fs.writeFileSync(path.join(seasonDir, 'index.html'), renderSeasonVenuesPage(season, VENUES));
+    fs.writeFileSync(path.join(seasonDir, 'index.html'), renderSeasonVenuesPage(season, venuesSorted));
   }
   for (const guide of VENUE_GUIDES) {
     const guideDir = path.join(DIST, 'mistsya', guide.slug);
