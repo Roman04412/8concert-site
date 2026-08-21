@@ -127,7 +127,7 @@ const SITE = {
 // (e.g. Airtable still has the old "Трибьюти" spelling while the site
 // now displays the correct "Триб'юти") never breaks category filtering.
 function normalizeCategoryKey(s) {
-  return String(s || '').toLowerCase().replace(SLASH_BRACKET_U0027_U2019_U02BC_U044C_BRACKET_SLASH_G, '');
+  return String(s || '').toLowerCase().replace(/['’ʼь]/g, '');
 }
 
 // Maps a raw Airtable Category value to the canonical, correctly-spelled
