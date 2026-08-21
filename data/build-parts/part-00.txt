@@ -1,0 +1,157 @@
+#!/usr/bin/env node
+/**
+ * Static-site generator for 8concert.com
+ *
+ * Runs at build time (locally, or as Netlify's "build command"). Fetches the
+ * concert list from Airtable using a token that lives ONLY in the build
+ * environment (env var), then writes plain HTML into dist/ — nothing is
+ * fetched from the browser, so nothing sensitive ships to visitors.
+ *
+ * Output:
+ *   dist/index.html                    – homepage, concerts already baked in
+ *   dist/concert/<slug>/index.html     – one SEO page per concert (JSON-LD Event)
+ *   dist/jazz|klasika|trybuti/         – category landing pages
+ *   dist/about/, dist/contacts/
+ *   dist/sitemap.xml, dist/robots.txt
+ *   dist/styles.css, dist/client.js    – copied from src/
+ *   dist/favicon.ico, dist/*.png       – copied from assets/
+ *   dist/images/<slug>.<ext>           – concert images, downloaded from
+ *                                         Airtable's (temporary) attachment
+ *                                         URLs and self-hosted so they don't
+ *                                         expire between deploys
+ *
+ * Env vars required:
+ *   AIRTABLE_TOKEN
+ *   AIRTABLE_BASE_ID
+ *   AIRTABLE_TABLE_ID
+ * Optional:
+ *   SITE_URL       (default https://8concert.com)
+ *   DISPLAY_COUNT  (default 8 — how many upcoming concerts to feature)
+ */
+
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const AIRTABLE_TOKEN = process.env.AIRTABLE_TOKEN;
+const BASE_ID = process.env.AIRTABLE_BASE_ID;
+const TABLE_ID = process.env.AIRTABLE_TABLE_ID;
+const SITE_URL = (process.env.SITE_URL || 'https://8concert.com').replace(/\/$/, '');
+const GA_MEASUREMENT_ID = 'G-W5L8STRVBJ'; // 8CONCERT GA4 property
+// Plerdy — heatmaps/click tracking/session recordings, complements GA4
+// (which only tells you traffic counts, not what people actually do on the
+// page: do they scroll past the first 3 cards, do the genre pills get used,
+// does the share button get clicked). Public site-verification snippet,
+// same category as the GA4 ID above — fine to have in page source.
+const PLERDY_SNIPPET = `<!-- BEGIN PLERDY CODE -->
+<script data-plerdy_code='1'>
+(function(w,d){
+  if(w.__plerdyCode)return;
+  w.__plerdyCode=1;
+  w._protocol=w.location.protocol=="https:"?"https://":"http://";
+  w._site_hash_code="135a92626586c1b939bc5c828ac957ac";
+  w._suid=80057;
+  var s=d.createElement("script");
+  s.async=true;
+  s.referrerPolicy="strict-origin-when-cross-origin";
+  s.src="https://a.plerdy.com/public/js/click/main.js?v="+Math.random();
+  d.head.appendChild(s);
+})(window,document);
+</script>
+<!-- END PLERDY CODE -->`;
+const DISPLAY_COUNT = Number(process.env.DISPLAY_COUNT || 8);
+const FETCH_LIMIT = 100; // Airtable's max per request without pagination — plenty of headroom
+
+const DIST = path.join(__dirname, 'dist');
+const SRC = path.join(__dirname, 'src');       // styles.css, client.js
+const ASSETS = path.join(__dirname, 'assets'); // favicon + touch icons
+
+// Persistent, git-committed history — NOT wiped between builds like dist/ is.
+// archive.json accumulates every concert record we've ever fetched from
+// Airtable (keyed by record id). images/ holds the self-hosted copy of each
+// one's picture. Both exist so that once a concert falls out of this week's
+// curated 8 (because its date has passed), its page and image keep working
+// forever instead of 404ing — see renderConcertPage's "past event" handling.
+const ARCHIVE_PATH = path.join(__dirname, 'data', 'archive.json');
+const IMAGE_ARCHIVE_DIR = path.join(__dirname, 'data', 'images');
+
+function loadArchive() {
+  try {
+    const raw = fs.readFileSync(ARCHIVE_PATH, 'utf8');
+    return JSON.parse(raw);
+  } catch {
+    return {};
+  }
+}
+
+function saveArchive(archiveMap) {
+  fs.mkdirSync(path.dirname(ARCHIVE_PATH), { recursive: true });
+  // Sort by key so the diff is stable/readable in git history.
+  const sorted = Object.fromEntries(Object.keys(archiveMap).sort().map((k) => [k, archiveMap[k]]));
+  fs.writeFileSync(ARCHIVE_PATH, JSON.stringify(sorted, null, 2) + '\n');
+}
+
+// TODO: замініть на реальні контакти/соцмережі — зараз це чернетка-заглушка,
+// сторінки /about/ і /contacts/ вже підключені й попадуть у sitemap.
+const SITE = {
+  contactEmail: 'hello@8concert.com',
+  telegramUrl: 'https://t.me/Roman0044',
+  instagramUrl: 'https://www.instagram.com/8_concert/',
+  // TODO: заміните на реальну сторінку 8CONCERT у Facebook, коли вона буде —
+  // зараз тут загальний https://www.facebook.com, який Rocky попросив
+  // поставити як тимчасове посилання.
+  facebookUrl: 'https://www.facebook.com/profile.php?id=100070742635481',
+  // Multi-paragraph — blank lines mark paragraph breaks, same convention as
+  // the Airtable "Snippet" field. renderAboutPage() feeds this straight into
+  // renderBodyParagraphs() so it gets the same magazine-style lead+body
+  // treatment as concert pages (first paragraph highlighted, rest as plain
+  // body copy) instead of a flat list of identical-looking paragraphs.
+  aboutText: `Ми не публікуємо повну афішу Києва — це зробили б за нас десятки інших сайтів. Натомість ми постійно відбираємо лише вісім концертів: джаз, класика, триб'юти улюбленим музикантам і виконавцям — ті події, які, на нашу думку, справді варті вашого вечора.
+
+8concert — це редакційна добірка, а не каталог. Кожен концерт у списку хтось із команди особисто прослухав, перевірив і вважає вартим уваги. Ми не женемось за кількістю — обираємо якість. Тому що музика — найкоротший шлях між двома серцями, і провести вечір варто там, де це відчувається по-справжньому.
+
+Наразі ми зосереджені на Києві — місті з дивовижною концертною сценою, яку легко проґавити серед сотень афіш і реклами. Ми допомагаємо не проґавити.
+
+Якщо ви цінуєте особливі моменти, живу музику і не хочете гортати нескінченні списки в пошуках "того самого" концерту — просто заглядайте до нас регулярно. Повна афіша і квитки — завжди на 8concert.com.
+
+Зроблено з любов'ю до музики. 🎵`,
+};
+
+// Static category landing pages (/jazz/, /klasika/, /trybuti/) — the genre
+// filter on the homepage is client-side JS only, so without these pages
+// Google has no crawlable URL to rank for "джаз Київ" / "класика Київ" /
+// "триб'юти Київ" style queries.
+// Normalizes category names for matching so a spelling difference
+// (e.g. Airtable still has the old "Трибьюти" spelling while the site
+// now displays the correct "Триб'юти") never breaks category filtering.
+function normalizeCategoryKey(s) {
+  return String(s || '').toLowerCase().replace(/['’ʼь]/g, '');
+}
+
+// Maps a raw Airtable Category value to the canonical, correctly-spelled
+// display name (matched via normalizeCategoryKey so an old/misspelled
+// Airtable value still renders correctly everywhere it's shown). Falls
+// back to the raw value for any category not in CATEGORIES.
+function displayCategory(raw) {
+  const norm = normalizeCategoryKey(raw);
+  const match = CATEGORIES.find((cat) => normalizeCategoryKey(cat.name) === norm);
+  return match ? match.name : (raw || '');
+}
+
+const CATEGORIES = [
+  {
+    name: 'Джаз',
+    slug: 'jazz',
+    emoji: '🎷',
+    title: "Куди піти на джаз у Києві цього тижня — афіша",
+    h1: 'Куди піти на джаз у Києві цього тижня',
+    intro: 'Куди піти на джаз у Києві цього тижня: джем-сейшени, вечори класичного свінгу та сучасного джазу на терасах і в клубах міста.',
+  },
+  {
+    name: 'Класика',
+    slug: 'klasika',
+    emoji: '🎻',
+    title: "Куди піти на класику у Києві цього тижня — афіша",
+    h1: 'Куди піти на класику у Києві цього тижня',
