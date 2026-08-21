@@ -1,0 +1,49 @@
+  for (const guide of VENUE_GUIDES) {
+    const guideDir = path.join(DIST, 'mistsya', guide.slug);
+    fs.mkdirSync(guideDir, { recursive: true });
+    fs.writeFileSync(path.join(guideDir, 'index.html'), renderVenueGuidePage(guide, VENUES));
+  }
+  const venuesImagesDir = path.join(DIST, 'images', 'venues');
+  fs.mkdirSync(venuesImagesDir, { recursive: true });
+  for (const venue of VENUES) {
+    fs.copyFileSync(path.join(ASSETS, 'venues', venue.image), path.join(venuesImagesDir, venue.image));
+    const dir = path.join(DIST, 'mistsya', venue.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), renderVenuePage(venue, venueConcertPool));
+  }
+
+  fs.copyFileSync(path.join(SRC, 'styles.css'), path.join(DIST, 'styles.css'));
+  fs.copyFileSync(path.join(SRC, 'client.js'), path.join(DIST, 'client.js'));
+  for (const asset of ['favicon.ico', 'apple-touch-icon.png', 'icon-32.png', 'icon-192.png', 'icon-512.png']) {
+    fs.copyFileSync(path.join(ASSETS, asset), path.join(DIST, asset));
+  }
+
+  // freshUpcoming (not just the curated `concerts`) so the "Концерти тут"
+  // same-venue strip can find a match even when that other concert isn't
+  // one of the 8 featured on the homepage.
+  for (const c of concerts) {
+    const dir = path.join(DIST, 'concert', c.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: freshUpcoming }));
+  }
+  for (const c of overflowConcerts) {
+    const dir = path.join(DIST, 'concert', c.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: false, otherConcerts: freshUpcoming }));
+  }
+  for (const c of pastPages) {
+    const dir = path.join(DIST, 'concert', c.slug);
+    fs.mkdirSync(dir, { recursive: true });
+    // freshUpcoming (not just the curated `concerts`) so a same-venue match
+    // can be found even when that upcoming concert isn't one of the 8
+    // featured on the homepage.
+    fs.writeFileSync(path.join(dir, 'index.html'), renderConcertPage(c, { isPast: true, otherConcerts: freshUpcoming }));
+  }
+
+  console.log(`Done. Wrote ${allPages.length + 3 + CATEGORIES.length + SCOPE_PAGE_SLUGS.length + 1 + SEASONS.length + VENUE_GUIDES.length + VENUES.length} HTML page(s) to dist/.`);
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
