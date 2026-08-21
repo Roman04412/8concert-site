@@ -22,17 +22,6 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Decorative red frame around every page, fixed to the viewport so it stays
-   put while the page scrolls. */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  border: 6px solid #C0392B;
-  pointer-events: none;
-  z-index: 9999;
-}
-
 /* HEADER */
 header {
   display: flex;
