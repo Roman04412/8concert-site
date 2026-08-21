@@ -1,0 +1,186 @@
+  // "Всі події" — literally everything fresh and upcoming, curated or not,
+  // in chronological order. Unlike the "8 подій" pool this needs no
+  // backfill mechanism: it already contains every concert we know about.
+  const allHtml = allUpcoming.length
+    ? allUpcoming
+      .map((c, index) => renderConcertCard(
+        { ...c, num: String(index + 1).padStart(2, '0'), isTop: Boolean(c.f.Status) },
+        { linkTitle: true },
+      ))
+      .join('')
+    : '<div class="loading">Незабаром тут з\'являться концерти Києва</div>';
+
+  // One dedicated row for the genre pills, sitting between the quote strip
+  // and the tabs — above "8 подій" rather than squeezed into the same row
+  // as the tab labels (that was cramped on narrow/in-app viewports: 3 tab
+  // labels + 3 pills fighting for one line never had a clean fallback) or
+  // stuffed under the hero subtitle (worked but felt disconnected from the
+  // list right below it). Single element, no responsive duplication needed.
+  const genrePills = `
+    <div class="genre-pill active">🎷 Джаз</div>
+    <div class="genre-pill active">🎻 Класика</div>
+    <div class="genre-pill active">🎤 Триб'юти</div>`;
+
+  const content = `
+<div class="hero">
+  <div class="hero-left">
+    <div class="hero-label">Редакційна добірка</div>
+    <h1 class="hero-title">Концерти Києва —<br>вісім вечорів, які варто <em>прожити</em></h1>
+    <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та триб'ютів у Києві — для тих, хто цінує особливі моменти.</p>
+  </div>
+</div>
+
+<div class="quote-strip">
+  <div class="quote-line"></div>
+  <div class="quote-text">«Музика — найкоротший шлях між двома серцями»</div>
+</div>
+
+<div class="filter-row">
+  <div class="hero-genres">${genrePills}</div>
+</div>
+
+<div class="tabs-bar">
+  <button class="tab active" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
+  <a class="tab" href="/tsey-tyzhden/" onclick="switchTab(this,'week');return false;" id="week">Цей тиждень</a>
+  <a class="tab" href="/sogodni-vvecheri/" onclick="switchTab(this,'today');return false;" id="today">Сьогодні ввечері</a>
+  <a class="tab" href="/vsi-podii/" onclick="switchTab(this,'all');return false;" id="all">Всі події</a>
+</div>
+
+<div id="tab-top8">${top8Html}${overflowHtml}</div>
+<div id="tab-week" style="display:none">${weekHtml}</div>
+<div id="tab-today" style="display:none">${todayHtml}</div>
+<div id="tab-all" style="display:none">${allHtml}</div>
+`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: '8CONCERT',
+        url: SITE_URL,
+        logo: `${SITE_URL}/icon-512.png`,
+        ...(SITE.telegramUrl ? { sameAs: [SITE.telegramUrl] } : {}),
+      },
+      {
+        '@type': 'WebSite',
+        name: '8CONCERT',
+        url: SITE_URL,
+      },
+      {
+        '@type': 'ItemList',
+        name: 'Афіша 8CONCERT — редакційна добірка концертів Києва',
+        itemListElement: concerts.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `${SITE_URL}/concert/${c.slug}/`,
+          name: c.title,
+        })),
+      },
+    ],
+  };
+
+  return pageShell({
+    title: '8CONCERT — Вісім вечорів, які варто прожити | Афіша концертів Києва',
+    description: "Щотижнева редакційна добірка з восьми концертів джазу, класики та триб'ютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.",
+    canonical: `${SITE_URL}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+    ogImage: (concerts.find((c) => c.image) || {}).image || '',
+  });
+}
+
+// Splits a concert's Snippet text into a magazine-style layout: a larger
+// italic "lead" paragraph up top, followed by normal body paragraphs. If the
+// Airtable field has real blank-line paragraph breaks, we use those. If it's
+// one unbroken block (the common case), we pull out just the first sentence
+// as the lead so long snippets still get a "standfirst" instead of one grey
+// wall of text.
+function renderBodyParagraphs(snippet) {
+  if (!snippet) return '';
+  const paragraphs = snippet.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  if (paragraphs.length === 0) return '';
+
+  let lead;
+  let rest;
+  if (paragraphs.length > 1) {
+    [lead, ...rest] = paragraphs;
+  } else {
+    const single = paragraphs[0];
+    const sentenceMatch = single.match(/^.+?[.!?…](?=\s|$)/);
+    if (sentenceMatch && sentenceMatch[0].length < single.length) {
+      lead = sentenceMatch[0].trim();
+      rest = [single.slice(sentenceMatch[0].length).trim()].filter(Boolean);
+    } else {
+      lead = single;
+      rest = [];
+    }
+  }
+
+  const leadHtml = `<p class="concert-lead">${escapeHtml(lead)}</p>`;
+  const restHtml = rest.map((p) => `<p class="concert-body-text">${escapeHtml(p)}</p>`).join('');
+  return leadHtml + restHtml;
+}
+
+// Compact link-card for the "Інші концерти в Києві" strip shown at the
+// bottom of past-event pages — deliberately much lighter than the full
+// renderConcertCard (no image/desc/tags), just enough to give the visitor
+// somewhere to go and to pass internal link equity to the current afisha.
+// showLocation defaults to true — the "Інші концерти в Києві" strip on a
+// past event's page shows each item's own venue so it's clear these are
+// *other* concerts around Kyiv, not more events at the venue on the page
+// above (without this, a visitor could easily assume every link below
+// happens at that same venue too). renderVenuePage passes showLocation:
+// false for its "Концерти тут" list, where every item is already at that
+// venue by definition and repeating it on each line would just be noise.
+function renderRelatedConcert(c, { showLocation = true } = {}) {
+  return `
+      <a class="related-item" href="/concert/${c.slug}/">
+        <span class="related-item-main">
+          <span class="related-item-title">${escapeHtml(c.title)}</span>
+          ${showLocation && c.f && c.f.Location ? `<span class="related-item-location">📍 ${escapeHtml(c.f.Location)}</span>` : ''}
+        </span>
+        ${c.dateDisplay ? `<span class="related-item-date">📅 ${escapeHtml(c.dateDisplay)}</span>` : ''}
+      </a>`;
+}
+
+function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
+  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, record, image } = c;
+
+  // MusicEvent (a subtype of Event) — every listing on this site is a
+  // concert, so the more specific type is accurate and Google explicitly
+  // supports it for the same Event rich result. "Performer" is only
+  // included when the Airtable "Performer" field has an actual name —
+  // guessing it from the title would be wrong for tribute nights (the
+  // performer is the local tribute act, not the artist being covered), and
+  // some rows use the literal placeholder "Без імені" instead of leaving
+  // the field blank, which needs the same "skip it" treatment as empty.
+  const performerName = f.Performer && f.Performer.trim().toLowerCase() !== 'без імені'
+    ? f.Performer.trim()
+    : '';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'MusicEvent',
+    name: title,
+    description: snippet || desc || title,
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    eventStatus: 'https://schema.org/EventScheduled',
+    ...(startDateTime ? { startDate: startDateTime } : {}),
+    ...(endDateTime ? { endDate: endDateTime } : {}),
+    location: {
+      '@type': 'Place',
+      name: f.Location || 'Київ',
+      address: { '@type': 'PostalAddress', addressLocality: 'Київ', addressCountry: 'UA' },
+    },
+    ...(f.Category ? { genre: displayCategory(f.Category) } : {}),
+    ...(image ? { image: [absUrl(image)] } : {}),
+    ...(performerName ? { performer: { '@type': 'PerformingGroup', name: performerName } } : {}),
+    // Organizer name comes from Airtable's "organizer" field — never
+    // fabricated (a wrong name is worse than none). Google Search Console
+    // flags a missing "url" on organizer as a minor structured-data issue;
+    // we don't track each promoter's own website separately, but the
+    // concert's own ticket link is sold by that same organizer, so its
+    // origin (e.g. https://concert.ua) is a real, verifiable URL to use
+    // here rather than inventing one. Falls back to omitting url if the
