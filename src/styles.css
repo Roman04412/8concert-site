@@ -892,7 +892,12 @@ footer {
     pointer-events: none;
   }
   .quote-strip { padding: 28px 20px; }
-  footer { grid-template-columns: 1fr; padding: 40px 20px; }
+  footer {
+    grid-template-columns: 1fr 1fr;
+    padding: 40px 20px;
+    gap: 32px 20px;
+  }
+  footer > div:first-child { grid-column: 1 / -1; }
   .breadcrumb, .concert-page, .related-concerts { padding-left: 20px; padding-right: 20px; }
   .concert-lead { font-size: 18px; padding-left: 14px; }
   .concert-body-text { font-size: 14.5px; max-width: none; }
