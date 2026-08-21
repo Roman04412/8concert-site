@@ -1,0 +1,99 @@
+    intro: 'Куди піти на класичну музику в Києві цього тижня: симфонічні оркестри, камерні вечори та виконання світових хітів у класичній обробці.',
+  },
+  {
+    name: "Триб'юти",
+    slug: 'trybuti',
+    emoji: '🎤',
+    title: "Куди піти на триб'юти у Києві цього тижня — афіша",
+    h1: "Куди піти на триб'юти у Києві цього тижня",
+    intro: "Куди піти на триб'ют-шоу в Києві цього тижня — концерти на честь легендарних виконавців, від симфонічних програм до клубних вечорів.",
+  },
+];
+
+// Slugs for the time-scope SEO pages (/vsi-podii/, /tsey-tyzhden/,
+// /sogodni-vvecheri/) — see renderScopePage/buildScopePages further down.
+// Kept as a flat list here (rather than only inside buildScopePages) so
+// renderSitemap can list them without needing freshUpcoming.
+const SCOPE_PAGE_SLUGS = ['vsi-podii', 'tsey-tyzhden', 'sogodni-vvecheri'];
+
+// Venue ("Місця") pages — a curated guide to Kyiv's recurring open-air /
+// rooftop / terrace concert spots. Distinct from CATEGORIES (genre) pages:
+// these are location-focused landing pages meant to rank for "концерти на
+// [venue] Київ" queries and to give past/future concert pages at a given
+// spot somewhere real to link from. locationMatch is matched against each
+// concert's Airtable "Location" field (substring, case-insensitive) to
+// auto-pull related concerts — no manual tagging needed.
+const VENUES = [
+  {
+    slug: 'dah-tsum',
+    name: 'Дах ЦУМ',
+    image: 'dah-tsum.png',
+    category: 'Торговий центр',
+    tagline: 'Джаз і оркестрові шоу з панорамою центру Києва',
+    seoTitle: 'Концерти на даху ЦУМ у Києві — афіша та огляд майданчика',
+    metaDescription: "Концерти на даху ЦУМ: джазові вечори, Kyiv Mozart Orchestra та біг-бенди з панорамою центру Києва. Афіша, ціни, плюси й мінуси майданчика.",
+    paragraphs: [
+      'Дах ЦУМ — один із найвпізнаваніших форматів літніх концертів у центрі Києва: невелика сцена просто неба на даху центрального універмагу, з видом на дахи і шпилі історичного центру. Формат камерний, тому атмосфера тут завжди ближча до джаз-клубу, ніж до великого відкритого майданчика.',
+      'У програмі — як джазові вечори, так і виступи Kyiv Mozart Orchestra та біг-бендів: тут звучали Jazz in Kyiv Band, Kyiv Jazz Quintet, Aniko Dolidze Big Band і оркестрові програми на честь популярних виконавців.',
+    ],
+    pros: ['Панорама центру Києва', 'Атмосферний захід сонця', 'Зручне розташування в центрі'],
+    cons: ['Відкритий простір залежить від погоди', 'На популярних концертах може бути багато людей'],
+    locationMatch: ['дах цум'],
+    setting: 'outdoor',
+    genres: ['джаз', "триб'юти"],
+    venueType: 'дах',
+  },
+  {
+    slug: 'terasa-river-mall',
+    name: 'Тераса River Mall',
+    image: 'terasa-river-mall.png',
+    category: 'Торговий центр',
+    tagline: 'Симфонічні кавери просто неба з видом на Дніпро',
+    seoTitle: 'Тераса River Mall — концерти просто неба з видом на Дніпро',
+    metaDescription: 'Симфонічні концерти на терасі River Mall: кавер-програми Coldplay, Imagine Dragons, Michael Jackson та інших з панорамою Дніпра. Афіша, плюси й мінуси.',
+    paragraphs: [
+      'Тераса River Mall — один із найпопулярніших майданчиків Києва для симфонічних концертів просто неба. Простору тут вистачає навіть для великих програм, а вид на Дніпро додає видовищності будь-якому вечору.',
+      'Тут регулярно проходять оркестрові програми з музикою Coldplay, Imagine Dragons, Michael Jackson, Metallica, Nirvana та інших популярних виконавців — формат розрахований радше на широку публіку, ніж на академічних цінителів класики.',
+    ],
+    pros: ['Вид на Дніпро', 'Сучасна простора тераса', 'Великий вибір концертних програм'],
+    cons: ['Далі від історичного центру', 'Формат більше про симфонічні кавери, ніж академічну класику'],
+    address: 'Торговий центр River Mall',
+    phone: '044 299 0007',
+    locationMatch: ['river mall'],
+    setting: 'outdoor',
+    genres: ['класика'],
+    venueType: 'тераса',
+  },
+  {
+    slug: 'terasa-gulliver',
+    name: 'Тераса Gulliver',
+    image: 'terasa-gulliver.png',
+    category: 'Торговий центр',
+    tagline: 'Симфонічні та джазові вечори в самому центрі міста',
+    seoTitle: 'Тераса Gulliver — концерти в центрі Києва',
+    metaDescription: 'Концерти на терасі ТРЦ Gulliver: симфонічні й джазові вечори, програми з музикою Vivaldi, Sting, Lady Gaga, Adele. Афіша, плюси й мінуси майданчика.',
+    paragraphs: [
+      'Тераса Gulliver — ще одна ключова літня сцена в самому центрі Києва. Локація регулярно приймає як симфонічні, так і джазові вечори, тому афіша тут оновлюється частіше, ніж на багатьох інших відкритих майданчиках.',
+      'У програмі трапляються як класичні композитори на кшталт Vivaldi, так і кросовер-версії світових хітів — Sting, Lady Gaga, Adele.',
+    ],
+    pros: ['У самому центрі Києва', 'Панорама міста', 'Регулярна концертна програма'],
+    cons: ['Міський шум', 'Залежність від погоди', 'Частина програм — радше кросовер, ніж академічна класика'],
+    address: 'Тераса ТРЦ Gulliver',
+    locationMatch: ['gulliver'],
+    setting: 'outdoor',
+    genres: ['джаз', 'класика'],
+    venueType: 'тераса',
+  },
+  {
+    slug: 'terasa-d12',
+    name: 'Тераса Д12',
+    image: 'terasa-d12.png',
+    category: 'Музей / галерея',
+    tagline: 'Камерні концерти з видом на історичний Київ',
+    seoTitle: "Тераса Д12 — камерні концерти з видом на історичний Київ",
+    metaDescription: 'Камерні концерти класики та джазу на терасі Галереї Д12 з видом на історичний центр Києва. Афіша, плюси й мінуси майданчика.',
+    paragraphs: [
+      'Тераса Д12 при однойменній галереї — цікава локація для камерних концертів з видом на історичний Київ. Формат тут менш масовий, ніж на великих терасах ТРЦ, тому це хороший варіант для тих, хто шукає інтимнішу атмосферу вечора.',
+      'Майданчик особливо добре підходить для романтичних літніх вечорів із класичною музикою або джазом — невеликий простір і краєвид працюють на камерність програми.',
+    ],
+    pros: ['Історичний центр Києва', 'Краєвид на старе місто', 'Камерна атмосфера'],
