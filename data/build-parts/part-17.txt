@@ -1,0 +1,167 @@
+          <div class="concert-price">${isFree ? 'Вільний' : escapeHtml(price) || '—'}</div>
+          <a href="${escapeHtml(link)}" class="${isFree ? 'btn-ticket btn-free' : 'btn-ticket'}" target="_blank" rel="noopener noreferrer sponsored"
+             data-ticket-link data-concert-id="${c.record.id}" data-concert-title="${escapeHtml(title)}"
+             data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(price)}">
+            ${isFree ? 'Деталі' : 'Квитки →'}
+          </a>
+        </div>
+      </div>`;
+}
+
+function pageShell({ title, description, canonical, bodyExtraHead = '', headerHtml, contentHtml, jsonLd = null, ogImage = '' }) {
+  return `<!DOCTYPE html>
+<html lang="uk">
+<head>
+${GA_MEASUREMENT_ID ? `<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '${GA_MEASUREMENT_ID}');
+</script>` : ''}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${escapeHtml(title)}</title>
+<meta name="description" content="${escapeHtml(description)}">
+<link rel="canonical" href="${canonical}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${escapeHtml(title)}">
+<meta property="og:description" content="${escapeHtml(description)}">
+<meta property="og:url" content="${canonical}">
+${ogImage ? `<meta property="og:image" content="${escapeHtml(absUrl(ogImage))}">` : ''}
+<meta name="twitter:card" content="${ogImage ? 'summary_large_image' : 'summary'}">
+${ogImage ? `<meta name="twitter:image" content="${escapeHtml(absUrl(ogImage))}">` : ''}
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/icon-32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="stylesheet" href="/styles.css">
+${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
+${bodyExtraHead}
+</head>
+<body>
+${headerHtml}
+${contentHtml}
+<script src="/client.js" defer></script>
+${PLERDY_SNIPPET}
+</body>
+</html>`;
+}
+
+function siteHeader() {
+  return `<header>
+  <a href="/" class="logo">8<span>CONCERT</span></a>
+  <nav>
+    <a href="/">Афіша</a>
+    <a href="/sogodni-vvecheri/">Сьогодні</a>
+    <a href="/mistsya/">Де слухати музику?</a>
+    <a href="/about/">Про нас</a>
+    <a href="/" class="nav-city">Київ</a>
+  </nav>
+</header>`;
+}
+
+// Small inline monoline icons — no icon font/library dependency, no
+// third-party embed/tracker (unlike Facebook's own share/like widgets).
+const ICON_SHARE = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><line x1="8.2" y1="10.7" x2="15.8" y2="6.3"/><line x1="8.2" y1="13.3" x2="15.8" y2="17.7"/></svg>`;
+const ICON_INSTAGRAM = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>`;
+const ICON_FACEBOOK = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M22 12.06C22 6.53 17.52 2 12 2S2 6.53 2 12.06c0 5 3.66 9.13 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.81 8.44-4.94 8.44-9.94z"/></svg>`;
+
+function siteFooter() {
+  return `<footer>
+  <div>
+    <div class="footer-logo">8<span>CONCERT</span></div>
+    <div class="footer-desc">Редакційна добірка концертів Києва для тих, хто цінує особливі вечори. Оновлюється щодня.</div>
+    <div class="footer-genres">
+      <span class="footer-genre">Джаз</span>
+      <span class="footer-genre">Класика</span>
+      <span class="footer-genre">Триб'юти</span>
+    </div>
+    <div class="footer-social">
+      ${SITE.instagramUrl ? `<a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener" aria-label="Instagram">${ICON_INSTAGRAM}</a>` : ''}
+      ${SITE.facebookUrl ? `<a href="${escapeHtml(SITE.facebookUrl)}" target="_blank" rel="noopener" aria-label="Facebook">${ICON_FACEBOOK}</a>` : ''}
+    </div>
+  </div>
+  <div>
+    <div class="footer-col-title">Афіша</div>
+    <div class="footer-links">
+      <a href="/vsi-podii/">Всі події</a>
+      <a href="/tsey-tyzhden/">Цей тиждень</a>
+      <a href="/sogodni-vvecheri/">Сьогодні</a>
+      <a href="/mistsya/">Місця</a>
+      ${CATEGORIES.map((cat) => `<a href="/${cat.slug}/">${escapeHtml(cat.name)}</a>`).join('\n      ')}
+    </div>
+  </div>
+  <div>
+    <div class="footer-col-title">Проєкт</div>
+    <div class="footer-links">
+      <a href="/about/">Про нас</a>
+      <a href="/contacts/">Контакти</a>
+      ${SITE.telegramUrl ? `<a href="${escapeHtml(SITE.telegramUrl)}" target="_blank" rel="noopener">Telegram</a>` : ''}
+      ${SITE.instagramUrl ? `<a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener">Instagram</a>` : ''}
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="footer-copy">© ${new Date().getFullYear()} 8concert.com — Київ</div>
+    <div class="footer-copy">Зроблено з любов'ю до музики</div>
+  </div>
+</footer>`;
+}
+
+function renderHomepage(concerts, overflowPool = [], allUpcoming = []) {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const { start: weekStart, end: weekEnd } = getWeekBounds();
+
+  // "Цей тиждень" / "Сьогодні ввечері" filter from allUpcoming (every fresh
+  // concert we know about), not just the curated top-8 `concerts` pool —
+  // otherwise these tabs would only ever show whichever of the 8 curated
+  // picks happen to land this week, hiding real concerts the site already
+  // has full pages for. Same pool the dedicated /tsey-tyzhden/ and
+  // /sogodni-vvecheri/ SEO pages use (see buildScopePages), so clicking a
+  // tab and visiting its URL directly show the same concerts. Unparseable
+  // dates are kept rather than hidden — see the isPastEvent comment above
+  // for the same reasoning. Anything with a known date outside this window
+  // belongs to a later week, not this one.
+  const weekConcerts = allUpcoming.filter((c) => !c.isoDate || (c.isoDate >= weekStart && c.isoDate <= weekEnd));
+  const todayConcerts = allUpcoming.filter((c) => c.isoDate === todayStr);
+
+  const renumber = (list) => list.map((c, index) => ({
+    ...c,
+    num: String(index + 1).padStart(2, '0'),
+    isTop: Boolean(c.f.Status),
+  }));
+
+  const weekList = renumber(weekConcerts);
+  const todayList = renumber(todayConcerts);
+
+  const weekHtml = weekList.length
+    ? weekList.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : '<div class="loading">На цьому тижні нових концертів ще не додали. Загляньте трохи пізніше ✨</div>';
+
+  const todayHtml = todayList.length
+    ? todayList.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : '<div class="loading">Сьогодні ввечері — тиша. Перевірте афішу тижня ✨</div>';
+
+  // "Топ 8" is the full curated pool regardless of week — since "Цей тиждень"
+  // is now an honest weekly filter, this is the only place to see all 8 picks
+  // at once when they're spread across more than one week.
+  const top8Html = concerts.length
+    ? concerts.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : '<div class="loading">Незабаром тут з\'являться найкращі вечори Києва</div>';
+
+  // Genre-filter backfill pool: every fresh upcoming concert beyond the
+  // curated 8, already numbered and rendered, but hidden by default (see
+  // renderConcertCard's `extra` flag). When someone isolates a single genre
+  // pill and the curated 8 doesn't have 8 concerts in that genre, client.js
+  // reveals cards from here (chronological order, matching genre) until
+  // either 8 cards are on screen or the pool runs out — so "Джаз" always
+  // shows every upcoming jazz concert we know about, not just whichever
+  // ones happened to make this week's front-page 8.
+  const overflowHtml = overflowPool
+    .map((c, index) => renderConcertCard(
+      { ...c, num: String(concerts.length + index + 1).padStart(2, '0'), isTop: false },
+      { linkTitle: true, extra: true },
+    ))
+    .join('');
+
