@@ -1,0 +1,172 @@
+    ? items.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : '<div class="loading">Найближчим часом нових концертів у цій категорії ще не додали. Загляньте трохи пізніше ✨</div>';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [{
+      '@type': 'ItemList',
+      name: `${cat.name} концерти Києва — 8CONCERT`,
+      itemListElement: items.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${SITE_URL}/concert/${c.slug}/`,
+        name: c.title,
+      })),
+    }],
+  };
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(cat.name)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Редакційна добірка</div>
+    <h1 class="hero-title">${cat.emoji} ${escapeHtml(cat.h1)}</h1>
+    <p class="hero-sub">${escapeHtml(cat.intro)}</p>
+  </div>
+</div>
+<div class="category-list">${listHtml}</div>
+`;
+
+  return pageShell({
+    title: `${cat.title} | 8CONCERT`,
+    description: cat.intro,
+    canonical: `${SITE_URL}/${cat.slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+  });
+}
+
+// Time/scope-based listing pages (/vsi-podii/, /tsey-tyzhden/,
+// /sogodni-vvecheri/) — same idea as CATEGORIES' /jazz/ /klasika/
+// /trybuti/ pages just above, but sliced by date range instead of genre.
+// The homepage's "Цей тиждень" / "Сьогодні ввечері" / "Всі події" tabs are
+// client-side JS toggles on a single URL (see client.js switchTab), so
+// without a dedicated page for each, Google has nothing separate to rank
+// for "концерти Київ сьогодні" / "концерти Київ цього тижня" / "афіша
+// концертів Києва" style searches — every tab's content lives under the
+// same canonical "/" URL and title. These pages give each time-based
+// search intent its own crawlable URL, title, meta description and H1.
+//
+// Built from the full freshUpcoming pool (passed in as `items`, already
+// date-filtered by the caller), not the capped 8-event curated set — same
+// reasoning as why renderCategoryPage takes freshUpcoming: a thin,
+// near-empty SEO landing page ranks worse than no page at all.
+function renderScopePage({ slug, breadcrumbLabel, title, description, h1, intro, items, emptyMessage }) {
+  const numbered = items.map((c, index) => ({
+    ...c,
+    num: String(index + 1).padStart(2, '0'),
+    isTop: Boolean(c.f.Status),
+  }));
+
+  const listHtml = numbered.length
+    ? numbered.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
+    : `<div class="loading">${escapeHtml(emptyMessage)}</div>`;
+
+  const jsonLd = numbered.length ? {
+    '@context': 'https://schema.org',
+    '@graph': [{
+      '@type': 'ItemList',
+      name: `${title} — 8CONCERT`,
+      itemListElement: numbered.map((c, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: `${SITE_URL}/concert/${c.slug}/`,
+        name: c.title,
+      })),
+    }],
+  } : null;
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(breadcrumbLabel)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Редакційна добірка</div>
+    <h1 class="hero-title">${escapeHtml(h1)}</h1>
+    <p class="hero-sub">${escapeHtml(intro)}</p>
+  </div>
+</div>
+<div class="category-list">${listHtml}</div>
+`;
+
+  return pageShell({
+    title: `${title} | 8CONCERT`,
+    description,
+    canonical: `${SITE_URL}/${slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+  });
+}
+
+// Builds the three renderScopePage() configs from freshUpcoming — kept as
+// one function so main() doesn't need to duplicate the week/today date-math
+// that renderHomepage's tabs already do.
+function buildScopePages(freshUpcoming) {
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const { start: weekStart, end: weekEnd } = getWeekBounds();
+  const weekLabel = formatWeekRangeDisplay(weekStart, weekEnd);
+  const todayLabel = formatFullDateDisplay(todayStr);
+
+  const allItems = freshUpcoming;
+  const weekItems = freshUpcoming.filter((c) => !c.isoDate || (c.isoDate >= weekStart && c.isoDate <= weekEnd));
+  const todayItems = freshUpcoming.filter((c) => c.isoDate === todayStr);
+
+  return [
+    {
+      slug: 'vsi-podii',
+      breadcrumbLabel: 'Всі події',
+      title: 'Усі концерти Києва — повна афіша джазу, класики та триб\'ютів',
+      description: 'Повний список найближчих концертів Києва з нашої афіші: джаз, класика та триб\'юти з усіх майданчиків міста. Дати, ціни й посилання на квитки — оновлюємо щодня.',
+      h1: 'Усі концерти Києва',
+      intro: `Тут — ${pluralEvents(allItems.length)}, які ми знайшли на найближчий час у Києві: не лише вісім обраних редакцією, а повний список джазу, класики й триб'ютів з усіх майданчиків.`,
+      items: allItems,
+      emptyMessage: 'Найближчим часом нових концертів ще не додали. Загляньте трохи пізніше ✨',
+    },
+    {
+      slug: 'tsey-tyzhden',
+      breadcrumbLabel: 'Цей тиждень',
+      title: `Концерти Києва цього тижня (${weekLabel}) — афіша`,
+      description: `Куди піти на концерт у Києві цього тижня, ${weekLabel}: джаз, класика та триб'юти. Актуальна афіша з датами, цінами й посиланнями на квитки.`,
+      h1: `Концерти Києва цього тижня — ${weekLabel}`,
+      intro: weekItems.length
+        ? `Афіша на ${weekLabel} — ${pluralEvents(weekItems.length)} джазу, класики й триб'ютів, які ми знайшли на цьому тижні в Києві.`
+        : `На ${weekLabel} нових концертів ще не додали.`,
+      items: weekItems,
+      emptyMessage: 'На цьому тижні нових концертів ще не додали. Загляньте трохи пізніше ✨',
+    },
+    {
+      slug: 'sogodni-vvecheri',
+      breadcrumbLabel: 'Сьогодні',
+      title: `Концерти Києва сьогодні ввечері (${todayLabel}) — афіша`,
+      description: `Куди піти сьогодні ввечері в Києві, ${todayLabel}: концерти джазу, класики та триб'ютів, які відбудуться сьогодні.`,
+      h1: `Концерти Києва сьогодні ввечері — ${todayLabel}`,
+      intro: todayItems.length
+        ? `Сьогодні, ${todayLabel}, у Києві — ${pluralEvents(todayItems.length)} з нашої афіші.`
+        : `Сьогодні, ${todayLabel}, у нашій афіші поки тихо — перевірте афішу тижня.`,
+      items: todayItems,
+      emptyMessage: 'Сьогодні ввечері — тиша. Перевірте афішу тижня ✨',
+    },
+  ];
+}
+
+function renderVenueCard(venue) {
+  return `
+      <a href="/mistsya/${venue.slug}/" class="venue-card">
+        <img class="venue-card-image" src="/images/venues/${venue.image}" alt="${escapeHtml(venue.name)}" loading="lazy">
+        <div class="venue-card-body">
+          <div class="venue-card-category">${escapeHtml(venue.category)}</div>
+          <div class="venue-card-name">${escapeHtml(venue.name)}</div>
+          <div class="venue-card-tagline">${escapeHtml(venue.tagline)}</div>
+        </div>
+      </a>`;
+}
+
+function renderVenuesIndexPage(venues) {
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / Місця</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Гід по майданчиках</div>
+    <h1 class="hero-title">Де в Києві слухають музику наживо</h1>
+            <p class="hero-sub">Інтимні концерти у найкрасивіших просторах Києва — понад 40 майданчиків нашого гіду: дахи бізнес-центрів, літні тераси, історичні зали філармонії й консерваторії та затишні джаз-клуби. Лише жива музика, без фонограм — для тих, хто цінує живий звук і справжні емоції.</p>
