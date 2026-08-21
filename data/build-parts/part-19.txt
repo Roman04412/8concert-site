@@ -1,0 +1,190 @@
+    // link isn't a valid absolute URL.
+    ...((() => {
+      const organizerRaw = fieldCI(f, 'Organizer');
+      const organizerName = typeof organizerRaw === 'string' ? organizerRaw.trim() : '';
+      if (!organizerName) return {};
+      let organizerUrl;
+      try {
+        organizerUrl = new URL(link).origin;
+      } catch (err) {
+        organizerUrl = undefined;
+      }
+      return {
+        organizer: {
+          '@type': 'Organization',
+          name: organizerName,
+          ...(organizerUrl ? { url: organizerUrl } : {}),
+        },
+      };
+    })()),
+    offers: {
+      '@type': 'Offer',
+      url: link,
+      ...(priceNumeric ? { price: priceNumeric } : {}),
+      priceCurrency: 'UAH',
+      availability: 'https://schema.org/InStock',
+      ...(validFrom ? { validFrom } : {}),
+    },
+  };
+
+  // Past events keep their page (never 404 — see main()'s pastPages), but
+  // swap the "buy tickets" CTA for an honest "this already happened" notice
+  // plus a way back into the current afisha, instead of pointing people at a
+  // ticket link that's no longer valid.
+  const ctaHtml = isPast
+    ? `
+  <div class="concert-ended">
+    <span class="tag tag-ended">Подія завершена</span>
+    <p class="concert-ended-note">Ця подія вже відбулася. Актуальну афішу дивіться нижче.</p>
+  </div>`
+    : `
+  <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>
+  <a href="${escapeHtml(link)}" class="btn-ticket" style="margin-top:16px" target="_blank" rel="noopener noreferrer sponsored"
+     data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}"
+     data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(price)}">
+    ${isFree ? 'Деталі та реєстрація →' : 'Купити квитки →'}
+  </a>`;
+
+  // Prefer other concerts at the SAME venue (matched via the shared VENUES
+  // list when possible, falling back to a loose text match on the raw
+  // Location string for venues without their own card) so a visitor
+  // reading about a past event sees what's coming up at that same place
+  // first. Generic "other concerts in Kyiv" fill any remaining slots up to
+  // 4, same as before — each item still shows its own 📍 location, so a
+  // mixed list never implies they're all at the same venue.
+  const thisLocation = f.Location || '';
+  const thisVenue = thisLocation ? findVenueForLocation(thisLocation) : null;
+  const isSameVenue = (oc) => {
+    const ocLocation = (oc.f && oc.f.Location) || '';
+    if (!ocLocation) return false;
+    if (thisVenue) return findVenueForLocation(ocLocation) === thisVenue;
+    const a = thisLocation.toLowerCase();
+    const b = ocLocation.toLowerCase();
+    return Boolean(a && b) && (a.includes(b) || b.includes(a));
+  };
+  const candidatePool = otherConcerts.filter((oc) => oc.slug !== slug);
+  const sameVenue = candidatePool.filter(isSameVenue);
+  const others = candidatePool.filter((oc) => !isSameVenue(oc));
+
+  // Past-event pages: same-venue matches first, then generic "other
+  // concerts in Kyiv" fill up to 4 — each item still shows its own 📍
+  // location (see renderRelatedConcert), so a mixed list never implies
+  // they're all at the same venue.
+  const related = [...sameVenue, ...others].slice(0, 4);
+  const relatedHtml = isPast && related.length
+    ? `
+<section class="related-concerts">
+  <h2 class="related-title">Інші концерти в Києві</h2>
+  <div class="related-list">${related.map(renderRelatedConcert).join('')}
+  </div>
+</section>`
+    : '';
+
+  // Upcoming-event pages: a "Концерти тут" strip listing only OTHER
+  // upcoming events at this exact venue (no generic Kyiv fallback — if
+  // there's nothing else on there isn't a section at all, rather than
+  // padding it with unrelated concerts). Every item is already known to
+  // share this venue, so showLocation is off, same as on the venue's own
+  // page. Links to the full venue page when we have a matching card.
+  const venueEventsHtml = !isPast && sameVenue.length
+    ? `
+<section class="related-concerts">
+  <h2 class="related-title">Концерти тут</h2>
+  <div class="related-list">${sameVenue.slice(0, 4).map((c) => renderRelatedConcert(c, { showLocation: false })).join('')}
+  </div>
+  ${thisVenue ? `<p class="concert-desc" style="font-size:14px;margin-top:16px"><a href="/mistsya/${thisVenue.slug}/" class="venue-link">${escapeHtml(thisVenue.seoTitle)} →</a></p>` : ''}
+</section>`
+    : '';
+
+  // Web Share API on supporting browsers (mostly mobile — opens the native
+  // share sheet), "copy link" fallback everywhere else. See src/client.js.
+  // No third-party share SDK/pixel — just the browser's own API.
+  const shareHtml = `
+  <button type="button" class="btn-share" data-share
+     data-share-title="${escapeHtml(title)}" data-share-url="${SITE_URL}/concert/${slug}/">
+    ${ICON_SHARE}<span class="btn-share-label">Поділитися</span>
+  </button>`;
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(title)}</nav>
+<article class="concert-page">
+  ${image ? `<img class="concert-page-image" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
+  <div class="concert-tags">
+    ${f.Category ? `<span class="tag">${escapeHtml(displayCategory(f.Category))}</span>` : ''}
+  </div>
+  <h1 class="concert-title">${escapeHtml(title)}</h1>
+  ${renderBodyParagraphs(snippet)}
+  <div class="concert-meta">
+    ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
+    ${f.Location ? (() => {
+      const venue = findVenueForLocation(f.Location);
+      return venue
+        ? `<span>📍 <a href="/mistsya/${venue.slug}/" class="venue-link">${escapeHtml(f.Location)}</a></span>`
+        : `<span>📍 ${escapeHtml(f.Location)}</span>`;
+    })() : ''}
+  </div>
+${ctaHtml}
+  ${shareHtml}
+</article>${relatedHtml}${venueEventsHtml}`;
+
+  return pageShell({
+    title: `${title} — 8CONCERT`,
+    description: (snippet || desc || `${title}. ${f.Date || ''} ${f.Location || ''}`).slice(0, 160),
+    canonical: `${SITE_URL}/concert/${slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+    ogImage: image,
+  });
+}
+
+function renderAboutPage() {
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / Про нас</nav>
+<article class="concert-page">
+  <h1 class="concert-title">8CONCERT — вісім вечорів, які варто прожити</h1>
+  ${renderBodyParagraphs(SITE.aboutText)}
+  <a href="${SITE.telegramUrl || '/contacts/'}" class="btn-ticket" style="margin-top:8px" ${SITE.telegramUrl ? 'target="_blank" rel="noopener"' : ''}>Зв'язатися з нами →</a>
+</article>`;
+
+  return pageShell({
+    title: 'Про нас — 8CONCERT',
+    description: 'Хто робить редакційну добірку концертів Києва 8CONCERT і як ми обираємо події тижня.',
+    canonical: `${SITE_URL}/about/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
+}
+
+function renderContactsPage() {
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / Контакти</nav>
+<article class="concert-page">
+  <h1 class="concert-title">Контакти</h1>
+  <p class="concert-desc" style="font-size:15px;margin-bottom:20px">Пропозиції щодо концертів для афіші, співпраця, помилка на сайті — пишіть, відповідаємо особисто.</p>
+  ${SITE.telegramUrl ? `<a href="${escapeHtml(SITE.telegramUrl)}" class="btn-ticket" target="_blank" rel="noopener" style="margin-bottom:20px">Написати в Telegram →</a>` : ''}
+  <div class="concert-meta" style="flex-direction:column;align-items:flex-start;gap:10px;font-size:14px;margin-top:${SITE.telegramUrl ? '4px' : '0'}">
+    <span>✉️ <a href="mailto:${escapeHtml(SITE.contactEmail)}" style="color:var(--brown)">${escapeHtml(SITE.contactEmail)}</a></span>
+    ${SITE.instagramUrl ? `<span>📷 <a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener" style="color:var(--brown)">Instagram</a></span>` : ''}
+  </div>
+</article>`;
+
+  return pageShell({
+    title: 'Контакти — 8CONCERT',
+    description: 'Як зв\'язатися з редакцією 8CONCERT.',
+    canonical: `${SITE_URL}/contacts/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
+}
+
+function renderCategoryPage(cat, concerts) {
+  const items = concerts
+    .filter((c) => normalizeCategoryKey(c.f.Category) === normalizeCategoryKey(cat.name))
+    .map((c, index) => ({
+      ...c,
+      num: String(index + 1).padStart(2, '0'),
+      isTop: index < 2 || c.f.Status === 'Топ',
+    }));
+
+  const listHtml = items.length
