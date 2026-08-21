@@ -1,0 +1,199 @@
+    '(copy .env.example to .env and fill it in, or set them in your host\'s dashboard).'
+  );
+  process.exit(1);
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+const UA_MONTHS = ['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
+
+const TRANSLIT = {
+  а:'a',б:'b',в:'v',г:'h',ґ:'g',д:'d',е:'e',є:'ie',ж:'zh',з:'z',и:'y',і:'i',ї:'i',
+  й:'i',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',
+  ц:'ts',ч:'ch',ш:'sh',щ:'shch',ь:'',ю:'iu',я:'ia',
+};
+
+function slugify(str) {
+  const lower = String(str || '').toLowerCase();
+  const translit = lower.replace(/[а-яіїєґ]/g, (ch) => TRANSLIT[ch] ?? ch);
+  return translit
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 60) || 'concert';
+}
+
+function escapeHtml(str) {
+  return String(str ?? '').replace(/[&<>"']/g, (c) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  }[c]));
+}
+
+// Airtable field names are exact-match — if a column ever gets typed as
+// "organizer" instead of "Organizer" (or any other casing slip), f.Organizer
+// silently reads as undefined and the value never shows up, with no error
+// anywhere to point at why. Case-insensitive lookup so a typo'd column
+// header doesn't quietly swallow real data.
+function fieldCI(fields, name) {
+  const key = Object.keys(fields).find((k) => k.toLowerCase() === name.toLowerCase());
+  return key ? fields[key] : undefined;
+}
+
+// og:image / twitter:image / JSON-LD "image" all require an ABSOLUTE url per
+// spec — our own images are stored as root-relative paths (/images/foo.jpg),
+// so this turns them into full https://8concert.com/images/foo.jpg URLs.
+function absUrl(p) {
+  if (!p) return '';
+  return /^https?:\/\//.test(p) ? p : `${SITE_URL}${p}`;
+}
+
+// Best-effort parse of the free-text Ukrainian "Date" field (e.g. "15 серпня",
+// "сьогодні") into an ISO date. Returns null if it can't confidently parse —
+// callers must handle that (omit startDate rather than emit a wrong one).
+function parseUkrainianDate(raw) {
+  if (!raw) return null;
+  const text = String(raw).trim().toLowerCase();
+  const now = new Date();
+
+  // Airtable's native "Date" field type returns ISO format (e.g. "2026-08-13"),
+  // not Ukrainian text — handle that directly instead of falling through to the
+  // Ukrainian-text regex below (which would never match it).
+  const isoMatch = text.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (isoMatch) return `${isoMatch[1]}-${isoMatch[2]}-${isoMatch[3]}`;
+
+  if (text.includes('сьогодні')) return now.toISOString().slice(0, 10);
+  if (text.includes('завтра')) {
+    const d = new Date(now);
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().slice(0, 10);
+  }
+
+  const match = text.match(/(\d{1,2})\s+([а-яіїєґ]+)/);
+  if (!match) return null;
+  const day = parseInt(match[1], 10);
+  const monthIdx = UA_MONTHS.findIndex((m) => m.startsWith(match[2].slice(0, 4)));
+  if (monthIdx === -1 || day < 1 || day > 31) return null;
+
+  let year = now.getFullYear();
+  // If that date already passed this year by more than a month, assume next year.
+  const candidate = new Date(year, monthIdx, day);
+  if (candidate < now && (now - candidate) / 86400000 > 31) year += 1;
+
+  return `${year}-${String(monthIdx + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+}
+
+function formatDateDisplay(isoDate) {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+  const tomorrow = new Date(now);
+  tomorrow.setDate(now.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().slice(0, 10);
+  if (isoDate === todayStr) return 'Сьогодні';
+  if (isoDate === tomorrowStr) return 'Завтра';
+  const sameYear = y === now.getFullYear();
+  return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
+}
+
+// Full "17 серпня" style date, without the "Сьогодні"/"Завтра" substitution
+// formatDateDisplay does — used on the /sogodni-vvecheri/ SEO page, where
+// the point of the page IS today's date, so writing "Сьогодні ввечері:
+// Сьогодні" would be a bug, not a feature.
+function formatFullDateDisplay(isoDate) {
+  if (!isoDate) return '';
+  const [y, m, d] = isoDate.split('-').map(Number);
+  const sameYear = y === new Date().getFullYear();
+  return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
+}
+
+// "17–23 серпня" / "28 серпня – 3 вересня" style range for the
+// /tsey-tyzhden/ SEO page title, H1 and meta description — spans the month
+// name only once when the week doesn't cross a month boundary.
+function formatWeekRangeDisplay(startIso, endIso) {
+  const [, sm, sd] = startIso.split('-').map(Number);
+  const [, em, ed] = endIso.split('-').map(Number);
+  if (sm === em) return `${sd}–${ed} ${UA_MONTHS[em - 1]}`;
+  return `${sd} ${UA_MONTHS[sm - 1]} – ${ed} ${UA_MONTHS[em - 1]}`;
+}
+
+// Kyiv flips between EET (+2) and EEST (+3) twice a year (DST), so the
+// correct UTC offset for a given date can't be hardcoded. Let the JS Intl
+// API (backed by the full IANA tz database) resolve it instead of
+// reimplementing the EU DST rules by hand.
+function kyivOffset(isoDate) {
+  try {
+    const d = new Date(`${isoDate}T12:00:00Z`); // midday sidesteps any DST-boundary edge case
+    const parts = new Intl.DateTimeFormat('en-US', {
+      timeZone: 'Europe/Kyiv',
+      timeZoneName: 'shortOffset',
+    }).formatToParts(d);
+    const tzPart = parts.find((p) => p.type === 'timeZoneName');
+    const match = tzPart && tzPart.value.match(/GMT([+-]\d+)/);
+    const hours = match ? parseInt(match[1], 10) : 2;
+    return `${hours >= 0 ? '+' : '-'}${String(Math.abs(hours)).padStart(2, '0')}:00`;
+  } catch {
+    return '+02:00';
+  }
+}
+
+// Google's structured-data check for Event/MusicEvent flags a missing
+// endDate as a (non-critical) recommendation. Airtable never records a real
+// end time, so — only when we actually know a specific start time, never
+// for a bare date — we estimate a typical concert length. This mirrors what
+// most ticketing/aggregator sites do when the true end time isn't
+// published; we deliberately skip it rather than invent a time-of-day we
+// don't have.
+const TYPICAL_CONCERT_DURATION_MS = 2.5 * 60 * 60 * 1000;
+function estimateEndDateTime(startDateTime, timeDisplay) {
+  if (!timeDisplay) return undefined;
+  const m = String(startDateTime).match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}([+-]\d{2}:\d{2})$/);
+  if (!m) return undefined;
+  const offset = m[1];
+  const start = new Date(startDateTime);
+  if (isNaN(start.getTime())) return undefined;
+  const om = offset.match(/^([+-])(\d{2}):(\d{2})$/);
+  const offsetMin = om ? (om[1] === '-' ? -1 : 1) * (parseInt(om[2], 10) * 60 + parseInt(om[3], 10)) : 0;
+  // Shift into "local time represented via UTC getters" so we can read
+  // Y/M/D/H/M/S directly without a second timezone-database lookup.
+  const local = new Date(start.getTime() + TYPICAL_CONCERT_DURATION_MS + offsetMin * 60000);
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${local.getUTCFullYear()}-${pad(local.getUTCMonth() + 1)}-${pad(local.getUTCDate())}T${pad(local.getUTCHours())}:${pad(local.getUTCMinutes())}:${pad(local.getUTCSeconds())}${offset}`;
+}
+
+// ISO (Mon-Sun) bounds of the current calendar week, as YYYY-MM-DD strings —
+// used to make the "Цей тиждень" tab actually mean "this week" instead of
+// "next 8 concerts whenever they happen to be".
+function getWeekBounds() {
+  const now = new Date();
+  const day = now.getDay();
+  const mon = new Date(now);
+  mon.setDate(now.getDate() - (day === 0 ? 6 : day - 1));
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  const toIso = (d) => d.toISOString().slice(0, 10);
+  return { start: toIso(mon), end: toIso(sun) };
+}
+
+function pluralEvents(n) {
+  if (n === 8) return 'вісім подій';
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return `${n} подія`;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${n} події`;
+  return `${n} подій`;
+}
+
+// ---------------------------------------------------------------------------
+// Fetch data
+// ---------------------------------------------------------------------------
+
+async function fetchConcerts() {
+  const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?maxRecords=${FETCH_LIMIT}&view=Grid%20view`;
+  const res = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
+  if (!res.ok) throw new Error(`Airtable ${res.status}: ${await res.text()}`);
+  const data = await res.json();
+  return data.records || [];
+}
+
