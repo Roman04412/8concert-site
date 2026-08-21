@@ -1,0 +1,162 @@
+  // record is removed from Airtable (or its date passes) it just keeps its
+  // last-known fields here forever, instead of disappearing.
+  const archiveMap = loadArchive();
+  // _firstSeenDate is the one field on the archived record that isn't raw
+  // Airtable data — it's the date this build first saw the record, kept
+  // stable across every future overwrite. Used as Offer.validFrom: an
+  // honest "we've had this listing since" instead of a fabricated
+  // on-sale date we have no way of knowing. Records archived before this
+  // feature existed get today's date as their first-seen date, since we
+  // have no earlier record of them.
+  for (const r of records) {
+    const prevFirstSeen = archiveMap[r.id] && archiveMap[r.id]._firstSeenDate;
+    archiveMap[r.id] = { ...r, _firstSeenDate: prevFirstSeen || todayStr };
+  }
+  saveArchive(archiveMap);
+
+  const freshIds = new Set(records.map((r) => r.id));
+  const allKnown = Object.values(archiveMap).map(buildConcertData);
+
+  // Every fresh (still in Airtable), not-yet-past record with at least a
+  // title — this is broader than the homepage's curated 8: Airtable can
+  // (and often does) have more upcoming concerts than we feature on the
+  // homepage at once. Records with no Title filled in yet are treated as
+  // unfinished drafts (e.g. a row Rocky started adding in Airtable but
+  // hasn't finished) and stay invisible on the site — no page, no
+  // homepage slot, no "Назва уточнюється" placeholder card — until a
+  // title is filled in.
+  const freshUpcoming = allKnown
+    .filter((c) => freshIds.has(c.record.id) && !isPastEvent(c, todayStr) && Boolean(c.f.Title))
+    // Soonest first. allKnown's own order is just archive.json's key order
+    // (alphabetical by Airtable record id, for stable git diffs — see
+    // saveArchive), which has nothing to do with event date, so without an
+    // explicit sort here the homepage's "curated 8" would appear in a
+    // effectively random order instead of chronological.
+    .sort((a, b) => {
+      if (!a.isoDate) return 1;
+      if (!b.isoDate) return -1;
+      return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
+    });
+
+  // Every concert we've ever archived whose date has passed gets to keep its
+  // page — "Не видаляти минулі концерти": no 404s, Google keeps whatever
+  // authority/traffic the page earned by artist/event name. This includes
+  // records still sitting in Airtable past their date AND ones already
+  // removed from the table, as long as we archived them at some point.
+  const pastPages = allKnown.filter((c) => isPastEvent(c, todayStr));
+
+  fs.rmSync(DIST, { recursive: true, force: true });
+  fs.mkdirSync(DIST, { recursive: true });
+  const imagesDir = path.join(DIST, 'images');
+  fs.mkdirSync(imagesDir, { recursive: true });
+
+  // Resolve images on freshUpcoming/pastPages BEFORE the curated "concerts"
+  // array is built below. "concerts" is a spread-copy of a slice of
+  // freshUpcoming (`.map((c) => ({ ...c, ... }))`), not the same object
+  // references — mutating `.image` on a later copy of a curated concert
+  // never reached back into the freshUpcoming original it was copied from.
+  // That silently broke images specifically for Status-tagged (curated)
+  // concerts on every page that renders straight from freshUpcoming
+  // instead of from the curated set: /vsi-podii/, /tsey-tyzhden/,
+  // /sogodni-vvecheri/, /jazz/, /klasika/, /trybuti/, and the homepage's
+  // own "Цей тиждень"/"Сьогодні ввечері"/"Всі події" tabs — they'd show
+  // the raw (temporary, expiring) Airtable attachment URL instead of the
+  // self-hosted one, and it would 404/fail to load once Airtable's link
+  // expired. Resolving here, once, on the shared objects, means every
+  // downstream array (concerts' copies included) inherits the already-
+  // resolved path.
+  for (const c of [...freshUpcoming, ...pastPages]) {
+    c.image = await resolveImage(c.image, c.slug, imagesDir);
+  }
+
+  // Curated homepage set: every fresh upcoming concert Rocky has marked
+  // with a Status in Airtable ("Топ" or "Вибір редакції") qualifies for
+  // "8 подій", capped at DISPLAY_COUNT and taken soonest-first (no
+  // priority between the two Status values — freshUpcoming is already
+  // sorted chronologically, so a plain slice keeps date order). If more
+  // than DISPLAY_COUNT records are marked, the rest fall through to
+  // overflow same as an unmarked record would.
+  const statusUpcoming = freshUpcoming.filter((c) => Boolean(c.f.Status));
+  const concerts = statusUpcoming
+    .slice(0, DISPLAY_COUNT)
+    .map((c, index) => ({
+      ...c,
+      num: String(index + 1).padStart(2, '0'),
+      isTop: true,
+    }));
+
+  // Everything else fresh+upcoming — unmarked records, plus any
+  // Status-marked ones beyond the DISPLAY_COUNT cap above — still gets a
+  // real /concert/<slug>/ page (isPast: false) and shows up in the "Всі
+  // події" tab, just not in the curated/featured set. Without this, a
+  // concert Rocky adds to Airtable that doesn't make the curated set has
+  // no page at all, so nothing (venue pages included) can safely link to
+  // it.
+  const curatedIds = new Set(concerts.map((c) => c.record.id));
+  const overflowConcerts = freshUpcoming.filter((c) => !curatedIds.has(c.record.id));
+
+  console.log(`Curated this week: ${concerts.length}. Extra upcoming (not on homepage): ${overflowConcerts.length}. Past pages kept alive: ${pastPages.length}.`);
+
+  const noDateCount = concerts.filter((c) => !c.isoDate).length;
+  if (noDateCount) {
+    console.warn(
+      `Warning: ${noDateCount} concert(s) have a "Date" field that couldn't be parsed into an ISO date, ` +
+      `so their Event structured data will be missing startDate (hurts eligibility for Google\'s event rich results). ` +
+      `Consider changing the Airtable "Date" column to a real Date field type.`
+    );
+  }
+
+  const allPages = [...concerts, ...overflowConcerts, ...pastPages];
+
+  fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts, overflowConcerts, freshUpcoming));
+  fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
+  fs.writeFileSync(path.join(DIST, 'robots.txt'), renderRobots());
+  fs.writeFileSync(path.join(DIST, 'llms.txt'), renderLlmsTxt(concerts));
+
+  fs.mkdirSync(path.join(DIST, 'about'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'about', 'index.html'), renderAboutPage());
+
+  fs.mkdirSync(path.join(DIST, 'contacts'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'contacts', 'index.html'), renderContactsPage());
+
+  for (const cat of CATEGORIES) {
+    fs.mkdirSync(path.join(DIST, cat.slug), { recursive: true });
+    fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, freshUpcoming));
+  }
+
+  for (const page of buildScopePages(freshUpcoming)) {
+    fs.mkdirSync(path.join(DIST, page.slug), { recursive: true });
+    fs.writeFileSync(path.join(DIST, page.slug, 'index.html'), renderScopePage(page));
+  }
+
+  // "Місця" (venues): built from allPages, NOT allKnown/allConcerts — only
+  // concerts allPages actually get a /concert/<slug>/ page written this
+  // build (see the loops below and pastPages above). allKnown includes
+  // every fresh Airtable record even ones beyond DISPLAY_COUNT that never
+  // get a page, which was linking venue pages to concerts whose page
+  // didn't exist (404). Sorted soonest-first so each venue page leads with
+  // its next upcoming concert rather than an arbitrary archive order.
+  const venueConcertPool = [...allPages].sort((a, b) => {
+    if (!a.isoDate) return 1;
+    if (!b.isoDate) return -1;
+    return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
+  });
+  // Venues with at least one upcoming (non-past) concert in our current
+  // listings float to the top of "Місця" — a visitor is more likely to
+  // care about a venue they could actually go to soon than one with
+  // nothing currently booked. Stable sort keeps the original curated
+  // order within each group (has-events / no-events).
+  const todayStrForVenues = new Date().toISOString().slice(0, 10);
+  const venuesSorted = [...VENUES].sort((a, b) => {
+    const aHas = findVenueConcerts(a, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues));
+    const bHas = findVenueConcerts(b, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues));
+    if (aHas === bHas) return 0;
+    return aHas ? -1 : 1;
+  });
+  fs.mkdirSync(path.join(DIST, 'mistsya'), { recursive: true });
+  fs.writeFileSync(path.join(DIST, 'mistsya', 'index.html'), renderVenuesIndexPage(venuesSorted));
+  for (const season of SEASONS) {
+    const seasonDir = path.join(DIST, 'mistsya', season.slug);
+    fs.mkdirSync(seasonDir, { recursive: true });
+    fs.writeFileSync(path.join(seasonDir, 'index.html'), renderSeasonVenuesPage(season, venuesSorted));
+  }
