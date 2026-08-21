@@ -7,6 +7,6 @@
     "node": ">=18"
   },
   "scripts": {
-    "build": "node build.js"
+    "build": "node assemble.js && node build.js"
   }
 }
