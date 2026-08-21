@@ -1,0 +1,122 @@
+  <a href="/mistsya/${s.slug}/" class="season-toggle-pill${s.slug === activeSlug ? ' active' : ''}">${s.icon} ${escapeHtml(s.navLabel)}</a>`).join('')}
+</div>`;
+}
+
+// Genre x venue-type SEO guides ("Найкращі тераси для класики" etc.) —
+// venue.genres is a factual read of what each venue's own paragraphs
+// already say it hosts (not a new claim), so these pages only ever list
+// venues we can actually back up. Kept as a short, reviewable list rather
+// than an auto-generated matrix of every venueType x genre combo, since
+// several combos (e.g. "дахи для триб'ютів" - just Дах ЦУМ) would be too
+// thin to be a useful page.
+const VENUE_GUIDES = [
+  {
+    slug: 'terasy-dlya-dzhazu-i-klasyky',
+    venueType: 'тераса',
+    genres: ['джаз', 'класика'],
+    seoTitle: 'Найкращі тераси Києва для джазу і класики | 8CONCERT',
+    metaDescription: "Тераси Києва, де регулярно проходять концерти джазу та класичної музики: River Mall, Gulliver, Д12, Toronto-Kyiv. Афіша, адреси, плюси й мінуси кожного майданчика.",
+    h1: 'Найкращі тераси Києва для джазу і класики',
+    intro: 'Джаз і класика просто неба — два формати, які найкраще працюють саме на терасі: камерний звук, вечірнє світло і місто навколо. Ось усі тераси з нашої добірки, де регулярно звучить джаз, класика або обидва жанри одразу.',
+  },
+  {
+    slug: 'dakhy-kyieva',
+    venueType: 'дах',
+    // No genres filter — unlike the terrace guide, this one isn't
+    // narrowed by genre yet. Right now it's just Дах ЦУМ; the page
+    // exists so there's already an indexed, ranking URL for "дахи Києва
+    // для концертів" by the time more rooftop venues get added here.
+    seoTitle: 'Найкращі дахи Києва для концертів просто неба | 8CONCERT',
+    metaDescription: "Дахи Києва, де проходять концерти просто неба: дах ЦУМ та інші майданчики, які додаються в міру розширення добірки. Афіша, адреси, плюси й мінуси.",
+    h1: 'Найкращі дахи Києва для концертів',
+    intro: 'Дах — один із найатмосферніших форматів літнього концерту в Києві: місто внизу, небо над головою і музика між ними. Список поповнюємо в міру того, як знаходимо нові дахові майданчики з живою музикою.',
+  },
+  {
+    slug: 'hoteli-dlya-dzhazu-i-klasyky',
+    slugs: ['fairmont-grand-hotel', 'premier-palace', 'hilton-kyiv', 'intercontinental-kyiv'],
+    seoTitle: 'Готелі Києва з концертами джазу та класики | 8CONCERT',
+    metaDescription: 'Готелі Києва, де проходять концерти джазу та класичної музики: Fairmont, Premier Palace, Hilton, InterContinental. Афіша, зали, акустика, плюси й мінуси кожного майданчика.',
+    h1: 'Готелі Києва з концертами джазу та класики',
+    intro: 'Не найочевидніший формат, але в кількох готелях Києва є зали з хорошою акустикою, де регулярно чи час від часу звучить джаз і класична музика. Ось усі готельні майданчики з нашої добірки — з чесними плюсами й мінусами.',
+  },
+  {
+    slug: 'budynky-tvorchykh-spilok',
+    venueType: 'творча спілка',
+    genres: ['джаз', 'класика'],
+    seoTitle: 'Будинки творчих спілок Києва з концертами джазу та класики | 8CONCERT',
+    metaDescription: 'Будинок архітектора, Будинок актора, Будинок кіно — камерні концерти джазу та класичної музики в історичних будівлях творчих спілок Києва. Афіша, адреси, плюси й мінуси.',
+    h1: 'Будинки творчих спілок Києва, де звучить джаз і класика',
+    intro: 'Будинок архітектора, Будинок актора, Будинок кіно — ці камерні майданчики належать професійним творчим спілкам, а не концертним агенціям, тож і атмосфера тут інакша: історичні зали, мистецькі виставки у фойє та концерти джазу і класики поруч із офіційними подіями самих спілок.',
+  },
+  {
+    slug: 'teatry-dlya-dzhazu-i-klasyky',
+    venueTypes: ['оперний театр', 'драматичний театр'],
+    seoTitle: 'Театри Києва з концертами джазу та класики | 8CONCERT',
+    metaDescription: 'Театри й оперні сцени Києва, де можна почути джаз і класичну музику: Національна опера, Київська опера, Театр Франка, Театр Лесі Українки. Афіша, зали, акустика.',
+    h1: 'Театри Києва, де звучить джаз і класика',
+    intro: 'Оперні та драматичні театри Києва — це не лише вистави: тут регулярно або вибірково звучить і джаз, і класична музика, часто в залах із визнаною акустикою. Ось усі театральні майданчики з нашої добірки.',
+  },
+];
+
+function renderVenueGuideLinks() {
+  return `
+<div class="venue-guides-row">
+  <span class="venue-guides-label">Тематичні добірки:</span>
+  ${VENUE_GUIDES.map((g) => `<a href="/mistsya/${g.slug}/" class="venue-link">${escapeHtml(g.h1)}</a>`).join(' · ')}
+</div>`;
+}
+
+function renderVenueGuidePage(guide, allVenues) {
+  // Most guides filter allVenues by venueType (or venueTypes, for guides
+  // spanning more than one category, like theatres = drama + opera). A
+  // guide can instead give an explicit `slugs` list when the grouping
+  // isn't a clean venueType match (e.g. "hotels" — Hilton/InterContinental
+  // are tagged 'концертний зал' rather than 'готель' because their own
+  // cards are framed around the concert halls, not the hotel itself).
+  const venues = guide.slugs
+    ? guide.slugs.map((s) => allVenues.find((v) => v.slug === s)).filter(Boolean)
+    : allVenues.filter((v) => {
+        const types = guide.venueTypes || (guide.venueType ? [guide.venueType] : []);
+        const typeMatch = types.length === 0 || types.includes(v.venueType);
+        const genreMatch = !guide.genres || (v.genres || []).some((g) => guide.genres.includes(g));
+        return typeMatch && genreMatch;
+      });
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(guide.h1)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">Добірка</div>
+    <h1 class="hero-title">${escapeHtml(guide.h1)}</h1>
+    <p class="hero-sub">${escapeHtml(guide.intro)}</p>
+  </div>
+</div>
+<div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
+<p class="concert-desc" style="font-size:14px;margin-top:28px"><a href="/mistsya/" class="venue-link">← Усі майданчики</a></p>
+`;
+
+  return pageShell({
+    title: guide.seoTitle,
+    description: guide.metaDescription,
+    canonical: `${SITE_URL}/mistsya/${guide.slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
+}
+
+function findVenueConcerts(venue, allConcerts) {
+  const keys = venue.locationMatch.map((k) => k.toLowerCase());
+  return allConcerts.filter((c) => {
+    const loc = (c.f.Location || '').toLowerCase();
+    return keys.some((k) => loc.includes(k));
+  });
+}
+
+function findVenueForLocation(location) {
+  const loc = (location || '').toLowerCase();
+  if (!loc) return null;
+  return VENUES.find((v) => v.locationMatch.some((k) => loc.includes(k.toLowerCase()))) || null;
+}
+
+if (!AIRTABLE_TOKEN || !BASE_ID || !TABLE_ID) {
+  console.error(
+    'Missing env vars. Set AIRTABLE_TOKEN, AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID\n' +
