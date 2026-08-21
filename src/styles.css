@@ -22,6 +22,17 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Decorative red frame around every page, fixed to the viewport so it stays
+   put while the page scrolls. */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  border: 6px solid #C0392B;
+  pointer-events: none;
+  z-index: 9999;
+}
+
 /* HEADER */
 header {
   display: flex;
@@ -711,7 +722,7 @@ footer {
 .concert-page .concert-title { font-size: 40px; margin-bottom: 16px; }
 .concert-page .concert-desc { font-size: 15px; margin-bottom: 24px; }
 
-/* VENUES (\u0027\u041c\u0456\u0441\u0446\u044f\u0027) */
+/* VENUES ('Місця') */
 .venue-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
