@@ -1,0 +1,187 @@
+            <p class="hero-sub" style="margin-top:16px">Для кожного місця — плюси, мінуси й афіша найближчих концертів; майданчики з подіями найближчим часом підіймаємо на початок списку. Щомісяця — нова програма з класики, неокласики та джазу: оберіть сезон нижче — влітку відкриваються тераси й дахи, взимку концерти переходять у зали.</p>
+              </div>
+</div>
+${renderSeasonToggle(null)}
+${renderVenueGuideLinks()}
+<div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
+`;
+
+  return pageShell({
+    title: 'Місця — де в Києві слухають концерти наживо | 8CONCERT',
+    description: 'Гід по концертних майданчиках Києва: дах ЦУМ, тераси River Mall, Gulliver, Д12, Toronto-Kyiv, концерти біля Києво-Печерської лаври та затишні зали й паби. Літні й зимові майданчики окремо.',
+    canonical: `${SITE_URL}/mistsya/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
+}
+
+function renderSeasonVenuesPage(season, allVenues) {
+  const venues = allVenues.filter((v) => v.setting === season.setting);
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(season.navLabel)}</nav>
+<div class="hero" style="padding-bottom:24px">
+  <div class="hero-left">
+    <div class="hero-label">${escapeHtml(season.heroLabel)}</div>
+    <h1 class="hero-title">${escapeHtml(season.h1)}</h1>
+    <p class="hero-sub">${escapeHtml(season.intro)}</p>
+  </div>
+</div>
+${renderSeasonToggle(season.slug)}
+<div class="venue-grid">${venues.map(renderVenueCard).join('')}</div>
+<p class="concert-desc" style="font-size:14px;margin-top:28px"><a href="/mistsya/" class="venue-link">← Усі майданчики</a></p>
+`;
+
+  return pageShell({
+    title: season.seoTitle,
+    description: season.metaDescription,
+    canonical: `${SITE_URL}/mistsya/${season.slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+  });
+}
+
+function renderVenuePage(venue, allConcerts) {
+  // allConcerts is allPages (only concerts that actually got a /concert/
+  // page written — see main()) sorted soonest-first by the caller. We only
+  // ever show upcoming concerts here, never past ones: a venue page is
+  // meant to help someone decide whether to go, and a list padded with
+  // events that already happened isn't useful for that.
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const upcoming = findVenueConcerts(venue, allConcerts)
+    .filter((c) => !isPastEvent(c, todayStr))
+    .slice(0, 8);
+
+  const prosConsHtml = `
+  <div class="venue-proscons">
+    <div class="venue-pros">
+      <div class="venue-proscons-title">Плюси</div>
+      <ul>${venue.pros.map((p) => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
+    </div>
+    <div class="venue-cons">
+      <div class="venue-proscons-title">Мінуси</div>
+      <ul>${venue.cons.map((p) => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
+    </div>
+  </div>`;
+
+  const infoLine = venue.address || '';
+
+  const concertsHtml = upcoming.length
+    ? `
+  <section class="related-concerts" style="padding:0;max-width:none;margin-top:8px">
+    <h2 class="related-title">Концерти тут</h2>
+    <div class="related-list">${upcoming.map((c) => renderRelatedConcert(c, { showLocation: false })).join('')}
+    </div>
+  </section>`
+    : `
+  <div class="loading" style="margin-top:8px">Найближчим часом концертів тут у нашій добірці ще немає. Стежте за афішею — оновлюємо її щодня.</div>`;
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Place',
+    name: venue.name,
+    description: venue.tagline,
+    ...(venue.address ? { address: { '@type': 'PostalAddress', name: venue.address, addressLocality: 'Київ', addressCountry: 'UA' } } : {}),
+  };
+
+  const content = `
+<nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(venue.name)}</nav>
+<article class="concert-page">
+  <img class="concert-page-image" src="/images/venues/${venue.image}" alt="${escapeHtml(venue.name)}" loading="lazy">
+  <div class="concert-tags">
+    <span class="tag">${escapeHtml(venue.category)}</span>
+  </div>
+  <h1 class="concert-title">${escapeHtml(venue.name)}</h1>
+  ${venue.paragraphs.map((p) => `<p class="concert-desc" style="font-size:15px;line-height:1.7;margin-bottom:14px">${escapeHtml(p)}</p>`).join('')}
+  ${venue.relatedLinkHtml || ''}
+  ${infoLine ? `<div class="concert-meta"><span>📍 ${escapeHtml(infoLine)}</span></div>` : ''}
+  ${prosConsHtml}
+  ${concertsHtml}
+</article>`;
+
+  return pageShell({
+    title: `${venue.seoTitle} | 8CONCERT`,
+    description: venue.metaDescription,
+    canonical: `${SITE_URL}/mistsya/${venue.slug}/`,
+    headerHtml: siteHeader(),
+    contentHtml: content + siteFooter(),
+    jsonLd,
+    ogImage: `/images/venues/${venue.image}`,
+  });
+}
+
+function renderSitemap(concerts) {
+  const urls = [
+    `${SITE_URL}/`,
+    `${SITE_URL}/about/`,
+    `${SITE_URL}/contacts/`,
+    `${SITE_URL}/mistsya/`,
+    ...SEASONS.map((s) => `${SITE_URL}/mistsya/${s.slug}/`),
+    ...VENUE_GUIDES.map((g) => `${SITE_URL}/mistsya/${g.slug}/`),
+    ...CATEGORIES.map((cat) => `${SITE_URL}/${cat.slug}/`),
+    ...SCOPE_PAGE_SLUGS.map((slug) => `${SITE_URL}/${slug}/`),
+    ...VENUES.map((v) => `${SITE_URL}/mistsya/${v.slug}/`),
+    ...concerts.map((c) => `${SITE_URL}/concert/${c.slug}/`),
+  ];
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map((u) => `  <url><loc>${u}</loc></url>`).join('\n')}
+</urlset>`;
+}
+
+function renderRobots() {
+  return `User-agent: *
+Allow: /
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`;
+}
+
+// llms.txt — informal convention some AI systems use to get a clean summary
+// of a site's content instead of parsing full HTML. Not a strict standard
+// (providers treat it as an optional hint, and it's aimed more at training
+// crawlers than the live web-search agents that actually answer "де піти на
+// концерт" in real time) — but it's cheap to provide and doesn't hurt.
+// Regenerated every build, so "Поточна добірка" always reflects what's live.
+function renderLlmsTxt(concerts) {
+  const picks = concerts
+    .map((c) => `- [${c.title}](${SITE_URL}/concert/${c.slug}/): ${c.dateDisplay || 'дата уточнюється'}${c.f.Location ? `, ${c.f.Location}` : ''}${c.price ? `, ${c.price}` : ''}`)
+    .join('\n');
+
+  return `# 8CONCERT
+
+> Щотижнева редакційна добірка з восьми концертів джазу, класики та триб'ютів у Києві.
+
+8CONCERT не публікує повну афішу міста — редакція постійно обирає лише вісім концертів (джаз, класика, триб'юти), які, на її думку, справді варті вечора. Це редакційний вибір, не каталог і не продавець квитків: посилання "Квитки" ведуть на офіційні майданчики продажу.
+
+## Розділи
+
+- [Афіша (головна)](${SITE_URL}/): поточна добірка тижня.
+- [Джаз](${SITE_URL}/jazz/)
+- [Класика](${SITE_URL}/klasika/)
+- [Триб'юти](${SITE_URL}/trybuti/)
+- [Про нас](${SITE_URL}/about/): хто ми і як обираємо концерти.
+- [Контакти](${SITE_URL}/contacts/)
+
+## Поточна добірка (оновлюється щодня)
+
+${picks}
+
+## Примітки
+
+Кожна подія має власну сторінку /concert/<slug>/ з датою, локацією, ціною, посиланням на квитки та Event/MusicEvent structured data (schema.org). Сторінки минулих концертів не видаляються — після завершення події сторінка залишається доступною з позначкою "Подія завершена".
+`;
+}
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+async function main() {
+  console.log('Fetching concerts from Airtable...');
+  const records = await fetchConcerts();
+  console.log(`Got ${records.length} record(s).`);
+
+  const todayStr = new Date().toISOString().slice(0, 10);
+
+  // Merge this week's fetch into the permanent archive (keyed by Airtable
+  // record id). Fresh data always wins for records still in Airtable; once a
