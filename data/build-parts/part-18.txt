@@ -1,4 +1,4 @@
-  // "Всі події" — літерально everything fresh and upcoming, curated or not,
+  // "Всі події" — literally everything fresh and upcoming, curated or not,
   // in chronological order. Unlike the "8 подій" pool this needs no
   // backfill mechanism: it already contains every concert we know about.
   const allHtml = allUpcoming.length
