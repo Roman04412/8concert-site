@@ -1,41 +1,42 @@
-    // link isn't a valid absolute URL.
-    ...((() => {
-      const organizerRaw = fieldCI(f, 'Organizer');
-      const organizerName = typeof organizerRaw === 'string' ? organizerRaw.trim() : '';
-      if (!organizerName) return {};
-      let organizerUrl;
-      try {
-        organizerUrl = new URL(link).origin;
-      } catch (err) {
-        organizerUrl = undefined;
-      }
-      return {
-        organizer: {
-          '@type': 'Organization',
-          name: organizerName,
-          ...(organizerUrl ? { url: organizerUrl } : {}),
-        },
+
+  // Concerts with a single date (the vast majority) get the original flat
+  // MusicEvent object, unchanged. A production with several performances
+  // (via the "Additional Dates" Airtable field) gets a @graph of one Event
+  // per showtime, so each date is independently eligible for Google's
+  // Event rich result instead of only the one date we happen to display.
+  const jsonLd = showtimes.length > 1
+    ? { '@context': 'https://schema.org', '@graph': showtimes.map(eventForShowtime) }
+    : {
+        '@context': 'https://schema.org',
+        ...eventForShowtime(showtimes[0] || { startDateTime, endDateTime, link, price, soldOut: false }),
       };
-    })()),
-    offers: {
-      '@type': 'Offer',
-      url: link,
-      ...(priceNumeric ? { price: priceNumeric } : {}),
-      priceCurrency: 'UAH',
-      availability: 'https://schema.org/InStock',
-      ...(validFrom ? { validFrom } : {}),
-    },
-  };
 
   // Past events keep their page (never 404 — see main()'s pastPages), but
   // swap the "buy tickets" CTA for an honest "this already happened" notice
   // plus a way back into the current afisha, instead of pointing people at a
-  // ticket link that's no longer valid.
+  // ticket link that's no longer valid. Productions with more than one
+  // showtime (see the "Additional Dates" Airtable field) get a schedule
+  // list instead of a single button, each date with its own price/link or
+  // a "Продано" badge if that date sold out.
   const ctaHtml = isPast
     ? `
   <div class="concert-ended">
     <span class="tag tag-ended">Подія завершена</span>
     <p class="concert-ended-note">Ця подія вже відбулася. Актуальну афішу дивіться нижче.</p>
+  </div>`
+    : showtimes.length > 1
+    ? `
+  <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>
+  <div class="concert-schedule" style="margin-top:8px">
+    <div class="concert-schedule-title" style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px">Дати показів</div>
+    <div class="concert-schedule-list">${showtimes.map((s) => `
+      <div class="concert-schedule-row" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)">
+        <span style="font-size:14px">📅 ${escapeHtml(s.dateDisplay)}</span>
+        ${s.soldOut
+          ? '<span class="tag tag-ended">Квитки продано</span>'
+          : `<a href="${escapeHtml(s.link)}" class="btn-ticket" style="padding:8px 16px;font-size:11px" target="_blank" rel="noopener noreferrer sponsored" data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}" data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(s.price)}">${escapeHtml(s.price) || 'Купити'} →</a>`}
+      </div>`).join('')}
+    </div>
   </div>`
     : `
   <p class="concert-price" style="margin-top:24px">${isFree ? 'Вхід вільний' : escapeHtml(price) || ''}</p>

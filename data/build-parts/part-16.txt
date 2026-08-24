@@ -96,38 +96,108 @@ function parseTimeField(raw) {
 // emitting a wrong/fake price.
 function parsePriceValue(priceStr) {
   if (!priceStr) return undefined;
-  const match = String(priceStr).replace(/ /g, ' ').match(/\d[\d\s]*/);
+  const match = String(priceStr).replace(/ /g, ' ').match(/\d[\d\s]*/);
   if (!match) return undefined;
   const digits = match[0].replace(/\s/g, '');
   return digits || undefined;
 }
 
+// "Additional Dates" is an optional Airtable field that lets ONE record
+// represent a production with several performances (a theatre/opera run,
+// for instance) instead of needing a separate near-duplicate record per
+// date — which was both a maintenance headache and a Google Search Console
+// duplicate-content problem for near-identical pages. One line per extra
+// showtime: "YYYY-MM-DD|HH:MM|price text|ticket link". A price of
+// "Продано"/"sold out" (case-insensitive) marks that date sold out — no
+// link needed, rendered as a disabled badge instead of a buy button. The
+// primary Date/Time/Price/Link fields still describe one showtime (usually
+// the first) exactly as they always have, so records that never use this
+// field behave 100% as before.
+function parseAdditionalDates(raw) {
+  if (!raw) return [];
+  return String(raw)
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+    .map((line) => {
+      const [dateRaw, timeRaw, priceRaw, linkRaw] = line.split('|').map((s) => (s || '').trim());
+      const isoDate = parseUkrainianDate(dateRaw);
+      if (!isoDate) return null;
+      const timeDisplay = parseTimeField(timeRaw) || timeRaw || '';
+      const dateDisplay = formatDateDisplay(isoDate) + (timeDisplay ? `, ${timeDisplay}` : '');
+      const soldOut = /продано|sold\s*out/i.test(priceRaw || '');
+      const startDateTime = timeDisplay ? `${isoDate}T${timeDisplay}:00${kyivOffset(isoDate)}` : isoDate;
+      const endDateTime = estimateEndDateTime(startDateTime, timeDisplay);
+      return { isoDate, timeDisplay, dateDisplay, price: priceRaw || '', link: linkRaw || '', soldOut, startDateTime, endDateTime };
+    })
+    .filter(Boolean);
+}
+
 function buildConcertData(record) {
   const f = record.fields;
+  const isFreeText = (p) => p.toLowerCase().includes('вільний') || p.toLowerCase().includes('безкоштовн');
   const price = f.Price || '';
   const link = f.Link || '#';
-  const isFree = price.toLowerCase().includes('вільний') || price.toLowerCase().includes('безкоштовн');
-  const priceNumeric = isFree ? '0' : parsePriceValue(price);
   const snippet = f.Snippet || '';
   const desc = snippet ? snippet.slice(0, 90) + (snippet.length > 90 ? '...' : '') : '';
   const title = f.Title || 'Назва уточнюється';
   const slug = `${slugify(title)}-${record.id.slice(-6).toLowerCase()}`;
-  const isoDate = parseUkrainianDate(f.Date);
-  const timeDisplay = parseTimeField(f.Time) || '';
-  const dateDisplay = (isoDate ? formatDateDisplay(isoDate) : (f.Date || '')) + (timeDisplay ? `, ${timeDisplay}` : '');
+  const primaryIsoDate = parseUkrainianDate(f.Date);
+  const primaryTimeDisplay = parseTimeField(f.Time) || '';
+  const primaryDateDisplay = (primaryIsoDate ? formatDateDisplay(primaryIsoDate) : (f.Date || '')) + (primaryTimeDisplay ? `, ${primaryTimeDisplay}` : '');
   // Full ISO datetime with Kyiv's correct UTC offset for that specific date —
   // used as Event startDate in JSON-LD. Falls back to date-only when there's
   // no time, and to nothing at all when there's no date either (existing
   // isoDate-null behaviour is unchanged).
-  const startDateTime = isoDate && timeDisplay ? `${isoDate}T${timeDisplay}:00${kyivOffset(isoDate)}` : isoDate;
-  const endDateTime = estimateEndDateTime(startDateTime, timeDisplay);
+  const primaryStartDateTime = primaryIsoDate && primaryTimeDisplay ? `${primaryIsoDate}T${primaryTimeDisplay}:00${kyivOffset(primaryIsoDate)}` : primaryIsoDate;
+  const primaryEndDateTime = estimateEndDateTime(primaryStartDateTime, primaryTimeDisplay);
+
+  const extraShowtimes = parseAdditionalDates(f['Additional Dates']);
+  const showtimes = (primaryIsoDate
+    ? [{
+        isoDate: primaryIsoDate,
+        timeDisplay: primaryTimeDisplay,
+        dateDisplay: primaryDateDisplay,
+        price,
+        link,
+        soldOut: /продано|sold\s*out/i.test(price),
+        startDateTime: primaryStartDateTime,
+        endDateTime: primaryEndDateTime,
+      }, ...extraShowtimes]
+    : extraShowtimes
+  ).sort((a, b) => `${a.isoDate}T${a.timeDisplay || ''}`.localeCompare(`${b.isoDate}T${b.timeDisplay || ''}`));
+
+  // The showtime actually surfaced on cards/badges/structured data as "the"
+  // date for this concert: soonest date that isn't already sold out (so a
+  // card whose premiere sold out but later dates are open advertises a date
+  // people can actually buy), falling back to the soonest date at all if
+  // literally every date is sold out, and to the LATEST date once the whole
+  // run is in the past — which is also what makes isPastEvent keep working
+  // unchanged for multi-date records: it only goes true once every showtime
+  // has passed.
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const display =
+    showtimes.find((s) => !s.soldOut && s.isoDate >= todayStr) ||
+    showtimes.find((s) => s.isoDate >= todayStr) ||
+    showtimes[showtimes.length - 1] ||
+    { isoDate: primaryIsoDate, timeDisplay: primaryTimeDisplay, dateDisplay: primaryDateDisplay, price, link, startDateTime: primaryStartDateTime, endDateTime: primaryEndDateTime };
+
+  const isFree = isFreeText(display.price || '');
+  const priceNumeric = isFree ? '0' : parsePriceValue(display.price);
   // validFrom: the date our archive first saw this record — see main()'s
   // _firstSeenDate tracking. Not the same as a real on-sale date (we don't
   // have that), but it's real data about our own listing, not a guess.
   const validFrom = record._firstSeenDate;
   const image = extractImageUrl(f.Image);
 
-  return { record, f, price, priceNumeric, link, isFree, snippet, desc, title, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, image };
+  return {
+    record, f,
+    price: display.price, priceNumeric, link: display.link, isFree,
+    snippet, desc, title, slug,
+    isoDate: display.isoDate, dateDisplay: display.dateDisplay,
+    startDateTime: display.startDateTime, endDateTime: display.endDateTime,
+    validFrom, image, showtimes,
+  };
 }
 
 // Only filters out events we're CONFIDENT have already happened (a successfully

@@ -1,4 +1,4 @@
-  // "Всі події" — literally everything fresh and upcoming, curated or not,
+  // "Всі події" — літерально everything fresh and upcoming, curated or not,
   // in chronological order. Unlike the "8 подій" pool this needs no
   // backfill mechanism: it already contains every concert we know about.
   const allHtml = allUpcoming.length
@@ -146,7 +146,7 @@ function renderRelatedConcert(c, { showLocation = true } = {}) {
 }
 
 function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
-  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, record, image } = c;
+  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, record, image, showtimes = [] } = c;
 
   // MusicEvent (a subtype of Event) — every listing on this site is a
   // concert, so the more specific type is accurate and Google explicitly
@@ -160,15 +160,42 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     ? f.Performer.trim()
     : '';
 
-  const jsonLd = {
-    '@context': 'https://schema.org',
+  // Organizer name comes from Airtable's "organizer" field — never
+  // fabricated (a wrong name is worse than none). Google Search Console
+  // flags a missing "url" on organizer as a minor structured-data issue;
+  // we don't track each promoter's own website separately, but the
+  // concert's own ticket link is sold by that same organizer, so its
+  // origin (e.g. https://concert.ua) is a real, verifiable URL to use
+  // here rather than inventing one. Falls back to omitting url if the
+  // link isn't a valid absolute URL.
+  const organizerField = (() => {
+    const organizerRaw = fieldCI(f, 'Organizer');
+    const organizerName = typeof organizerRaw === 'string' ? organizerRaw.trim() : '';
+    if (!organizerName) return {};
+    let organizerUrl;
+    try {
+      organizerUrl = new URL(link).origin;
+    } catch (err) {
+      organizerUrl = undefined;
+    }
+    return {
+      organizer: {
+        '@type': 'Organization',
+        name: organizerName,
+        ...(organizerUrl ? { url: organizerUrl } : {}),
+      },
+    };
+  })();
+
+  // Fields shared by every showtime of this production (name, description,
+  // location, performer, organizer...). Only the date/time and the offer
+  // (price/link/availability) actually vary per showtime.
+  const sharedEventFields = {
     '@type': 'MusicEvent',
     name: title,
     description: snippet || desc || title,
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     eventStatus: 'https://schema.org/EventScheduled',
-    ...(startDateTime ? { startDate: startDateTime } : {}),
-    ...(endDateTime ? { endDate: endDateTime } : {}),
     location: {
       '@type': 'Place',
       name: f.Location || 'Київ',
@@ -177,10 +204,18 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     ...(f.Category ? { genre: displayCategory(f.Category) } : {}),
     ...(image ? { image: [absUrl(image)] } : {}),
     ...(performerName ? { performer: { '@type': 'PerformingGroup', name: performerName } } : {}),
-    // Organizer name comes from Airtable's "organizer" field — never
-    // fabricated (a wrong name is worse than none). Google Search Console
-    // flags a missing "url" on organizer as a minor structured-data issue;
-    // we don't track each promoter's own website separately, but the
-    // concert's own ticket link is sold by that same organizer, so its
-    // origin (e.g. https://concert.ua) is a real, verifiable URL to use
-    // here rather than inventing one. Falls back to omitting url if the
+    ...organizerField,
+  };
+  const eventForShowtime = (s) => ({
+    ...sharedEventFields,
+    ...(s.startDateTime ? { startDate: s.startDateTime } : {}),
+    ...(s.endDateTime ? { endDate: s.endDateTime } : {}),
+    offers: {
+      '@type': 'Offer',
+      url: s.link || link,
+      ...(!s.soldOut && parsePriceValue(s.price || '') ? { price: parsePriceValue(s.price || '') } : {}),
+      priceCurrency: 'UAH',
+      availability: s.soldOut ? 'https://schema.org/SoldOut' : 'https://schema.org/InStock',
+      ...(validFrom ? { validFrom } : {}),
+    },
+  });
