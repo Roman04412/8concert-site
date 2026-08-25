@@ -9,6 +9,12 @@
 
 const UA_MONTHS = ['січня','лютого','березня','квітня','травня','червня','липня','серпня','вересня','жовтня','листопада','грудня'];
 
+// Indexed like Date#getDay() (0 = Sunday ... 6 = Saturday) — used to prefix
+// card dates with a short weekday label ("Пн, 28 серпня") so a visitor can
+// tell at a glance whether a concert falls on a weeknight or a weekend
+// without doing the date math themselves.
+const UA_WEEKDAYS_SHORT = ['Нд','Пн','Вт','Ср','Чт','Пт','Сб'];
+
 const TRANSLIT = {
   а:'a',б:'b',в:'v',г:'h',ґ:'g',д:'d',е:'e',є:'ie',ж:'zh',з:'z',и:'y',і:'i',ї:'i',
   й:'i',к:'k',л:'l',м:'m',н:'n',о:'o',п:'p',р:'r',с:'s',т:'t',у:'u',ф:'f',х:'kh',
@@ -94,7 +100,8 @@ function formatDateDisplay(isoDate) {
   if (isoDate === todayStr) return 'Сьогодні';
   if (isoDate === tomorrowStr) return 'Завтра';
   const sameYear = y === now.getFullYear();
-  return `${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
+  const weekday = UA_WEEKDAYS_SHORT[new Date(y, m - 1, d).getDay()];
+  return `${weekday}, ${d} ${UA_MONTHS[m - 1]}${sameYear ? '' : ' ' + y}`;
 }
 
 // Full "17 серпня" style date, without the "Сьогодні"/"Завтра" substitution
