@@ -42,8 +42,8 @@
 <div class="tabs-bar">
   <a class="tab active" href="/vsi-podii/" onclick="switchTab(this,'all');return false;" id="all">Всі події</a>
   <button class="tab" onclick="switchTab(this,'top8')" id="top8">8 подій</button>
-  <a class="tab" href="/tsey-tyzhden/" onclick="switchTab(this,'week');return false;" id="week">Цей тиждень</a>
   <a class="tab" href="/sogodni-vvecheri/" onclick="switchTab(this,'today');return false;" id="today">Сьогодні ввечері</a>
+  <a class="tab" href="/tsey-tyzhden/" onclick="switchTab(this,'week');return false;" id="week">Цей тиждень</a>
 </div>
 
 <div id="tab-all">${allHtml}</div>
