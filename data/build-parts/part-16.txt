@@ -96,7 +96,7 @@ function parseTimeField(raw) {
 // emitting a wrong/fake price.
 function parsePriceValue(priceStr) {
   if (!priceStr) return undefined;
-  const match = String(priceStr).replace(/ /g, ' ').match(/\d[\d\s]*/);
+  const match = String(priceStr).replace(/ /g, ' ').match(/\d[\d\s]*/);
   if (!match) return undefined;
   const digits = match[0].replace(/\s/g, '');
   return digits || undefined;
