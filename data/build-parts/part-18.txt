@@ -30,11 +30,6 @@
   </div>
 </div>
 
-<div class="quote-strip">
-  <div class="quote-line"></div>
-  <div class="quote-text">«Музика — найкоротший шлях між двома серцями»</div>
-</div>
-
 <div class="filter-row">
   <div class="hero-genres">${genrePills}</div>
 </div>
@@ -50,6 +45,11 @@
 <div id="tab-top8" style="display:none">${top8Html}${overflowHtml}</div>
 <div id="tab-week" style="display:none">${weekHtml}</div>
 <div id="tab-today" style="display:none">${todayHtml}</div>
+
+<div class="quote-strip">
+  <div class="quote-line"></div>
+  <div class="quote-text">«Музика — найкоротший шлях між двома серцями»</div>
+</div>
 `;
 
   const jsonLd = {
