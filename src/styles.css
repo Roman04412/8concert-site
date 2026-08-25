@@ -245,7 +245,7 @@ nav a {
 /* CONCERTS */
 .concert-item {
   display: grid;
-  grid-template-columns: 80px 1fr 180px;
+  grid-template-columns: 1fr 180px;
   gap: 28px;
   align-items: center;
   padding: 32px 48px;
@@ -268,20 +268,6 @@ nav a {
 @media (hover: hover) {
   .concert-item:hover { background: #F5EFE6; }
   .concert-item:hover::after { opacity: 1; }
-}
-
-.concert-num {
-  font-family: 'Cormorant Garamond', serif;
-  font-size: 34px;
-  font-weight: 300;
-  font-style: italic;
-  color: var(--line);
-  line-height: 1;
-  transition: color 0.2s;
-}
-
-@media (hover: hover) {
-  .concert-item:hover .concert-num { color: var(--warm); }
 }
 
 .concert-tags {
@@ -565,11 +551,17 @@ a.concert-title::after {
 
 /* QUOTE STRIP */
 .quote-strip {
-  padding: 40px 48px;
-  border-bottom: 1px solid var(--line);
+  padding: 48px;
   display: flex;
   align-items: center;
-  gap: 32px;
+  justify-content: center;
+  gap: 24px;
+}
+
+.quote-image {
+  width: 84px;
+  height: 84px;
+  flex-shrink: 0;
 }
 
 .quote-text {
@@ -579,13 +571,8 @@ a.concert-title::after {
   font-weight: 300;
   color: var(--brown);
   line-height: 1.4;
-}
-
-.quote-line {
-  width: 40px;
-  height: 1px;
-  background: var(--warm);
-  flex-shrink: 0;
+  text-align: center;
+  max-width: 480px;
 }
 
 /* FOOTER */
@@ -596,6 +583,10 @@ footer {
   grid-template-columns: 1.5fr 1fr 1fr;
   gap: 48px;
   margin-top: 80px;
+}
+
+.quote-strip + footer {
+  margin-top: 0;
 }
 
 .footer-logo {
@@ -857,41 +848,12 @@ footer {
   .hero { padding: 48px 20px 40px; }
   .tabs-bar { padding: 0 20px; }
   .filter-row { padding: 16px 20px; }
-  /* The big serif "01/02/..." numeral used to sit in its own 56px column,
-     eating a chunk of the narrow mobile width for a purely decorative
-     element. Single column now; the number becomes a small round badge
-     over the thumbnail (when there is one) or a small muted label above
-     the tags (when there isn't) instead of a wide dedicated gutter. */
+  /* Single column on mobile; no dedicated numeral gutter/badge. */
   .concert-item { grid-template-columns: 1fr; padding: 24px 20px; gap: 4px; }
   .concert-right { display: none; }
 
-  .concert-num {
-    font-size: 13px;
-    font-style: normal;
-    color: var(--muted);
-    margin-bottom: 4px;
-  }
-
-  .concert-item.has-image .concert-num {
-    position: absolute;
-    top: 24px;
-    left: 20px;
-    width: 34px;
-    height: 34px;
-    margin-bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 16px;
-    font-style: italic;
-    color: var(--cream);
-    background: rgba(28,22,18,0.6);
-    backdrop-filter: blur(3px);
-    border-radius: 50%;
-    pointer-events: none;
-  }
-  .quote-strip { padding: 28px 20px; }
+  .quote-strip { padding: 32px 20px; flex-direction: column; gap: 16px; }
+  .quote-image { width: 64px; height: 64px; }
   footer {
     grid-template-columns: 1fr 1fr;
     padding: 40px 20px;
