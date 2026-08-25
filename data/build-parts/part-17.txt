@@ -53,7 +53,7 @@ function siteHeader() {
   return `<header>
   <a href="/" class="logo">8<span>CONCERT</span></a>
   <nav>
-    <a href="/">Афіша</a>
+    <a href="/vsi-podii/">Афіша</a>
     <a href="/sogodni-vvecheri/">Сьогодні</a>
     <a href="/mistsya/">Де слухати музику?</a>
     <a href="/about/">Про нас</a>
