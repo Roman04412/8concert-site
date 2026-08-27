@@ -846,7 +846,20 @@ footer {
   header { padding: 0 20px; }
   nav a { display: none; }
   .hero { padding: 48px 20px 40px; }
-  .tabs-bar { padding: 0 20px; }
+  .tabs-bar {
+    padding: 0 20px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs-bar::-webkit-scrollbar { display: none; }
+  .tab {
+    padding: 14px 8px;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
   .filter-row { padding: 16px 20px; }
   /* Single column on mobile; no dedicated numeral gutter/badge. */
   .concert-item { grid-template-columns: 1fr; padding: 24px 20px; gap: 4px; }
