@@ -129,7 +129,7 @@
     fs.writeFileSync(path.join(DIST, page.slug, 'index.html'), renderScopePage(page));
   }
 
-  // "Місця" (венues): built from allPages, NOT allKnown/allConcerts — only
+  // "Місця" (venues): built from allPages, NOT allKnown/allConcerts — only
   // concerts allPages actually get a /concert/<slug>/ page written this
   // build (see the loops below and pastPages above). allKnown includes
   // every fresh Airtable record even ones beyond DISPLAY_COUNT that never
