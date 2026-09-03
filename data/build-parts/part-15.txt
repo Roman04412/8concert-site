@@ -197,15 +197,19 @@ function pluralEvents(n) {
 // ---------------------------------------------------------------------------
 
 async function fetchConcerts() {
-  // Airtable caps each response at 100 records and hands back an `offset`
-  // cursor whenever more rows exist past that page — follow it until it
-  // stops appearing, otherwise the table silently truncates once it grows
-  // past 100 rows (the bottom-most records in Grid view, usually the
-  // furthest-out dates, would just vanish from the fetch with no error).
+  // Airtable paginates at up to 100 records per response and hands back an
+  // `offset` cursor whenever more rows exist — follow it until it stops
+  // appearing. Deliberately NOT passing `maxRecords`: that param caps the
+  // TOTAL record count across every page combined, not just page size, so
+  // once that many have been returned the API stops sending `offset` at
+  // all — silently truncating the table (the bottom-most records in Grid
+  // view, usually the furthest-out dates) with no error, pagination loop
+  // or not. Omitting it lets Airtable's own 100-per-page default paginate
+  // through the whole table, however large it grows.
   let all = [];
   let offset;
   do {
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?maxRecords=${FETCH_LIMIT}&view=Grid%20view${offset ? `&offset=${offset}` : ''}`;
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?view=Grid%20view${offset ? `&offset=${offset}` : ''}`;
     const res = await fetch(url, { headers: { Authorization: `Bearer ${AIRTABLE_TOKEN}` } });
     if (!res.ok) throw new Error(`Airtable ${res.status}: ${await res.text()}`);
     const data = await res.json();
