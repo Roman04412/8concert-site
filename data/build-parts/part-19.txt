@@ -34,7 +34,7 @@
         <span style="font-size:14px">📅 ${escapeHtml(s.dateDisplay)}</span>
         ${s.soldOut
           ? '<span class="tag tag-ended">Квитки продано</span>'
-          : `<a href="${escapeHtml(s.link)}" class="btn-ticket" style="padding:8px 16px;font-size:11px" target="_blank" rel="noopener noreferrer sponsored" data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}" data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(s.price)}">${escapeHtml(s.price) || 'Купити'} →</a>`}
+          : `<a href="${escapeHtml(s.link)}" class="btn-ticket" style="padding:8px 16px;font-size:11px" target="_blank" rel="noopener noreferrer sponsored" data-ticket-link data-concert-id="${record.id}" data-concert-title="${escapeHtml(title)}" data-concert-category="${escapeHtml(displayCategory(f.Category))}" data-concert-price="${escapeHtml(s.price)}">Купити →</a>`}
       </div>`).join('')}
     </div>
   </div>`
