@@ -108,6 +108,16 @@
 
   const allPages = [...concerts, ...overflowConcerts, ...pastPages];
 
+  // TEMP DEBUG — remove after diagnosing missing records
+  for (const id of ['recHyxrr20SyiH965', 'recolRPToHU9nIHAh']) {
+    const inRecords = records.some((r) => r.id === id);
+    const inAllKnown = allKnown.find((c) => c.record.id === id);
+    const inFresh = freshUpcoming.find((c) => c.record.id === id);
+    const inPast = pastPages.find((c) => c.record.id === id);
+    const inAllPages = allPages.find((c) => c.record.id === id);
+    console.log(`DEBUG ${id}: inRecords=${inRecords} inAllKnown=${Boolean(inAllKnown)} title=${inAllKnown && inAllKnown.f.Title} isoDate=${inAllKnown && inAllKnown.isoDate} isPast=${inAllKnown && isPastEvent(inAllKnown, todayStr)} inFresh=${Boolean(inFresh)} inPast=${Boolean(inPast)} inAllPages=${Boolean(inAllPages)} slug=${inAllKnown && inAllKnown.slug}`);
+  }
+
   fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts, overflowConcerts, freshUpcoming));
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
   fs.writeFileSync(path.join(DIST, 'robots.txt'), renderRobots());
