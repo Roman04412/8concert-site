@@ -134,14 +134,37 @@ function renderBodyParagraphs(snippet) {
 // happens at that same venue too). renderVenuePage passes showLocation:
 // false for its "Концерти тут" list, where every item is already at that
 // venue by definition and repeating it on each line would just be noise.
+//
+// Concerts with multiple showtimes on the SAME calendar day (e.g. this
+// venue's recurring 16:00-and-19:00 series) collapse to a single
+// dateDisplay upstream in buildConcertData — it only ever picks one
+// showtime to surface. Rather than touch that shared selection logic (used
+// by every card on the site), detect the same-day multi-showtime case here
+// and swap just the trailing time segment of dateDisplay for all of that
+// day's times joined with "та", so a compact list item reads e.g. "Нд, 20
+// вересня, 16:00 та 19:00" instead of implying there's only one show.
 function renderRelatedConcert(c, { showLocation = true } = {}) {
+  let dateLabel = c.dateDisplay;
+  if (dateLabel && c.isoDate && Array.isArray(c.showtimes) && c.showtimes.length > 1) {
+    const sameDayTimes = [...new Set(
+      c.showtimes
+        .filter((s) => s.isoDate === c.isoDate && !s.soldOut && s.timeDisplay)
+        .map((s) => s.timeDisplay),
+    )];
+    if (sameDayTimes.length > 1) {
+      const lastComma = dateLabel.lastIndexOf(', ');
+      if (lastComma !== -1) {
+        dateLabel = `${dateLabel.slice(0, lastComma)}, ${sameDayTimes.join(' та ')}`;
+      }
+    }
+  }
   return `
       <a class="related-item" href="/concert/${c.slug}/">
         <span class="related-item-main">
           <span class="related-item-title">${escapeHtml(c.title)}</span>
           ${showLocation && c.f && c.f.Location ? `<span class="related-item-location">📍 ${escapeHtml(c.f.Location)}</span>` : ''}
         </span>
-        ${c.dateDisplay ? `<span class="related-item-date">📅 ${escapeHtml(c.dateDisplay)}</span>` : ''}
+        ${dateLabel ? `<span class="related-item-date">📅 ${escapeHtml(dateLabel)}</span>` : ''}
       </a>`;
 }
 
