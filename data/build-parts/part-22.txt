@@ -95,6 +95,19 @@
   const curatedIds = new Set(concerts.map((c) => c.record.id));
   const overflowConcerts = freshUpcoming.filter((c) => !curatedIds.has(c.record.id));
 
+  // Cancelled concerts (Airtable "Скасовано" checkbox) keep their page —
+  // concerts/overflowConcerts/freshUpcoming/pastPages above stay untouched
+  // so /concert/<slug>/ still gets written for them below (see the loops
+  // later in this file) — but they must never appear on a LISTING surface.
+  // These "visible*" views feed the homepage, category pages, scope pages,
+  // llms.txt, and the `otherConcerts` argument of every concert page's
+  // "Концерти тут"/"Інші концерти" strip. renderVenuePage filters
+  // cancellations out on its own (from allPages) instead of needing a
+  // separate visible variant here, since it never writes a page.
+  const visibleConcerts = concerts.filter((c) => !c.isCancelled);
+  const visibleOverflow = overflowConcerts.filter((c) => !c.isCancelled);
+  const visibleUpcoming = freshUpcoming.filter((c) => !c.isCancelled);
+
   console.log(`Curated this week: ${concerts.length}. Extra upcoming (not on homepage): ${overflowConcerts.length}. Past pages kept alive: ${pastPages.length}.`);
 
   const noDateCount = concerts.filter((c) => !c.isoDate).length;
@@ -108,10 +121,10 @@
 
   const allPages = [...concerts, ...overflowConcerts, ...pastPages];
 
-  fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(concerts, overflowConcerts, freshUpcoming));
+  fs.writeFileSync(path.join(DIST, 'index.html'), renderHomepage(visibleConcerts, visibleOverflow, visibleUpcoming));
   fs.writeFileSync(path.join(DIST, 'sitemap.xml'), renderSitemap(allPages));
   fs.writeFileSync(path.join(DIST, 'robots.txt'), renderRobots());
-  fs.writeFileSync(path.join(DIST, 'llms.txt'), renderLlmsTxt(concerts));
+  fs.writeFileSync(path.join(DIST, 'llms.txt'), renderLlmsTxt(visibleConcerts));
 
   fs.mkdirSync(path.join(DIST, 'about'), { recursive: true });
   fs.writeFileSync(path.join(DIST, 'about', 'index.html'), renderAboutPage());
@@ -121,10 +134,10 @@
 
   for (const cat of CATEGORIES) {
     fs.mkdirSync(path.join(DIST, cat.slug), { recursive: true });
-    fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, freshUpcoming));
+    fs.writeFileSync(path.join(DIST, cat.slug, 'index.html'), renderCategoryPage(cat, visibleUpcoming));
   }
 
-  for (const page of buildScopePages(freshUpcoming)) {
+  for (const page of buildScopePages(visibleUpcoming)) {
     fs.mkdirSync(path.join(DIST, page.slug), { recursive: true });
     fs.writeFileSync(path.join(DIST, page.slug, 'index.html'), renderScopePage(page));
   }
@@ -141,15 +154,15 @@
     if (!b.isoDate) return -1;
     return a.isoDate < b.isoDate ? -1 : a.isoDate > b.isoDate ? 1 : 0;
   });
-  // Venues with at least one upcoming (non-past) concert in our current
+  // Venues with at least one upcoming, non-cancelled concert in our current
   // listings float to the top of "Місця" — a visitor is more likely to
   // care about a venue they could actually go to soon than one with
-  // nothing currently booked. Stable sort keeps the original curated
-  // order within each group (has-events / no-events).
+  // nothing currently booked (or only a cancelled show). Stable sort keeps
+  // the original curated order within each group (has-events / no-events).
   const todayStrForVenues = new Date().toISOString().slice(0, 10);
   const venuesSorted = [...VENUES].sort((a, b) => {
-    const aHas = findVenueConcerts(a, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues));
-    const bHas = findVenueConcerts(b, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues));
+    const aHas = findVenueConcerts(a, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues) && !c.isCancelled);
+    const bHas = findVenueConcerts(b, venueConcertPool).some((c) => !isPastEvent(c, todayStrForVenues) && !c.isCancelled);
     if (aHas === bHas) return 0;
     return aHas ? -1 : 1;
   });
