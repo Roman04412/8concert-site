@@ -724,9 +724,13 @@ footer {
   .venue-card:hover { transform: translateY(-3px); }
 }
 
+/* Square crop (1:1) at every breakpoint — width already scales with the
+   grid column (3 across on desktop, 1 across on mobile), so tying height
+   to aspect-ratio instead of a fixed px value keeps the photo genuinely
+   square everywhere instead of a wide 160px-tall letterbox on desktop. */
 .venue-card-image {
   width: 100%;
-  height: 160px;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
 }
