@@ -227,8 +227,8 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
   // card, just starts hidden and flagged so JS can find it.
   return `
       <div class="concert-item${image ? ' has-image' : ''}${extra ? ' concert-item-extra' : ''}" data-category="${escapeHtml(displayCategory(f.Category))}"${extra ? ' style="display:none"' : ''}>
+        ${image ? `<img class="concert-thumb" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
         <div class="concert-info">
-          ${image ? `<img class="concert-thumb" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
           <div class="concert-tags">
             ${isTop ? '<span class="tag tag-warm">Вибір редакції</span>' : ''}
             ${f.Category ? `<span class="tag">${escapeHtml(displayCategory(f.Category))}</span>` : ''}
@@ -246,4 +246,3 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
           </div>
         </div>
         <div class="concert-right">
-          ${isFree ? '<div class="concert-price-label">Вхід</div>' : ''}
