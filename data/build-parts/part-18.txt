@@ -169,7 +169,7 @@ function renderRelatedConcert(c, { showLocation = true } = {}) {
 }
 
 function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
-  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, record, image, showtimes = [] } = c;
+  const { f, title, desc, snippet, price, priceNumeric, isFree, link, slug, isoDate, dateDisplay, startDateTime, endDateTime, validFrom, record, image, showtimes = [], isCancelled = false } = c;
 
   // MusicEvent (a subtype of Event) — every listing on this site is a
   // concert, so the more specific type is accurate and Google explicitly
@@ -218,7 +218,10 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     name: title,
     description: snippet || desc || title,
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
-    eventStatus: 'https://schema.org/EventScheduled',
+    // Reflects the Airtable "Скасовано" checkbox in structured data too —
+    // Google's Event rich result supports EventCancelled and will show it
+    // to searchers instead of treating a cancelled show as still on.
+    eventStatus: isCancelled ? 'https://schema.org/EventCancelled' : 'https://schema.org/EventScheduled',
     location: {
       '@type': 'Place',
       name: f.Location || 'Київ',
