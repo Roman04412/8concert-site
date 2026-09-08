@@ -256,10 +256,10 @@ nav a {
 }
 
 /* A real photo gets its own fixed-size square column instead of stretching
-   full-width above the text (the old 180px-tall banner crop) — small,
+   full-width above the text (the old 180px-tall banner crop) — a large,
    consistently cropped thumbnail, same idea as a typical event-listing row. */
 .concert-item.has-image {
-  grid-template-columns: 140px 1fr 180px;
+  grid-template-columns: 280px 1fr 180px;
 }
 
 .concert-item::after {
@@ -385,8 +385,8 @@ nav a {
 }
 
 .concert-thumb {
-  width: 140px;
-  height: 140px;
+  width: 280px;
+  height: 280px;
   aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 12px;
@@ -868,12 +868,21 @@ footer {
     white-space: nowrap;
   }
   .filter-row { padding: 16px 20px; }
-  /* Single column on mobile; no dedicated numeral gutter/badge. A photo
-     still gets a small square thumb beside the text instead of either the
-     old full-width banner or the desktop's 140px column. */
+  /* Single column on mobile; no dedicated numeral gutter/badge. Photo goes
+     back to a full-width banner stacked above the text, like before the
+     desktop square-column redesign — the desktop-only fixed square/column
+     sizing above doesn't apply here. */
   .concert-item { grid-template-columns: 1fr; padding: 24px 20px; gap: 4px; }
-  .concert-item.has-image { grid-template-columns: 84px 1fr; gap: 14px; align-items: flex-start; }
-  .concert-thumb { width: 84px; height: 84px; border-radius: 10px; }
+  .concert-item.has-image { grid-template-columns: 1fr; }
+  .concert-thumb {
+    width: 100%;
+    height: auto;
+    max-height: 180px;
+    aspect-ratio: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 8px;
+  }
   .concert-right { display: none; }
 
   .quote-strip { padding: 32px 20px; flex-direction: column; gap: 16px; }
