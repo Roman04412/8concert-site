@@ -43,12 +43,12 @@ ${renderSeasonToggle(season.slug)}
 function renderVenuePage(venue, allConcerts) {
   // allConcerts is allPages (only concerts that actually got a /concert/
   // page written — see main()) sorted soonest-first by the caller. We only
-  // ever show upcoming concerts here, never past ones: a venue page is
-  // meant to help someone decide whether to go, and a list padded with
-  // events that already happened isn't useful for that.
+  // ever show upcoming, non-cancelled concerts here: a venue page is meant
+  // to help someone decide whether to go, and a list padded with events
+  // that already happened or got cancelled isn't useful for that.
   const todayStr = new Date().toISOString().slice(0, 10);
   const upcoming = findVenueConcerts(venue, allConcerts)
-    .filter((c) => !isPastEvent(c, todayStr))
+    .filter((c) => !isPastEvent(c, todayStr) && !c.isCancelled)
     .slice(0, 8);
 
   const prosConsHtml = `
