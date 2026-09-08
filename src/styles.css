@@ -255,11 +255,22 @@ nav a {
   position: relative;
 }
 
-/* A real photo gets its own fixed-size square column instead of stretching
+/* A real photo gets its own fixed-size column instead of stretching
    full-width above the text (the old 180px-tall banner crop) — a large,
    consistently cropped thumbnail, same idea as a typical event-listing row. */
 .concert-item.has-image {
-  grid-template-columns: 280px 1fr 180px;
+  grid-template-columns: 360px 1fr 180px;
+}
+
+/* Bigger card text on desktop only — the photo column just grew a lot,
+   and the original 26/13/12/11px sizes (still used as-is on mobile, see
+   the max-width:768px block below) started to look small/cramped next to
+   it at that size. */
+@media (min-width: 769px) {
+  .concert-item .concert-title { font-size: 32px; }
+  .concert-item .concert-desc { font-size: 15px; }
+  .concert-item .concert-meta { font-size: 13px; }
+  .concert-item .tag { font-size: 12px; }
 }
 
 .concert-item::after {
@@ -385,9 +396,8 @@ nav a {
 }
 
 .concert-thumb {
-  width: 280px;
+  width: 360px;
   height: 280px;
-  aspect-ratio: 1 / 1;
   object-fit: cover;
   border-radius: 12px;
   display: block;
@@ -874,14 +884,17 @@ footer {
      sizing above doesn't apply here. */
   .concert-item { grid-template-columns: 1fr; padding: 24px 20px; gap: 4px; }
   .concert-item.has-image { grid-template-columns: 1fr; }
+  /* Same treatment as the event's own page hero image (.concert-page-image)
+     instead of the old cramped 180px-tall crop — full width, taller,
+     bigger rounded corners. */
   .concert-thumb {
     width: 100%;
     height: auto;
-    max-height: 180px;
+    max-height: 380px;
     aspect-ratio: auto;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 8px;
+    border-radius: 12px;
+    margin-bottom: 16px;
   }
   .concert-right { display: none; }
 
