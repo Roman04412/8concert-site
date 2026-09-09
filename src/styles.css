@@ -475,6 +475,17 @@ a.concert-title::after {
   color: var(--brown);
   display: flex;
   gap: 16px;
+  flex-wrap: wrap;
+  row-gap: 4px;
+}
+
+/* Date never breaks mid-phrase (e.g. "Пт, 23" / "жовтня, 18:00") even
+   when a long venue name shares the row and squeezes it — if both don't
+   fit on one line, flex-wrap above drops the location to its own full-width
+   line instead, where it can wrap normally as a whole address. */
+.concert-meta-date {
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .concert-right {
