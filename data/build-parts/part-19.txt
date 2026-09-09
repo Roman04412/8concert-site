@@ -142,7 +142,7 @@
   <h1 class="concert-title">${escapeHtml(title)}</h1>
   ${renderBodyParagraphs(snippet)}
   <div class="concert-meta">
-    ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
+    ${dateDisplay ? `<span class="concert-meta-date">📅 ${escapeHtml(dateDisplay)}</span>` : ''}
     ${f.Location ? (() => {
       const venue = findVenueForLocation(f.Location);
       return venue
