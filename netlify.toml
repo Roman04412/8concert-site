@@ -8,6 +8,17 @@
 [functions]
   directory = "netlify/functions"
 
+# One-off redirect: this record's old Airtable row was deleted/replaced
+# (rescheduled to 27 вересня) on 2026-08-28, BEFORE the archive-persistence
+# fix in scripts/persist-archive.mjs existed, so its page was lost to a
+# 404 instead of surviving like every future rename/deletion now will.
+# Pointing the old URL at the event's new page preserves any links/SEO
+# value it had instead of leaving a dead end.
+[[redirects]]
+  from = "/concert/the-best-of-love-kyivska-troianda-tyslpa/"
+  to = "/concert/the-best-of-love-kyivska-troianda-27-veresnia-ssyyf7/"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]
