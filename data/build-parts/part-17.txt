@@ -8,6 +8,36 @@
       </div>`;
 }
 
+// jsonLd accepts either a single object OR an array of objects — each one
+// gets its own <script type="application/ld+json"> tag. Google reads
+// multiple separate JSON-LD blocks on one page fine, so pages that need
+// both an Event/Place block AND a BreadcrumbList (see renderBreadcrumbJsonLd)
+// just pass [eventJsonLd, breadcrumbJsonLd] instead of having to merge
+// everything into one @graph.
+function renderJsonLdScripts(jsonLd) {
+  if (!jsonLd) return '';
+  const items = Array.isArray(jsonLd) ? jsonLd.filter(Boolean) : [jsonLd];
+  return items.map((item) => `<script type="application/ld+json">${JSON.stringify(item)}</script>`).join('\n');
+}
+
+// Builds schema.org BreadcrumbList structured data matching a page's visible
+// <nav class="breadcrumb"> trail exactly (Google explicitly wants the two to
+// agree). `items` is ordered home-first: [{ name, url? }, ...] — omit `url`
+// on the last (current-page) crumb, same as the visible breadcrumb doesn't
+// link the current page either.
+function renderBreadcrumbJsonLd(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      ...(item.url ? { item: item.url } : {}),
+    })),
+  };
+}
+
 function pageShell({ title, description, canonical, bodyExtraHead = '', headerHtml, contentHtml, jsonLd = null, ogImage = '' }) {
   return `<!DOCTYPE html>
 <html lang="uk">
@@ -37,7 +67,7 @@ ${ogImage ? `<meta name="twitter:image" content="${escapeHtml(absUrl(ogImage))}"
 <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/styles.css">
-${jsonLd ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>` : ''}
+${renderJsonLdScripts(jsonLd)}
 ${bodyExtraHead}
 </head>
 <body>
@@ -143,7 +173,7 @@ function renderHomepage(concerts, overflowPool = [], allUpcoming = []) {
     ? todayList.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
     : '<div class="loading">Сьогодні ввечері — тиша. Перевірте афішу тижня ✨</div>';
 
-  // "Топ 8" is the full curated pool regardless of week — since "Цей тиждень"
+  // "Топ 8" is the full curated pool regардless of week — since "Цей тиждень"
   // is now an honest weekly filter, this is the only place to see all 8 picks
   // at once when they're spread across more than one week.
   const top8Html = concerts.length
