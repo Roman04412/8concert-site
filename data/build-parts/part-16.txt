@@ -215,10 +215,29 @@ function isPastEvent(concert, todayStr) {
 }
 
 function renderConcertCard(c, { linkTitle, extra = false }) {
-  const { f, num, price, link, isTop, isFree, desc, title, slug, image, dateDisplay } = c;
+  const { f, num, price, link, isTop, isFree, desc, title, slug, image, dateDisplay, isoDate, showtimes } = c;
   const titleHtml = linkTitle
     ? `<a class="concert-title" href="/concert/${slug}/">${escapeHtml(title)}</a>`
     : `<div class="concert-title">${escapeHtml(title)}</div>`;
+
+  // Same-day multiple showtimes (e.g. a 16:00 and a 19:00 performance) get
+  // both times joined onto the one date shown on the card instead of just
+  // whichever single showtime buildConcertData() picked as "the" display
+  // date — same logic as renderRelatedConcert's "Концерти тут" strip.
+  let dateLabel = dateDisplay;
+  if (dateLabel && isoDate && Array.isArray(showtimes) && showtimes.length > 1) {
+    const sameDayTimes = [...new Set(
+      showtimes
+        .filter((s) => s.isoDate === isoDate && !s.soldOut && s.timeDisplay)
+        .map((s) => s.timeDisplay),
+    )];
+    if (sameDayTimes.length > 1) {
+      const lastComma = dateLabel.lastIndexOf(', ');
+      if (lastComma !== -1) {
+        dateLabel = `${dateLabel.slice(0, lastComma)}, ${sameDayTimes.join(' та ')}`;
+      }
+    }
+  }
 
   // "extra" cards are the genre-filter backfill pool (see client.js
   // refreshVisibility): concerts beyond the curated 8, baked into the page
@@ -236,7 +255,7 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
           ${titleHtml}
           ${desc ? `<div class="concert-desc">${escapeHtml(desc)}</div>` : ''}
           <div class="concert-meta">
-            ${dateDisplay ? `<span>📅 ${escapeHtml(dateDisplay)}</span>` : ''}
+            ${dateLabel ? `<span>📅 ${escapeHtml(dateLabel)}</span>` : ''}
             ${f.Location ? (() => {
               const venue = findVenueForLocation(f.Location);
               return venue
