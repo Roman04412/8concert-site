@@ -255,7 +255,7 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
           ${titleHtml}
           ${desc ? `<div class="concert-desc">${escapeHtml(desc)}</div>` : ''}
           <div class="concert-meta">
-            ${dateLabel ? `<span>📅 ${escapeHtml(dateLabel)}</span>` : ''}
+            ${dateLabel ? `<span class="concert-meta-date">📅 ${escapeHtml(dateLabel)}</span>` : ''}
             ${f.Location ? (() => {
               const venue = findVenueForLocation(f.Location);
               return venue
