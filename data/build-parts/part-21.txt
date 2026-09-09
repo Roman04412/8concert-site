@@ -12,6 +12,10 @@ ${renderVenueGuideLinks()}
     canonical: `${SITE_URL}/mistsya/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
+    jsonLd: renderBreadcrumbJsonLd([
+      { name: 'Афіша', url: `${SITE_URL}/` },
+      { name: 'Місця' },
+    ]),
   });
 }
 
@@ -37,6 +41,11 @@ ${renderSeasonToggle(season.slug)}
     canonical: `${SITE_URL}/mistsya/${season.slug}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
+    jsonLd: renderBreadcrumbJsonLd([
+      { name: 'Афіша', url: `${SITE_URL}/` },
+      { name: 'Місця', url: `${SITE_URL}/mistsya/` },
+      { name: season.navLabel },
+    ]),
   });
 }
 
@@ -75,13 +84,20 @@ function renderVenuePage(venue, allConcerts) {
     : `
   <div class="loading" style="margin-top:8px">Найближчим часом концертів тут у нашій добірці ще немає. Стежте за афішею — оновлюємо її щодня.</div>`;
 
-  const jsonLd = {
+  const placeJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Place',
     name: venue.name,
     description: venue.tagline,
+    url: `${SITE_URL}/mistsya/${venue.slug}/`,
+    image: absUrl(`/images/venues/${venue.image}`),
     ...(venue.address ? { address: { '@type': 'PostalAddress', name: venue.address, addressLocality: 'Київ', addressCountry: 'UA' } } : {}),
   };
+  const breadcrumbJsonLd = renderBreadcrumbJsonLd([
+    { name: 'Афіша', url: `${SITE_URL}/` },
+    { name: 'Місця', url: `${SITE_URL}/mistsya/` },
+    { name: venue.name },
+  ]);
 
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(venue.name)}</nav>
@@ -104,7 +120,7 @@ function renderVenuePage(venue, allConcerts) {
     canonical: `${SITE_URL}/mistsya/${venue.slug}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
-    jsonLd,
+    jsonLd: [placeJsonLd, breadcrumbJsonLd],
     ogImage: `/images/venues/${venue.image}`,
   });
 }
