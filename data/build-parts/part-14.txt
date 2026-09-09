@@ -100,6 +100,11 @@ function renderVenueGuidePage(guide, allVenues) {
     canonical: `${SITE_URL}/mistsya/${guide.slug}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
+    jsonLd: renderBreadcrumbJsonLd([
+      { name: 'Афіша', url: `${SITE_URL}/` },
+      { name: 'Місця', url: `${SITE_URL}/mistsya/` },
+      { name: guide.h1 },
+    ]),
   });
 }
 
