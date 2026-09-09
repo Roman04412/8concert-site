@@ -1,4 +1,4 @@
-// "Всі події" — literally everything fresh and upcoming, curated or not,
+// "Всі події" — літерально everything fresh and upcoming, curated or not,
   // in chronological order. Unlike the "8 подій" pool this needs no
   // backfill mechanism: it already contains every concert we know about.
   const allHtml = allUpcoming.length
@@ -216,6 +216,10 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   const sharedEventFields = {
     '@type': 'MusicEvent',
     name: title,
+    // The event's own page — distinct from offers.url (the ticket link).
+    // Google's Event guidelines list this as a required/recommended field
+    // in its own right, separate from where to buy a ticket.
+    url: `${SITE_URL}/concert/${slug}/`,
     description: snippet || desc || title,
     eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
     // Reflects the Airtable "Скасовано" checkbox in structured data too —
@@ -229,7 +233,10 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     },
     ...(f.Category ? { genre: displayCategory(f.Category) } : {}),
     ...(image ? { image: [absUrl(image)] } : {}),
-    ...(performerName ? { performer: { '@type': 'PerformingGroup', name: performerName } } : {}),
+    // MusicGroup (not the more generic PerformingGroup) — schema.org's own
+    // MusicEvent examples use it, and it's the more specific/correct type
+    // for a musical act.
+    ...(performerName ? { performer: { '@type': 'MusicGroup', name: performerName } } : {}),
     ...organizerField,
   };
   const eventForShowtime = (s) => ({
