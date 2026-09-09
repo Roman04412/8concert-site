@@ -4,12 +4,24 @@
   // (via the "Additional Dates" Airtable field) gets a @graph of one Event
   // per showtime, so each date is independently eligible for Google's
   // Event rich result instead of only the one date we happen to display.
-  const jsonLd = showtimes.length > 1
+  const eventJsonLd = showtimes.length > 1
     ? { '@context': 'https://schema.org', '@graph': showtimes.map(eventForShowtime) }
     : {
         '@context': 'https://schema.org',
         ...eventForShowtime(showtimes[0] || { startDateTime, endDateTime, link, price, soldOut: false }),
       };
+
+  // Breadcrumb — matches the visible <nav class="breadcrumb"> trail below
+  // exactly (Головна → [Category, if known] → Title), per Google's
+  // requirement that structured data reflect what's actually on the page.
+  const breadcrumbCategory = f.Category
+    ? CATEGORIES.find((cat) => normalizeCategoryKey(cat.name) === normalizeCategoryKey(f.Category))
+    : null;
+  const breadcrumbJsonLd = renderBreadcrumbJsonLd([
+    { name: 'Афіша', url: `${SITE_URL}/` },
+    ...(breadcrumbCategory ? [{ name: breadcrumbCategory.name, url: `${SITE_URL}/${breadcrumbCategory.slug}/` }] : []),
+    { name: title },
+  ]);
 
   // Past events keep their page (never 404 — see main()'s pastPages), but
   // swap the "buy tickets" CTA for an honest "this already happened" notice
@@ -121,7 +133,7 @@
   </button>`;
 
   const content = `
-<nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(title)}</nav>
+<nav class="breadcrumb"><a href="/">Афіша</a> / ${breadcrumbCategory ? `<a href="/${breadcrumbCategory.slug}/">${escapeHtml(breadcrumbCategory.name)}</a> / ` : ''}${escapeHtml(title)}</nav>
 <article class="concert-page">
   ${image ? `<img class="concert-page-image" src="${escapeHtml(image)}" alt="${escapeHtml(title)}" loading="lazy">` : ''}
   <div class="concert-tags">
@@ -148,7 +160,7 @@ ${ctaHtml}
     canonical: `${SITE_URL}/concert/${slug}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
-    jsonLd,
+    jsonLd: [eventJsonLd, breadcrumbJsonLd],
     ogImage: image,
   });
 }
@@ -168,6 +180,7 @@ function renderAboutPage() {
     canonical: `${SITE_URL}/about/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
+    jsonLd: renderBreadcrumbJsonLd([{ name: 'Афіша', url: `${SITE_URL}/` }, { name: 'Про нас' }]),
   });
 }
 
@@ -190,6 +203,7 @@ function renderContactsPage() {
     canonical: `${SITE_URL}/contacts/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
+    jsonLd: renderBreadcrumbJsonLd([{ name: 'Афіша', url: `${SITE_URL}/` }, { name: 'Контакти' }]),
   });
 }
 
