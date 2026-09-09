@@ -12,6 +12,12 @@
         url: `${SITE_URL}/concert/${c.slug}/`,
         name: c.title,
       })),
+    }, {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Афіша', item: `${SITE_URL}/` },
+        { '@type': 'ListItem', position: 2, name: cat.name },
+      ],
     }],
   };
 
@@ -63,19 +69,28 @@ function renderScopePage({ slug, breadcrumbLabel, title, description, h1, intro,
     ? numbered.map((c) => renderConcertCard(c, { linkTitle: true })).join('')
     : `<div class="loading">${escapeHtml(emptyMessage)}</div>`;
 
-  const jsonLd = numbered.length ? {
+  const jsonLd = {
     '@context': 'https://schema.org',
-    '@graph': [{
-      '@type': 'ItemList',
-      name: `${title} — 8CONCERT`,
-      itemListElement: numbered.map((c, i) => ({
-        '@type': 'ListItem',
-        position: i + 1,
-        url: `${SITE_URL}/concert/${c.slug}/`,
-        name: c.title,
-      })),
-    }],
-  } : null;
+    '@graph': [
+      ...(numbered.length ? [{
+        '@type': 'ItemList',
+        name: `${title} — 8CONCERT`,
+        itemListElement: numbered.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          url: `${SITE_URL}/concert/${c.slug}/`,
+          name: c.title,
+        })),
+      }] : []),
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Афіша', item: `${SITE_URL}/` },
+          { '@type': 'ListItem', position: 2, name: breadcrumbLabel },
+        ],
+      },
+    ],
+  };
 
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / ${escapeHtml(breadcrumbLabel)}</nav>
