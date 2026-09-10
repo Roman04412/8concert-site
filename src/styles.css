@@ -488,6 +488,16 @@ a.concert-title::after {
   flex-shrink: 0;
 }
 
+/* "+N дат" hint next to the date on cards for multi-date productions —
+   points at the same concert page the whole card already links to (via
+   a.concert-title::after's stretched link), so this stays a plain styled
+   span rather than its own <a>; no separate click target needed. */
+.concert-meta-more-dates {
+  color: var(--warm);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
 .concert-right {
   text-align: right;
   display: flex;
