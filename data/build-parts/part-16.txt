@@ -225,6 +225,7 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
   // whichever single showtime buildConcertData() picked as "the" display
   // date — same logic as renderRelatedConcert's "Концерти тут" strip.
   let dateLabel = dateDisplay;
+  let otherDaysCount = 0;
   if (dateLabel && isoDate && Array.isArray(showtimes) && showtimes.length > 1) {
     const sameDayTimes = [...new Set(
       showtimes
@@ -237,7 +238,31 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
         dateLabel = `${dateLabel.slice(0, lastComma)}, ${sameDayTimes.join(' та ')}`;
       }
     }
+
+    // Distinct upcoming calendar days beyond the one shown here — a touring
+    // production (e.g. a choir playing several different nights across a
+    // month) otherwise only ever shows the single soonest date on its card,
+    // with no hint that more dates exist until you click through. Counts
+    // only OTHER days (not more same-day times, already handled above) and
+    // only ones still in the future, so a mostly-finished run doesn't
+    // advertise dates that have already passed.
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const otherDays = new Set(
+      showtimes
+        .filter((s) => s.isoDate !== isoDate && s.isoDate >= todayStr && !s.soldOut)
+        .map((s) => s.isoDate),
+    );
+    otherDaysCount = otherDays.size;
   }
+
+  // Ukrainian plural: 1 дата / 2-4 дати / 5+ (and 11-14) дат.
+  const pluralDatesUk = (n) => {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod10 === 1 && mod100 !== 11) return 'дата';
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'дати';
+    return 'дат';
+  };
 
   // "extra" cards are the genre-filter backfill pool (see client.js
   // refreshVisibility): concerts beyond the curated 8, baked into the page
@@ -256,6 +281,7 @@ function renderConcertCard(c, { linkTitle, extra = false }) {
           ${desc ? `<div class="concert-desc">${escapeHtml(desc)}</div>` : ''}
           <div class="concert-meta">
             ${dateLabel ? `<span class="concert-meta-date">📅 ${escapeHtml(dateLabel)}</span>` : ''}
+            ${otherDaysCount > 0 ? `<span class="concert-meta-more-dates">+${otherDaysCount} ${pluralDatesUk(otherDaysCount)}</span>` : ''}
             ${f.Location ? (() => {
               const venue = findVenueForLocation(f.Location);
               return venue
