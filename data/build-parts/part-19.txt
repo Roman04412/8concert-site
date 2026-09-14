@@ -191,10 +191,9 @@ function renderContactsPage() {
   <h1 class="concert-title">Контакти</h1>
   <p class="concert-desc" style="font-size:15px;margin-bottom:20px">Пропозиції щодо концертів для афіші, співпраця, помилка на сайті — пишіть, відповідаємо особисто.</p>
   ${SITE.telegramUrl ? `<a href="${escapeHtml(SITE.telegramUrl)}" class="btn-ticket" target="_blank" rel="noopener" style="margin-bottom:20px">Написати в Telegram →</a>` : ''}
-  <div class="concert-meta" style="flex-direction:column;align-items:flex-start;gap:10px;font-size:14px;margin-top:${SITE.telegramUrl ? '4px' : '0'}">
-    <span>✉️ <a href="mailto:${escapeHtml(SITE.contactEmail)}" style="color:var(--brown)">${escapeHtml(SITE.contactEmail)}</a></span>
-    ${SITE.instagramUrl ? `<span>📷 <a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener" style="color:var(--brown)">Instagram</a></span>` : ''}
-  </div>
+  ${SITE.instagramUrl ? `<div class="concert-meta" style="flex-direction:column;align-items:flex-start;gap:10px;font-size:14px;margin-top:${SITE.telegramUrl ? '4px' : '0'}">
+    <span>📷 <a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener" style="color:var(--brown)">Instagram</a></span>
+  </div>` : ''}
 </article>`;
 
   return pageShell({
