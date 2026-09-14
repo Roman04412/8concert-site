@@ -19,6 +19,37 @@
   to = "/concert/the-best-of-love-kyivska-troianda-27-veresnia-ssyyf7/"
   status = 301
 
+# One-off redirects: these records had no Title filled in yet in Airtable at
+# some point, so build.js's fallback ("Назва уточнюється") produced a
+# placeholder slug for them (see buildConcertData in
+# data/build-parts/part-16.txt). Google indexed those placeholder URLs before
+# the title was filled in (or the record was removed) and, since slugs are
+# recomputed from the CURRENT title on every build with no memory of the old
+# one, the placeholder URL just 404s afterwards with no redirect. Added
+# 2026-09-15 after Rocky spotted these in Google Search Console.
+[[redirects]]
+  from = "/concert/nazva-utochniuietsia-f5zvln/"
+  to = "/concert/skasovano-billie-eilish-lana-del-rey-f5zvln/"
+  status = 301
+
+# Record no longer exists on the site at all (removed from Airtable before
+# ever getting a title) — no live page to point to, so send visitors home
+# instead of leaving them on a dead end.
+[[redirects]]
+  from = "/concert/nazva-utochniuietsia-aicsv8/"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/concert/nazva-utochniuietsia-xxpiy7/"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/concert/nazva-utochniuietsia-2d4pqw/"
+  to = "/"
+  status = 301
+
 [[headers]]
   for = "/*"
   [headers.values]
