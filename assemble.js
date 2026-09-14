@@ -17,10 +17,13 @@
  * text content byte-exact (see above) but not arbitrary binary — bytes above
  * 0x7F get re-encoded as UTF-8 multi-byte sequences somewhere in the
  * request/REST-API path, which silently corrupts a raw PNG. So new venue
- * images are committed as base64 text under data/venue-images-b64/*.png.b64
- * (pure ASCII, round-trips fine) and decoded back into real PNGs under
- * assets/venues/ here, before build.js copies them into dist/. No-op when
- * that folder doesn't exist or is empty.
+ * images are committed as base64 text (pure ASCII, round-trips fine) under
+ * data/venue-images-b64/<image-filename>/part-NN.txt — chunked the same way
+ * build.js is, since a single ~80KB base64 blob in one file-write call is
+ * itself unreliable to send in one piece. Each subdirectory's parts get
+ * concatenated, base64-decoded, and written to assets/venues/<dirname>
+ * here, before build.js copies it into dist/. No-op when the folder doesn't
+ * exist or is empty.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -45,13 +48,18 @@ const b64Dir = path.join(__dirname, 'data', 'venue-images-b64');
 if (fs.existsSync(b64Dir)) {
   const venuesDir = path.join(__dirname, 'assets', 'venues');
   fs.mkdirSync(venuesDir, { recursive: true });
-  const imgFiles = fs.readdirSync(b64Dir).filter((f) => f.endsWith('.b64'));
-  for (const f of imgFiles) {
-    const outName = f.replace(/\.b64$/, '');
-    const b64 = fs.readFileSync(path.join(b64Dir, f), 'utf8').trim();
-    fs.writeFileSync(path.join(venuesDir, outName), Buffer.from(b64, 'base64'));
+  const imageDirs = fs.readdirSync(b64Dir).filter((f) =>
+    fs.statSync(path.join(b64Dir, f)).isDirectory()
+  );
+  for (const imageName of imageDirs) {
+    const partsDirForImage = path.join(b64Dir, imageName);
+    const parts = fs.readdirSync(partsDirForImage)
+      .filter((f) => /^part-\d+\.txt$/.test(f))
+      .sort();
+    const b64 = parts.map((f) => fs.readFileSync(path.join(partsDirForImage, f), 'utf8')).join('').trim();
+    fs.writeFileSync(path.join(venuesDir, imageName), Buffer.from(b64, 'base64'));
   }
-  if (imgFiles.length) {
-    console.log(`assemble.js: reconstructed ${imgFiles.length} venue image(s) from base64.`);
+  if (imageDirs.length) {
+    console.log(`assemble.js: reconstructed ${imageDirs.length} venue image(s) from base64.`);
   }
 }
