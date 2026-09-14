@@ -12,6 +12,15 @@
  * future edits should go through the normal build.js edit flow; this script
  * doesn't need touching again unless build.js needs to be split into parts
  * like this a second time.
+ *
+ * Second job: reconstruct venue photos. Our file-writing tooling round-trips
+ * text content byte-exact (see above) but not arbitrary binary — bytes above
+ * 0x7F get re-encoded as UTF-8 multi-byte sequences somewhere in the
+ * request/REST-API path, which silently corrupts a raw PNG. So new venue
+ * images are committed as base64 text under data/venue-images-b64/*.png.b64
+ * (pure ASCII, round-trips fine) and decoded back into real PNGs under
+ * assets/venues/ here, before build.js copies them into dist/. No-op when
+ * that folder doesn't exist or is empty.
  */
 import fs from 'node:fs';
 import path from 'node:path';
@@ -26,9 +35,23 @@ const files = fs.readdirSync(partsDir)
 
 if (files.length === 0) {
   console.log('No build-parts found; leaving build.js as-is.');
-  process.exit(0);
+} else {
+  const content = files.map((f) => fs.readFileSync(path.join(partsDir, f), 'utf8')).join('');
+  fs.writeFileSync(path.join(__dirname, 'build.js'), content);
+  console.log(`assemble.js: wrote build.js from ${files.length} part(s), ${content.length} chars.`);
 }
 
-const content = files.map((f) => fs.readFileSync(path.join(partsDir, f), 'utf8')).join('');
-fs.writeFileSync(path.join(__dirname, 'build.js'), content);
-console.log(`assemble.js: wrote build.js from ${files.length} part(s), ${content.length} chars.`);
+const b64Dir = path.join(__dirname, 'data', 'venue-images-b64');
+if (fs.existsSync(b64Dir)) {
+  const venuesDir = path.join(__dirname, 'assets', 'venues');
+  fs.mkdirSync(venuesDir, { recursive: true });
+  const imgFiles = fs.readdirSync(b64Dir).filter((f) => f.endsWith('.b64'));
+  for (const f of imgFiles) {
+    const outName = f.replace(/\.b64$/, '');
+    const b64 = fs.readFileSync(path.join(b64Dir, f), 'utf8').trim();
+    fs.writeFileSync(path.join(venuesDir, outName), Buffer.from(b64, 'base64'));
+  }
+  if (imgFiles.length) {
+    console.log(`assemble.js: reconstructed ${imgFiles.length} venue image(s) from base64.`);
+  }
+}
