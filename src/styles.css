@@ -407,6 +407,7 @@ nav a {
   width: 100%;
   max-height: 380px;
   object-fit: cover;
+  object-position: center top;
   border-radius: 12px;
   margin-bottom: 24px;
   display: block;
