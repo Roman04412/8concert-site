@@ -175,6 +175,7 @@ function renderLlmsTxt(concerts) {
 - [Джаз](${SITE_URL}/jazz/)
 - [Класика](${SITE_URL}/klasika/)
 - [Триб'юти](${SITE_URL}/trybuti/)
+- [Театр](${SITE_URL}/teatr/)
 - [Про нас](${SITE_URL}/about/): хто ми і як обираємо концерти.
 - [Контакти](${SITE_URL}/contacts/)
 
