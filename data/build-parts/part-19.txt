@@ -212,7 +212,7 @@ function renderCategoryPage(cat, concerts) {
     .map((c, index) => ({
       ...c,
       num: String(index + 1).padStart(2, '0'),
-      isTop: index < 2 || c.f.Status === 'Топ',
+      isTop: Boolean(c.f.Status),
     }));
 
   const listHtml = items.length
