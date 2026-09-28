@@ -688,14 +688,42 @@
     "fields": {
       "Title": "Жінки Моцарта",
       "Performer": "Театр «Колесо»",
-      "Snippet": "Комедія за п'єсою Фелікса Міттерера про жінок, які кохали і ненавиділи Моцарта, — незвичний погляд на генія очима тих, хто його оточував.",
+      "Image": [
+        {
+          "id": "attOZyRLDIALrKNpr",
+          "width": 630,
+          "height": 891,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/9dZhoK10QcMfkGNjpir9Qw/hqmb4aqvXKf9MhOZYhbwzr8_XAqZBtE7I3-KAq09jqs8ID6gvnr0fZvSjCH4qCBpuzSxJofWyZ58xd9GG4t7Z_EOjEJhQocY4sMATVxLd10GspV-lYxf5qNRebE5JFN9hlUmITkcyd8r8cLgHbxLCQ/CkHTdI-QYqSJh4zt376htgQD59Ud8FkBq8QPuvA6XoQ",
+          "filename": "630x891_1761488890.webp",
+          "size": 104170,
+          "type": "image/webp",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/s8XNNYBU8aFboF0YBhBKvA/aEQWW6mltZ7l3zFwgMbnRdItlCd_ESC3utQzX9Ulenm30JSScc60vpWfH1uengRXtljwZh60-aEy0SsePDV60hbz5RtuJEhpyMCm78EneD2jfPYhtLQeZMgNJvsRczb_-KHAtjUYirEel855p3Z3QQ/bJ-Vu4iP5CtxoPeACZSw9KpHTxbpqjEYD5dz4zbbGgI",
+              "width": 25,
+              "height": 35
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/-zWaqeyiMYraQSqrMp54dg/ztENEMPCQUYVQ8Os-D_Z9mGOTMrn2SnWLwimbGIZj6jm4a59zhxT2fnnj4YjSCVqXuJZ5u7T28HSRAbueTT6WC2S-YmOI2wJuB235EceVLwxzhwl75_eiMpBDX5JLNvGH_EwfCTgtP1u-MvPe6C7IA/NTYR20XZPQGJVDcPozSztoP2PhcpyP6yg4OFa1BCv2s",
+              "width": 512,
+              "height": 724
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/6sPYvVKQYVsRgFjZLNybRw/YIrraILxFqiTMHBcB1_Ndii7SvvI6N7zVnT4evZ4YUWOK4oZiKRtV2n6qcy028I0gtvggDhDHumxnkephQLOaIk_-HOOg3Xq0RbhTRFjuwXMwHBn3NIRgaeIV9pXkOjB750gsgxwR66UaHNJNZyyrw/KklN3U7S2h8P6w7c-9Vce8QzV4S8vdOlCWcARAQ4-o4",
+              "width": 630,
+              "height": 891
+            }
+          }
+        }
+      ],
+      "Snippet": "Комедія за п'єсою Фелікса Міттерера про жінок, які кохали і ненавиділи Моцарта, — незвичний погляд на генія очима тих, хто його оточував.\n\nІнтриги, кохання, заздрість і зради — вистава показує композитора не як міф, а як людину, чиє життя творили (і руйнували) жінки поруч із ним. Гостра, дотепна й водночас гірка комедія на дві дії.",
       "Price": "350 грн",
       "organizer": "Театр «Колесо»",
       "Time": 64800,
       "Location": "Театр «Колесо», вул. Андріївський узвіз, 8, Київ",
       "Date": "2026-09-29",
       "Category": "Театр",
-      "Link": "https://kontramarka.ua/uk/zinki-mocarta-111496.html"
+      "Link": "https://widget.kontramarka.ua/uk/widget510site106/widget/event/190021?utm_referrer=kontramarka.ua/uk/zinki-mocarta-111496.html&siteShowId=111496&siteEventId=288596"
     },
     "_firstSeenDate": "2026-09-28"
   },
@@ -933,15 +961,43 @@
     "fields": {
       "Title": "Куди я з вами не піду",
       "Performer": "Ірина Мельник, Анатолій Ященко",
-      "Snippet": "Прем'єра. Майже комедія за п'єсою ізраїльського драматурга Михайла Хейфеца про чоловіка й жінку, яких доля звела в парі на уроках танців.",
+      "Image": [
+        {
+          "id": "attguo2MGe0ntKU7P",
+          "width": 630,
+          "height": 891,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/l-hwEUC4Phn9E2O2qgY4KQ/6gTXSgbj8npRzjqezQ7NK_Ay2dODWTRB6zY2CyrWwOhn-WAJtZuwWwllNg52ujcxfpMSouT2BOWz8qMyiAcdYTqbu8SI6F8WzGQUgsNVtes2xDpnlB_sE-Frl51VYCiBGjG-QW6LeDIXGLk_a5GpPw/_z91JMn5FZZZc-rtnPQzkC_bEiRSK9AQBHG5_MnmPkU",
+          "filename": "630x891_1654024619.webp",
+          "size": 44870,
+          "type": "image/webp",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/Hs50QUHLAwkUtVm-zc-KIw/e4pn23lgIE5Uh5orx79h4CYWVCxAdjQ7hscK_o77xxnyCr5MIPL08Y4irTAYrrRFLSYAofqweu_8MGR6ClHYRnxK-L93YhIF0qT1kzj40Ob1TKbVAq0SYM5mdg0NDHkspb1NYE1BsWzxQaia-Nr57A/sxfbSMJc_f2Gx6-DNOEeg3xBVR3sdQTbMYd_4jLrYEM",
+              "width": 25,
+              "height": 35
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/-ne0e1OtyDuvtqf0grONPw/hPR61UduniXbiuB1W6g0UuYowZ7glKKvouvPYwS-9ET1HHLIxFgprTDc46o5KaQ7aqjB9AdXFk_a5hsYoZ8HJ7K3DDbZO-pRTvD3YWx1dWWnrGj8fUCwRyn4DkyIE4-2EeyNXRoOIKvzseBIYOFV4A/7PUQer6Rvd0w_R0yXHxbPWjGPb6WspZC66J37DI8vJM",
+              "width": 512,
+              "height": 724
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/SZfZPHNC4h4eWo05xMCJAQ/4W6JeyYVIcEwaGzzlwEKGb_2NDOMTiPK9ynDHPxLMC5q1j7KtZi1nJcp0H-D2HurgcldeprtsLOKclZEUlxTw2nv9J_09T0CNb9SkDMblrnc2AMMvBxDCghqnwpMjdmKc2zUTjUospcXM3MUCVpYgg/FJ1XulcJigO5I9lq9BFOKDcDqb9odKnHdK38cW1SKxU",
+              "width": 630,
+              "height": 891
+            }
+          }
+        }
+      ],
+      "Snippet": "Прем'єра. Майже комедія за п'єсою ізраїльського драматурга Михайла Хейфеца про чоловіка й жінку, яких доля звела в парі на уроках танців.\n\nДвоє абсолютно різних людей намагаються порозумітися в ритмі танцю — і постійно зриваються в суперечки, кпини й непорозуміння. У головних ролях — Заслужена артистка України Ірина Мельник та Народний артист України Анатолій Ященко.",
       "Price": "400 грн",
-      "Additional Dates": "2026-10-10|17:00|400 грн|https://kontramarka.ua/uk/kudi-a-z-vami-ne-pidu-73503.html\n2026-10-29|18:00|400 грн|https://kontramarka.ua/uk/kudi-a-z-vami-ne-pidu-73503.html",
+      "Additional Dates": "2026-10-10|17:00|400 грн|https://widget.kontramarka.ua/uk/widget510site96/widget/event/193048?utm_referrer=kontramarka.ua/uk/kudi-a-z-vami-ne-pidu-73503.html&siteShowId=73503&siteEventId=291385\n2026-10-29|18:00|400 грн|https://widget.kontramarka.ua/uk/widget510site96/widget/event/193060?utm_referrer=kontramarka.ua/uk/kudi-a-z-vami-ne-pidu-73503.html&siteShowId=73503&siteEventId=291393",
       "organizer": "Театр «Сузір'я»",
       "Time": 64800,
       "Location": "Театр «Сузір'я», вул. Ярославів Вал, 14Б, Київ",
       "Date": "2026-09-29",
       "Category": "Театр",
-      "Link": "https://kontramarka.ua/uk/kudi-a-z-vami-ne-pidu-73503.html"
+      "Link": "https://widget.kontramarka.ua/uk/widget510site96/widget/event/189745?utm_referrer=kontramarka.ua/uk/kudi-a-z-vami-ne-pidu-73503.html&siteShowId=73503&siteEventId=288300"
     },
     "_firstSeenDate": "2026-09-28"
   },
@@ -1504,15 +1560,43 @@
     "fields": {
       "Title": "Конотопська відьма",
       "Performer": "MODERN THEATRE, реж. Дмитро Рачковський",
-      "Snippet": "Прем'єра. Сатирично-фантастична вистава за повістю Григорія Квітки-Основ'яненка про конотопську містику, у постановці Дмитра Рачковського.",
+      "Image": [
+        {
+          "id": "attadmjpcPUS8eWPz",
+          "width": 630,
+          "height": 891,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/RSyJVay89Ig2KILtDC8VHg/-RYGPwHg8GzPwZ0dxgGiceBUES6B_lEBQo_YfpIyOKT8WhyYsMa-YcHRIm8HEMydttJ6lzshNz1mxxpjPXXfiI14VXEUVlSjbD_ALYwjKdUQoIAYSvEYN6q6uchI8delowoUDWTIZuO2qoldswSXgw/2uHDSZ481dx1nk0Ps5I9kMBE-eLKnNbdG-I6eZRxHI8",
+          "filename": "630x891_1779871894_1773332979_1745312954_show_utldc2o9adkyge5bruxz-akjcfgz-cdh.webp",
+          "size": 68064,
+          "type": "image/webp",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/oP3tJ0YhgkNtv4jp1xuVXw/ASZ0MhI0Nq-pfSSiHle0QkgvdVhyvswZpPhAjx08raPqOgWFJ7ZnBQIbXmXzxIReOSVtGRTgkOKk8VgiS2TOY5j9oWOXKM41sTInhu_DB4sbgNjn9zWN11tJiuXCXVhx513xb3_pqTD7rlCZkD70uw/-45YDQxuD91HMEz1hQb1664Y_edo6_uZDGpobRFtUcw",
+              "width": 25,
+              "height": 35
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/X5Fg5jzRDYA9VZxbgnPlqg/6kycOtWiaH0Icfhic2qvZmA9bASeEmSGunNRw5T-qm6US7VYMwneKGFee5BLG0RVHWJn17LNF3_ZyzHdNHlh250buyA7ucc8uDny7BBOV6wM6-gaM9Xzap3G3EdXCH9g44xdot7HEmU2ORWNMuLaGA/2lhn-JvpF6wWsgD6vG_xkpyudV9qTZ4yuSCOPTu4sjM",
+              "width": 512,
+              "height": 724
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/-f4RXrufjDoYrb6KoVEUfA/bqgKJWfcXwEVGIuVb0wRFtGZVDoe8eVl2mAR6dUhQqVR_Yg4twjG61AlAohJlconDJbuxYp8fTKZH7PDgDjAENRy658jrRuzkY8xH0tv8Mx029dYjA7uxx8X422FzOVJh7AoQECoF8uWg8Vp3Ar79Q/KrkwM3nOffsYoETiUPDzVGg1uj-1gpeFzbSbOtYPwwE",
+              "width": 630,
+              "height": 891
+            }
+          }
+        }
+      ],
+      "Snippet": "Прем'єра. Сатирично-фантастична вистава за повістю Григорія Квітки-Основ'яненка про конотопську містику, у постановці Дмитра Рачковського.\n\nДурні сотники, хитрі писарі й справжня відьма — історія про містичну Україну, де межа між сатирою і жахом дуже тонка. Прем'єра трупи MODERN THEATRE переносить класичну повість на сцену з сучасною енергією та іронією.",
       "Price": "300-1000 грн",
-      "Additional Dates": "2026-11-04|18:00|300-1000 грн|https://kontramarka.ua/uk/konotopska-vidma-120919.html",
+      "Additional Dates": "2026-11-04|18:00|300-1000 грн|https://widget.kontramarka.ua/uk/widget512site1008/widget/event/100187212?utm_referrer=kontramarka.ua/uk/konotopska-vidma-120919.html&siteShowId=120919&siteEventId=288341",
       "organizer": "MODERN THEATRE",
       "Time": 64800,
       "Location": "Будинок офіцерів Збройних сил України, вул. М. Грушевського, 30/1, Київ",
       "Date": "2026-09-29",
       "Category": "Театр",
-      "Link": "https://kontramarka.ua/uk/konotopska-vidma-120919.html"
+      "Link": "https://widget.kontramarka.ua/uk/widget512site1008/widget/event/100187214?utm_referrer=kontramarka.ua/uk/konotopska-vidma-120919.html&siteShowId=120919&siteEventId=288343"
     },
     "_firstSeenDate": "2026-09-28"
   },
@@ -1522,14 +1606,42 @@
     "fields": {
       "Title": "Цар Едіп",
       "Performer": "Театр на Подолі, реж. Давид Петросян",
-      "Snippet": "Давньогрецька трагедія Софокла в незвичному прочитанні — трагіфарс у стилі кіберпанк про владу, фатум і гнів богів.",
+      "Image": [
+        {
+          "id": "attObtX1sUiHUgvFK",
+          "width": 612,
+          "height": 891,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/lYalwQb2o_2ZLZyOpAn3yw/OLOe6RXnZbqNmbXmDtpJk9OHmJO5uJnWEoJHnFy2R7e9mb_bl0iPEMWF3U0Cg4yy2RA030ZsP-0FJBrg4Tz7aUvjY_D2fJjVRxA0vDb7NPfQwqYf5-gme1kpKlxWIUwtYILBpq1-u4TUOKvDvS59eg/HUbSQ3TundatPDetk7dBJO03MlS2TnQz79PnrAA2AUs",
+          "filename": "630x891_Edip_660x960px.webp",
+          "size": 69442,
+          "type": "image/webp",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/A6Fr6VwT0RkHrAcuRg6v0g/Tdc9BjdhMOfIOHXqG_s-Q9_cZbsVZozkWPBZmfcyaO1VjHK4RzJv8X0B3sbNcnhW5X3rrTruaX0donTf5PJ1a0X1rVI4eSCZhYOhshZLEKHsygVVz9x6JNoYgNJ6AQ_GtO5GMIL5zgWS8VfQLdhmMw/jdPwuB72ttoONNSVZoizDODH3GzZBkE4BdJjuE4Fqc4",
+              "width": 25,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/Z7m5qKoq2YxkQrnWxwH3ZQ/pDkcbLEcMDjQamhxbJyHjpbRV7gDrQqtX72O6qsOnbuHxpKu6GZwINoc7godU9qAZ_3NlmLfUPCtHJyKBdpdQ0u8bWo4xjoX2n8NHZE11gF0_KUun8m4Bg4aFVtBNS2X4HrE8Qv9NQw_EoJ4x_mAdA/Znbt-Jov9rdsUY5mNOAW9tIln1P7dm5s_WoCHiFz5e4",
+              "width": 512,
+              "height": 745
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/qWc8mXYhpkrVSuXVZI7ZBQ/A8Qr-d6jTQdht72bxzmRSgzzGoQBmoSTuvXdDz4Z9ooRVMj8XFpebYniOnahfaz_5giVNBKNu2FfXVsqtSej0zVU-QaW6vKwYZTBEW7L2D91ATQozYlD4ac_D8S2ByHxZe72raIt35T9iZr6Tj6uSw/yv4S5I5OlsJXNswRhP5v0odfYG5VKW5vmdmnro3yPw0",
+              "width": 612,
+              "height": 891
+            }
+          }
+        }
+      ],
+      "Snippet": "Давньогрецька трагедія Софокла в незвичному прочитанні — трагіфарс у стилі кіберпанк про владу, фатум і гнів богів.\n\nЦар Фів Едіп розслідує прокляття, що впало на його місто, і крок за кроком наближається до жахливої правди про власне минуле. Режисер Давид Петросян переносить античний сюжет у футуристичну оптику, не змінюючи його головного — невідворотності долі.",
       "Price": "350-750 грн",
       "organizer": "Театр на Подолі",
       "Time": 64800,
       "Location": "Театр на Подолі, Андріївський узвіз, 20Б, Київ",
       "Date": "2026-09-29",
       "Category": "Театр",
-      "Link": "https://kontramarka.ua/uk/edip-77074.html"
+      "Link": "https://widget.kontramarka.ua/uk/widget509site94/widget/event/188150?utm_referrer=kontramarka.ua/uk/edip-77074.html&siteShowId=77074&siteEventId=286698"
     },
     "_firstSeenDate": "2026-09-28"
   },
@@ -1630,14 +1742,43 @@
     "fields": {
       "Title": "Жізель",
       "Performer": "Трупа балету Національної опери України",
-      "Snippet": "Балет Адольфа Адана про трагічне кохання і прощення — одна з найзворушливіших класичних історій, що вже понад століття хвилює глядачів.",
+      "Image": [
+        {
+          "id": "attzUXUgBMc3nZd79",
+          "width": 630,
+          "height": 891,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/wZOJSqFoh66lcvsqn2o28g/uF2U28N8ESA2TxqfmDTe5nN9Jviz8cC9m4NXzO8nUT39Ge2RRooyuHnWStMvmRaSM0ExjWCrr0GEHUOqOpDqzviCSEiQSSRtBRgmN-w05cGJUPOBJV8ql7y-TRKHYG8_No0JNMmCF-oS40GehmqJ_A/nBGm-ZN5PeDMjiJfHuo2DuqZF2j3p6yQc6DlIAQ_1vE",
+          "filename": "630x891_IMG_7921.webp",
+          "size": 53012,
+          "type": "image/webp",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/BxAX40rB9D0O7f3mVfgGPQ/K5tp6lDxSVr1TLnTgU0ti2EOQU_G-3mSxUJR9ouun2qcY0ARvvO-CU65ah4idT1BkM7Mc1kIU4vWkSUSitO-EFNqFbhrucPKqM4E2Oyu5rs01A1HGRTqrhGukeN082dRRNGwJdgKhGQvwAVtAGAy3w/J8FTzKfJjCwFduXeMKnrUmdq3wa8jmy6hTE5FqPGsCY",
+              "width": 25,
+              "height": 35
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/cg7Q3F1dmSQzcE9iFOhwnw/BAn0SAyY4tQ19NEfpB3xeFdbrbk2g-lJwQBoY1Mqi4bvHu0-QTBWtel3t3-VbsIut8xAM9uvOLUSWnwywoRGiZhazBxwC8crauNj3JelY4BcaWOVX0bAUJQJ4qUxbZgn5gT9l4t9Z2czwC-riorFRw/B74BDRdR14IyD51gY4_F4-8QLhuq0No4VpXlga_y3vM",
+              "width": 512,
+              "height": 724
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/UDuFqPECsqoaOUOFBk4KBQ/R7Qvm3t7vf7WqkBo6zKCyYAadaobhWqrrDd4ZaKy6TSJNiHD6zTs2Wu_IQuKrx0Ef_KXdZnpY1Y9U_EDu9teK_UbZIEUSpwranZCK0LAdsGHnESdFCr6qq0LCFVGSX6e9ubUylweCC9nWTxkn0tQRQ/aLTUkX3vgoum0Rj444klw1oJn8ePuZ5O1m5XdlAuNOs",
+              "width": 630,
+              "height": 891
+            }
+          }
+        }
+      ],
+      "Snippet": "Балет Адольфа Адана про трагічне кохання і прощення — одна з найзворушливіших класичних історій, що вже понад століття хвилює глядачів.\n\nСелянку Жізель зраджує граф Альберт, який приховав свій справжній статус, — і після її смерті дівчина перетворюється на вілісу, приречену мстити чоловікам-зрадникам. Але навіть у потойбічному світі кохання виявляється сильнішим за помсту. Класична партитура і хореографія у виконанні трупи Національної опери України.",
       "Price": "200-800 грн",
       "organizer": "Національна опера України",
       "Time": 61200,
       "Location": "Національна опера України ім. Т. Г. Шевченка, вул. Володимирська, 50, Київ",
+      "Status": "Вибір редакції",
       "Date": "2026-09-29",
       "Category": "Театр",
-      "Link": "https://kontramarka.ua/uk/zizel-65351.html"
+      "Link": "https://widget.kontramarka.ua/uk/widget422site1003/widget/event/100186516?utm_referrer=kontramarka.ua/uk/zizel-65351.html&siteShowId=65351&siteEventId=285140"
     },
     "_firstSeenDate": "2026-09-28"
   },
@@ -3250,11 +3391,40 @@
     "fields": {
       "Title": "Коріолан",
       "Performer": "Трупа Театру Франка",
-      "Snippet": "Трагедія Шекспіра про злет і падіння легендарного давньоримського полководця Кая Марція, який за здобуття ворожого міста Коріоли отримав прізвисько Коріолан.",
+      "Image": [
+        {
+          "id": "attFydkQxdDy3DGVj",
+          "width": 1200,
+          "height": 800,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/KZuGA6Ft-IsV5e_4DJwVIQ/FpUPqWGIyC8PVFMq4mIUtyqH4G2Njm3wiV3Bx4t8n9iGM-ma4F9lerNQiYoASngzUMJHNUDXv4BOVmRcKPbpDaHfAiAqufEZ6_rYSzcAVj2KNlRoXGztGJrfwyCds7xTSEIwV9ZTSn6VGmMLVgZIqQ/iHjiqo-e470eO2cza6FeeJcUeNEZgPDmq8qmil5ldRo",
+          "filename": "b41de8c7fb13e78650488e94cd5422c437ad8d0f.jpg",
+          "size": 593601,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/eV3rsRlAKeV2oWFGuMUKOA/s13honitIUpnEu7uH78qLq68QSoqy87QbTQVyaID_59JizwDfwg73pogf6iWdOTcgcr3lpdV0GEzA0CjwmQtJUuW4T8bSU2tAWMjfbI8iNbWxTTEO0tQIwbT7CfRuDJbqHwBPAKiPdDobH4-ap6oaw/fP2fWVKAwycdjvc0Ttzmz2T8JiDhbbQYRnYo7pL7qrc",
+              "width": 54,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/HEhey7KfLcm1EWP1ddiTdg/wlV8Wf0y_SVC-bXrVvx8fbTX7iqPrDc0Yxr4AIVuNDGF9nE4Z-GcEQJxt42B9xKahyJ4-TBnP0-lSS5ygKLKR-IWOYyrM_vhE9EuL9tC1pg23f56Jt10-2yBH4z-FGmu83eyDJLRa1lRl-ZN4B8v_g/RY7y-RBGydwTPwye8Oqj2z63TsOXBiitjN0uuFgReuQ",
+              "width": 768,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790604000000/uyXgvreHNvpWHLZVygRNOA/bWZ51ektjv3ihZetsutWDvuAnNkdh7cjo43zHFGhGenYK62oPbUbTnKmmw2hQ_UAZ0V23FxquQkOq5XHqRf1XYSKGTr9fwKMZGTb0n_0wrDZQ6Q-_rhCp55CrqcGqIi9zYcP2K-fOUpc5JNBAbDFdw/wuuTpaQs-0sB88dTr-tZQMi5F__p9tIqRQbaycTh_6U",
+              "width": 1200,
+              "height": 800
+            }
+          }
+        }
+      ],
+      "Snippet": "Трагедія Шекспіра про злет і падіння легендарного давньоримського полководця Кая Марція, який за здобуття ворожого міста Коріоли отримав прізвисько Коріолан.\n\nГордість і зневага до натовпу приводять героя до вигнання зі власного міста — і до спокуси помститися Риму разом із вчорашніми ворогами. Вистава Національного театру ім. Івана Франка про владу, честь і ціну політичних амбіцій.",
       "Price": "50-1200 грн",
       "organizer": "Національний академічний драматичний театр ім. Івана Франка",
       "Time": 64800,
       "Location": "Національний академічний драматичний театр ім. Івана Франка, пл. І. Франка, 3, Київ",
+      "Status": "Вибір редакції",
       "Date": "2026-09-29",
       "Category": "Театр",
       "Link": "https://sales.ft.org.ua/events/5c765fu6121"
