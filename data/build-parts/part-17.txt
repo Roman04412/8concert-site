@@ -107,6 +107,7 @@ function siteFooter() {
       <span class="footer-genre">Джаз</span>
       <span class="footer-genre">Класика</span>
       <span class="footer-genre">Триб'юти</span>
+      <span class="footer-genre">Театр</span>
     </div>
     <div class="footer-social">
       ${SITE.instagramUrl ? `<a href="${escapeHtml(SITE.instagramUrl)}" target="_blank" rel="noopener" aria-label="Instagram">${ICON_INSTAGRAM}</a>` : ''}
@@ -194,4 +195,3 @@ function renderHomepage(concerts, overflowPool = [], allUpcoming = []) {
       { linkTitle: true, extra: true },
     ))
     .join('');
-
