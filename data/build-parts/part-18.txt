@@ -19,7 +19,8 @@
   const genrePills = `
     <div class="genre-pill active">🎷 Джаз</div>
     <div class="genre-pill active">🎻 Класика</div>
-    <div class="genre-pill active">🎤 Триб'юти</div>`;
+    <div class="genre-pill active">🎤 Триб'юти</div>
+    <div class="genre-pill active">🎭 Театр</div>`;
 
   const content = `
 <div class="hero">
@@ -213,8 +214,13 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
   // Fields shared by every showtime of this production (name, description,
   // location, performer, organizer...). Only the date/time and the offer
   // (price/link/availability) actually vary per showtime.
+  // Theatre/ballet listings (Category "Театр") are not concerts, so they
+  // get schema.org's TheaterEvent instead of MusicEvent — same Event rich
+  // result support from Google, more accurate type for the actual content.
+  const isTheaterCategory = normalizeCategoryKey(f.Category) === normalizeCategoryKey('Театр');
+
   const sharedEventFields = {
-    '@type': 'MusicEvent',
+    '@type': isTheaterCategory ? 'TheaterEvent' : 'MusicEvent',
     name: title,
     // The event's own page — distinct from offers.url (the ticket link).
     // Google's Event guidelines list this as a required/recommended field
@@ -236,7 +242,7 @@ function renderConcertPage(c, { isPast = false, otherConcerts = [] } = {}) {
     // MusicGroup (not the more generic PerformingGroup) — schema.org's own
     // MusicEvent examples use it, and it's the more specific/correct type
     // for a musical act.
-    ...(performerName ? { performer: { '@type': 'MusicGroup', name: performerName } } : {}),
+    ...(performerName ? { performer: { '@type': isTheaterCategory ? 'PerformingGroup' : 'MusicGroup', name: performerName } } : {}),
     ...organizerField,
   };
   const eventForShowtime = (s) => ({
