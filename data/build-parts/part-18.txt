@@ -1,4 +1,4 @@
-// "Всі події" — literally everything fresh and upcoming, curated or not,
+// "Всі події" — literально everything fresh and upcoming, curated or not,
   // in chronological order. Unlike the "8 подій" pool this needs no
   // backfill mechanism: it already contains every concert we know about.
   const allHtml = allUpcoming.length
@@ -27,7 +27,7 @@
   <div class="hero-left">
     <div class="hero-label">Редакційна добірка</div>
     <h1 class="hero-title">Концерти Києва —<br>вісім вечорів, які варто <em>прожити</em></h1>
-    <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики та триб'ютів у Києві — для тих, хто цінує особливі моменти.</p>
+    <p class="hero-sub">Щотижня обираємо вісім концертів джазу, класики, театру та триб'ютів у Києві — для тих, хто цінує особливі моменти.</p>
   </div>
 </div>
 
@@ -83,7 +83,7 @@
 
   return pageShell({
     title: '8CONCERT — Вісім вечорів, які варто прожити | Афіша концертів Києва',
-    description: "Щотижнева редакційна добірка з восьми концертів джазу, класики та триб'ютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.",
+    description: "Щотижнева редакційна добірка з восьми концертів джазу, класики, театру та триб'ютів у Києві. Обираємо найкращі вечори для тих, хто цінує особливі моменти.",
     canonical: `${SITE_URL}/`,
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
