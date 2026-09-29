@@ -102,7 +102,7 @@ function siteFooter() {
   return `<footer>
   <div>
     <div class="footer-logo">8<span>CONCERT</span></div>
-    <div class="footer-desc">Редакційна добірка концертів Києва для тих, хто цінує особливі вечори. Оновлюється щодня.</div>
+    <div class="footer-desc">Редакційна добірка концертів та вистав Києва для тих, хто цінує особливі вечори. Оновлюється щодня.</div>
     <div class="footer-genres">
       <span class="footer-genre">Джаз</span>
       <span class="footer-genre">Класика</span>
@@ -135,7 +135,7 @@ function siteFooter() {
   </div>
   <div class="footer-bottom">
     <div class="footer-copy">© ${new Date().getFullYear()} 8concert.com — Київ</div>
-    <div class="footer-copy">Зроблено з любов'ю до музики</div>
+    <div class="footer-copy">Зроблено з любов'ю до музики і театру</div>
   </div>
 </footer>`;
 }
