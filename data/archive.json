@@ -2434,8 +2434,29 @@
       "Image": [
         {
           "id": "attKQKqK7X8qXK2k2",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1714382055.jpg",
-          "filename": "otello-hd.jpg"
+          "width": 1732,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/F_T5XVxxFTjsuVDaMMH14g/PAWP1_32VRFNWhZXPH_i6odqHFZXr3sX7CThkb9sgypwzCQXIYONrQZx3Vp5_2S346pF7SYh2-62gWyqF3x6gQpwREdn56a0fadhKECP0uHW-Uq7GOQMoPJ9E_HHTx25diBwnKPoM_qcmDuXDFz-BfHCIlLOpXV3bW2rrpNafFs/QnN6YreLCVMxoW0wQVyL0Ab2OySNeUiy3LfmpLLm58E",
+          "filename": "otello-hd.jpg",
+          "size": 1086331,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/G0NWzryQjvu2mQxKHyqPqg/y5KdQHh9st3NWqSjQmUk6ZpckAbFIwYfsaEHx_o623UyNWZMG-G2VbmFzkb1nKueM614YWkH0fQotlsrVvC9IWzPzA1AW0qdzwebcitCHRIwwPG9kVzVT9Iob3RLB6ci_wRTNdYoZdEqB1eOA6uBPA/Ga4gpx-en3nC6d_LnL9wZ3xHYIeI5FK6-iz9qAbZsH4",
+              "width": 62,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/xVEg3PRZUd0wE6qGCs0Gdg/aa5c_z8XpC5vT6MGpV_kydvdDymxLEyyi6PU3PB3TAD5L_EaDKAzcVShAzZqyQ2MOezrPq5l51Cw5N0yHBiVYIUcg1aTy8kvituMEXQy3Lb3fiaCGu69cnXvCyLwKeht0od5Zf4LYYA2jiUkO9tfYA/ayhp1evexb6T0xOAzThmChWdpC6FnhArd8sT8MKgUqs",
+              "width": 887,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/y3et2ixUD86yDyhK7FMSUQ/HjFhVvMDxp5GNRHpJltrl5SHpRk-VoWSk8-gE6GGr-mY5mq68hpWcrBBIgZiwmEw64pE8IH7Ia8aaBpL3j5IOTvaPiZ0ZQfj4ZNHeTAPWISuzXVoNhPG5OccaO3bAdrXIp9X8VLsTfv0iH3-L47eVw/R3f6Gd20nu7V2Hyw3F_tngX93A5r5Q_wtt1fWSnPqrQ",
+              "width": 1732,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Шекспірівська трагедія про ревнощі та підступність у постановці Давида Петросяна: генерал-переможець Отелло, якого власне оточення руйнує наклепами й інтригами, перетворюючи довіру на смертельну пастку. За задумом режисера, це радше історія про боротьбу людини з власними внутрішніми демонами, ніж про побутовий чи політичний конфлікт — Яго в деяких інтерпретаціях трактують як alter ego самого Отелло, тоді як Дездемона втілює його найкращі якості. Дію супроводжують сценічний хор і музика композиторки Сусанни Карпенко, а плакат до вистави створив художник Сергій Маслобойщиков. Вистава на дві дії, 2 год. 50 хв.",
@@ -2597,8 +2618,29 @@
       "Image": [
         {
           "id": "att6d2MSgTW0ewVpc",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1743770871.jpg",
-          "filename": "khvylya-hd.jpg"
+          "width": 1233,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/DYThOlJVZd0-04k8oI6ulg/siKDHZF582QPL9qOdCyO6YwyIah26mvBPEdb0K5iTcNijOK79HcbYFSXi6N9C-S9hpbpgxPUlPdpjKFho0AhGrAIpV_g1oqM---iB28ilWb0FzcIFQR5_ospDSJKta4AlloDn4HD_nG65oA-E5Q6D2ZQzg9s4ChNazjdU4R2uWY/yA7z2ZwLD2TIjOxWi6wd-OH3v1SPyuuslGNzvM_aNww",
+          "filename": "khvylya-hd.jpg",
+          "size": 892700,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/hibPqjHbDs-pOGQSYRsQ1A/RSrTKHMg-lwRuO6CMVCJplMZQYwaRSXgti_klzYh4ji1x8WUiOfzqwkiXpDLCg5gp9MnCzCeIEEffOd0GqfARwwAVXiv2yMVwgWKq0hVpuuvqU1CcEpgozwXrcpUqyvUCb3gK-lkgeUuRc021mH1SQ/ej9FYvPvoswIUk3Sk5W5k8qFbS7fZD8iK4xQXS4pfsQ",
+              "width": 44,
+              "height": 35
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/mQ7-p6TI_V29nSzAcOX6YA/UCeUOZZgFTzwcviB-22QdBNY70fl8JVuZFq_StXujjFhjqk7I6bC6eLHVD-Z8rGFTaHv5Rd-q8OYsqxPN3BnkUAoAUtmgkpKLshJ6_W6LfkdVAS1_5QUxSC-jo1Q7W7o1v0Bc42CGWrrW6_51HcK9Q/libAYtvbi_npJMeweWyIWI5AnjqvaTgdcnvDgs7bmhw",
+              "width": 631,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/Rck-bBX2LfEvMTNrOUkAyA/CqEj5-if7UJrCl9RvdQxqevqiFWWaqsbhZRaA1Sakvq6IRFXjBYUdLt2K37Mx5saMq_bGccGjIRsKdzqDg00QVNfGfVXZhUXZLmylg_-kwBJVXGHVq2BnEdzNFxgxZZtsmnAJtZZbNwUJp1EDg90Pw/HOJZP5vriS4er9AkCwvBVo_aIHG1rSJyYSGKK_mw9Lc",
+              "width": 1233,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Вистава за романом Тода Штрассера про реальний експеримент шкільного вчителя історії, який показав, як легко звичайні підлітки перетворюються на слухняну юрбу. Режисер Юрій Дяк ставить запитання, на які немає простих відповідей: хто дає людям право експериментувати над іншими, і в який момент люди перетворюються на тварин? Історія, яка справді сталася, — про межу, за якою зникає індивідуальність і починається насильство натовпу, «хвиля», під якою тонуть народи. У виставі задіяно понад тридцять акторів і використовується штучний дим. Вистава на дві дії, 2 год. 20 хв.",
@@ -2897,8 +2939,29 @@
       "Image": [
         {
           "id": "att9pVNhNpFlxPLOH",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1790602789.jpg",
-          "filename": "ostanniy-kadr-hd.jpg"
+          "width": 1500,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/j0hb5s6_9rAUTdAFzzd74A/GSxwKjgeuthMjIK22bIk_m-RwgCj5vheXV-UwPaHEh9g3khAwOfexDmR9S8dp9K1Kksn94Ile8eJVJV7I_RmKv0kaNpsoE1J0eSg8UnNqPZJcww40zRxI6iZzNEdnB3IYfCAGwkcHNY0dAPStrKH90j8Mk9YgNnfsoqtj9albLI/33c6S3sWb-X2-B29ktFFwfH1G7CM0gSqFyj1F32MHPk",
+          "filename": "ostanniy-kadr-hd.jpg",
+          "size": 1111790,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/-Gspk88sP8X7kdZyd1-dng/LY_SvK7LYrVXTcA5abWVFukj3ua4OdfY1INHjvbsTaq8wP8-7SpArbNQ0fpT8R3l7ImLYdRIpsLWS-G4bD_p7xg466OteTzCAWAYvetO1p8inVEnjp-MEkHxhH0w4Onrje1oip3jRRhGUfCxySWlJA/QUPO425yXIX4ps939M1VBL0btwbf_OmUn2U-aymUHN8",
+              "width": 54,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/3ArA6mcFL1J70QBL1zDORw/MKWrhyCZrxOgqDS2Q1WPWyIWzL405lEQhfE0JQMf3OJtACnUSJZYqtZNb5UZX8nPcauno5gT0jdR7SBj228GgHgmmzHZdbigjYh4Q2Scyk2VMaFcwBgMM8iu7r6TfW3a5fPKvms7IM8HV9zNg5U5XQ/6YlhPAB1aLzydHpV6Xdp7d_azDXod8R9SxJd00XRYDA",
+              "width": 768,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/TMJNnNH18T58YLnnnN4bfA/G9CQIrIeUw9eheVfD_VKI9G44gTv2IH9Jq8ynEgD0byQqk5QrB2Bwj4TF9Vg1KUttIJoC5DClk0Bd86MVZAWga5t9zjHcHViDKczRkBLiJSWljmZ-FYn0rgBiicQYPtwsS0ovZvxLV821OcsnSY0Cg/sru8bh89PlQCEWBGvb7N4RwqiFc1a6EHjPLewtIMFJ8",
+              "width": 1500,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Психологічна драма Юлії Лобановської — авторки ідеї, режисерки, сценографині й художниці костюмів в одній особі — про двох людей на межі правди й болю, де кохання стає полем бою без правил. Ніч, де тіні розмовляють голосніше за слова, а кожен погляд — вирок; світло прожекторів згасає, але справжній фільм починається за лаштунками, і сценарій стосунків пишеться між сварками, каяттями й спалахами пристрасті. Це історія про крик, заглушений шепотом, і слова, які знищують і зцілюють водночас — про світ, де сцена і реальність сплітаються у складний монтаж почуттів. Камерна вистава на двох акторів тривалістю трохи більше години, без антракту.",
@@ -3060,8 +3123,29 @@
       "Image": [
         {
           "id": "attPMUZaZmdV8lprI",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1636120958.jpg",
-          "filename": "svyate-simeystvo-hd.jpg"
+          "width": 747,
+          "height": 1080,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/6JUCy57ITYlf21ovxPyqqQ/KNmZgZ_J3m5gHNQGukcEHphjdwblhLcjk0w-6w98nZzOPXDLxBQcf7Hy-PCR4D4BixbdKp0KpXg0HsTjDRFLQrVXxhXtfJGZSNL3OnhsywBARTn_OCHMhg8fUJuOxwdNAiN2LkZMxVQm001vTxz3y2Krh956QbBhCjEZ7dwd-VAWcMoC71AKNGAy7wZvbwi_/TPATjkWt_Dz86FaZGpqyWbFxbOomlCfI1mg0e8BrnwA",
+          "filename": "svyate-simeystvo-hd.jpg",
+          "size": 189909,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/6fatR8iy2fMKJf0S81Gysw/tFywJQmqjQBdYSrRARqdgGOOxZvhsZ0ssHrYSqXZHl4p9vgHKWWY2qGSOT8BJQp7d95ImVqGcAsyyaaIf--Ds0EmLBKMA5Mjnspj2a6nium_MCbrPV4mzf1V9XfBw2jzZv75k_ZnAJ4UbgP7J-T5lw/khML2pbVN3XJ2py5AummF4DsdqKW2uNTiiGI77-VDmg",
+              "width": 25,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/0nNDo1OFyTea_0rjq_6WnA/WmbtvzRhmHJURGgqj_bcQRlYih_SlO9GdhGrcm2Y9O0ahh0i1WUbOljAPLAD60FL5GLpfFLfZSIj2lf5N8limdnV0mdfcBKtpkr0zwpWGwzRo_n129m0Bw9RVPfLOU_8C2-oGQYkPIFjMtUWJw8UXg/iw3OFV-vLqOFP8VQTIjE5-tAjlHEoh4CIgInqtIpTDw",
+              "width": 512,
+              "height": 740
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/b0ss9M85x0JvzTEDEHCmhQ/Wm0HSXP2Mx-EdU8XeFeidknizI7HRO_goe_LOnN_sKUl4oHQNxKBuxtV-OZsFHaiFn-ve58KdFyjFykZSQrkPjttOIjwhNrEnZr3oXiiESeRTwIRoU4S1Yo9_6UYEXuqp1UdocQtrs3WOjTch8o14Q/Y5ZrA3OJAm3edX1rudm1x1_qMMSBvYipQVEEq83QxwA",
+              "width": 747,
+              "height": 1080
+            }
+          }
         }
       ],
       "Snippet": "Кримінальна комедія Альдо Ніколаї про наївну й барвисту італійську родину Карручо з бідного району великого міста, чиє життя перевертає з ніг на голову несподівана інтрига одного божевільного дня. Всупереч соціальній нерівності та відсутності статків, батько, мати й син по-дитячому наївно й завзято сподіваються реалізувати свої мрії — аж доки в їхньому колоритному домі не зав'язується історія зі справжніми італійськими пристрастями, безумством і непередбачуваними парадоксами. Режисер Олександр Степанцов, який також відповідає за музичне оформлення вистави, називає це «історією, що перевернула все догори дриґом». Кримінальна комедія на одну дію, 1 год. 20 хв.",
@@ -3588,8 +3672,29 @@
       "Image": [
         {
           "id": "att8K9az22Guam3eX",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1721134275.jpg",
-          "filename": "akademiya-smihu-hd.jpg"
+          "width": 1440,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/cFh9RDia2Qbj2aBOmvg6nw/Pq9aMGaSNCzxMOjX6xnRNq_ToSQsS78N-bp6ycP4V1biTi1GGC-xUknZx1x7YgIFHbMjd1z6KVbQlpTDHWxUfjciUltHoDE_t9jz94pqzs64E494Dteby07sQ2SQ4X3KiYy6WqQ3CS_KpnGJcr4EhErtyRpw6-MQ6lHJ5azii_8/n1-GJnZQz676vjTjUPsiMOtodnnlvRUETMdryzmPMuY",
+          "filename": "akademiya-smihu-hd.jpg",
+          "size": 831596,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/FD-3wnfrvvfUvpExO5wQcg/Vsl_DjD21sERpf0HeXOisDLvcRlvIHdRKZQ8vUeR1uLWgaahqlcciRsmqWkqYULiLzLrJDeZwddr_fnmJ4TO1c8c2afhIar8Q1DjuDRNELPSWMGApuEBdqAAk9jv6qdJr6N_gZjR98EqDoJvWjoNDw/-vXjjpxNLTLVEcRas0rOf4O5qxjIGec-uTuJLdKYf9c",
+              "width": 52,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/gq8L8781ntoRucbQZHHShg/XP1yLGln3p_JcE2cuiUxvf7fDYOC9n4PhqBj5gEMnA8mEFyYNdtXgXmyy0j9jNsBSKb1H-GTHbiXGPBB_AHwCyDLSrxGNYdBI_29B57T9xUwHyKXo8DtuRxbrswgPF4nkBCdYPS69WH3PexaKtkwMw/aziCcXSHOcHzhZCo2c1c-GtKj4X-0d_bWvXZYJ-yNBc",
+              "width": 737,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/-zRu53PKxsAFDbYkcOD7NA/96MSyc-Fx76PY3z8hNqQe5xBpazXNPhl6OGl-ejaitywbn8iIMv4TCJpQYsmZK7TE6Ka0Wrq7Z1TWQVGMWlPMmc0jyWwPouoM71ZNwAu9VLPKE7UrJqz1_SHaSV1oTvJHiQRkw3WiPgX0CXaR7VpUQ/2-JGsOlEhLfOV34GqHgT3KLex21N2Zm2iQcML0BXm1w",
+              "width": 1440,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Комедія японського драматурга Кокі Мітані на одну дію про Цензора й Автора, які тиждень поспіль працюють над комедійною п'єсою — і в цій словесній грі поступово розкриваються справжні характери обох. В'їдливо-відповідальний Цензор («Я не маю почуття гумору зовсім») і запопадливий Автор, готовий зробити все, аби п'єсу взяли, перетворюють кожне прискіпування на жарт, і Цензор, хоч і позбавлений почуття гумору, несподівано стає співавтором цих жартів. До фінального діалогу-поєдинку ставлення обох героїв — і до п'єси, і до самого театру — докорінно змінюється. Вистава народилася із самостійної роботи акторів театру Гліба Суряги та Павла Текучева, тривалість 1 год. 20 хв.",
@@ -3613,8 +3718,29 @@
       "Image": [
         {
           "id": "attQFUYLPHQYqJadm",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1772197535.jpg",
-          "filename": "lyalkovyy-dim-hd.jpg"
+          "width": 713,
+          "height": 1080,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/Wshbd8nk-ND-nGbUYnlIPA/aCqzwx_LpWYIdW0xks_ioL0r12nQAC_CpCPnfIfAKGokHou-Zu2IA2ieSd0yE6RciVGk1f1DJA_1UvXvmlxKlTMAuw3CWTXWTjK6Ju_wgQx0w1pJKtojXS9v9UdzJ8kHS2MBjkkTs_xDiiGKxFBlwEWXvubUIRjjXCg9EUrr3FE/LCXAqj2sta0M-gft8JPJghkC7fC4AcwVu76vEMp9L_g",
+          "filename": "lyalkovyy-dim-hd.jpg",
+          "size": 156941,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/fKdR_MlvmQgt_EiBquId2Q/lznu9iTqyhY42hv1zacbPheROND-HZyVUtmefqSyrFoXT-mxDp7pXvyKoz8xg33IqkXUB0TKS98vxAZy7u4JwfBu9EAPsEAlkaa96_dTe0iFsGs-Wf5ZtJrcHLNFOIdmdN1eJSbVGdtq6YiGlu9LBQ/08NZhbaIohH4zkih22-EdIgdOpqzDQXOR5gNk_dRzgk",
+              "width": 24,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/rbKASqTbWLBIesKw7IDoPg/p9PNA7UMeKfdfB4I2FdIycRazYLfjhlpzEodN2qi4Vv5bRKq2hx434_nqmLneZj8QeUCPkkuzWdtxYq2zQ62rtkEhBo2wDdkk-o3n33cXmcFhrF_4vv5QOZ5QviIlV7hsjmxWBqFDlsLpR80IGiyQQ/GcW6PgZAbTh_y2uwewpYsmb0CODmyWbYW9vfwOE2Y74",
+              "width": 512,
+              "height": 776
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/eNrhpJhai4M8cIULMEMAwA/vFFm1-VXe1a-apLiDPRp_Vn-PkZXqLWR1Qjgq3c88ZUpMfNejqQ6TGLzrTafk5rZqEiiNBalc4fm2t0pe1TnM18gCzu-dMt1zzjzDl1M6pyVMs9zHTWLcZsY01c7oi26PyQLWhinNFLdQ8tvUtorwA/OzzBnuiC9curJg_9o2Db0p-_j-KSAfuRVrns7lMRJfw",
+              "width": 713,
+              "height": 1080
+            }
+          }
         }
       ],
       "Snippet": "Прем'єра. Соціально-психологічна драма за Ібсеном про Нору, яка ціною таємного вчинку рятує чоловіка, а згодом усвідомлює, що її життя побудоване на владі й страху, а не на довірі. Напередодні Різдва у родині адвоката Торвальда Хельмера розгортається драма турботливої дружини й дбайливої матері, за зовнішньою легкістю якої прихований сміливий крок: колись, рятуючи чоловіка, вона таємно взяла в борг гроші, підробивши підпис батька. Режисерка Юлія Лобановська каже: «„Ляльковий дім“ — про ілюзії, що тримають нас у пастці, і про сміливість зробити перший крок до себе». У виставі порушено питання, актуальні й сьогодні: любов без свободи, право жінки бути собою, межа між обов'язком і правом на власне життя. Тривалість 1 год. 40 хв.",
@@ -3959,8 +4085,29 @@
       "Image": [
         {
           "id": "attYvpFX0ee39lO7L",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1576068387.jpg",
-          "filename": "juliet-i-romeo-hd.jpg"
+          "width": 667,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/9004J5tt-tYAO_p5eBLfkg/PR5TmKbrlzl0jGi-yn8yBuHnPLMyKuYApYeAdt92CkUAYSoK2z__fkUDXHI6PfBC8uGwxwaj8J60GjsSooFIBJ3WDUQecAnb8StpRR8QN97Up8V3o_YaemRq5DnWqBSRQLyTGPKpG6eK1t3gn_0QTXOs8TYy1s7BoUaipSF9XiQ/a7i90GUzEuQ4A0-4_L3QxWZexJJiaeeP9xa2OhwPi_8",
+          "filename": "juliet-i-romeo-hd.jpg",
+          "size": 586741,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/ADm6mbUNL9i2dJJZB1Sc3A/FWPj2h6RyTlmu5v79a6ApSO4Pwdz355N0hIxxsDef1hziyYhNhMh0FogIIUHtrgr_3tq2xByi3rpBWYp2pSNOYq27SyYf8J5NJZ5_szgq2f6OvIji6xc0uuO06Y9GVzx4jmQvn8pYaBikw6YbS-UIA/PsNcuy96Kv6gRiVViTxBcm1xUIpSpq0m_YosYHRFYJQ",
+              "width": 24,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/biOVLrxOJw0JUkLF-d8srQ/aXI2Os0p-0uY0Qh6-A53WrDDIWFYWoiIyllYb3VmVNcZiUcd4aDg6Ob0luM13aLTfQ-u5QDUgq5WZXJubZCUDL9pH2soZ7vYMGXUzXFJ6ASNWaWW3RbEuqmQMFQGC-5Smn2HyObgQBGZndhMOO5--g/qMjDKQbL7j_7R5QegyPVrPeGQWqKuYbxiodiN6masqU",
+              "width": 512,
+              "height": 768
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/ADWey-gTtEc2myB6J_0uNw/6FzNfAuF0xpQnqgxJls6e1FSXrxUqEYr2h96LF4aE_X2JMg4zB_7uwv5m7cHtianFVEv8j-U4rnrEWiYl7SvKRwdP_ZPCSSZ1_L9n5EzhE6yRcG59JviEEKe7qPwngJOyIrTYidGdcaq5I4e-WjFAQ/Ss2fNIG7X6hPxncMPiFKq2u1avtbwZtVTFNScmWaZkg",
+              "width": 667,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Історія кохання і ненависті за Шекспіром у постановці художнього керівника театру Кирила Кашлікова — одна з найвідоміших п'єс світу про силу почуття, що виявляється сильнішою за смерть і родову ворожнечу. «Вважаю цю п'єсу на сьогодні не менш актуальною і сучасною, ніж у 1595 році», — каже режисер. У виставі — сценічні бої, хореографія Ольги Голдис і Максима Пекнього, жива музика та аранжування «Марески», а також штучний дим і гучні звукові ефекти. Вистава на дві дії, 2 год. 40 хв.",
@@ -4672,8 +4819,29 @@
       "Image": [
         {
           "id": "attjER9FeHXRNF6Oq",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1636117630.jpg",
-          "filename": "taksist-hd.jpg"
+          "width": 1403,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/5jyRHTCQ4lfkyfdvUIjiAQ/IfTMn4zaG4cugSrRHiAWngEHd3561lZC9PMl6Y-qAH-sUOxEQHTqX2J2YrSaJjsAdMjglG9dAgfmF3--fJvWCloRjEkLJow4qrvm7D8lxLaiUH7Nqx38bnsw87bIocEJg2U4IdWYrjzHSAv7gsYfzp-bhtx1Bx4-MbAlxxy94xE/rXlEq6xYCe7GLZVYSghgpzzCT6RZ2lqFa8shJx_2wdk",
+          "filename": "taksist-hd.jpg",
+          "size": 1045049,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/N2-SpT3fZQkLokzrVBLXSw/T7hTcnLJnsHdflOfjOpTZBGRGgv9ioyOBF86VQ9pRE1bo5Ej7vsOJ21Qn39WiXLA3aniL9poi5iZ4WWhTfO5F4u7WPRBZGzgsuzT2m_GtmOQKHQWUaGsKPng-k8QkVNk4KVO0m4qA4TE9WmS1jJYQA/dje0YmyQqO5Zq1H1t5GbyLoauj1LRAMX-Yw-FyIrRyE",
+              "width": 51,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/RKU6WYp2VYEUBXG1zS_DUw/qCSm5XGWnB6pDMqJlKlX_o0Ed1s7sWc83YIPMxISbqk8jRTgmlWgcebQov9VrYTxUtY4s9MvUmXOpU-hjzE5AWXgOgFF8ZMhZ5aWEaxbsh7rPNmJy1hST-_-srjx3KQyTA8B_XMS7zjmx2jr5xdGrw/gViTe8UEUFWTv_W-uC4ER7ruh7dqDRFQOYrewbYRTiQ",
+              "width": 718,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/sOFmdqhruxlv7KDp7f-ACQ/UmJfNGxIxN9HMa-_-sXXXPz7SrHSbW8imBBrSaDWiDDbe8RlS_htZBVo6018cxZAb8Fqj5znn0SrfbthJCxpbxblTTgpGTQETgFUUeatuHsP3-XI8OfSrJNXDzefHD05PNJt4u_ugzfUi-ylrPXDTQ/aUipqvtk_5QiXn8isHR42gwBEyrbit2SgPmveilVVyE",
+              "width": 1403,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Комедія положень Рея Куні про скромного таксиста, який роками веде подвійне життя з двома сім'ями, що не підозрюють одна про одну: два затишних сімейних кубельця, дві милі дружини. Випадкова подія докорінно змінює спокійне існування велелюбного героя — ризикуючи бути викритим, він так заплутується у нетрях власних вигадок, що повернутися звідти вже неможливо. Хто б міг подумати, що скромний таксист так блискуче впорається з роллю запеклого інтригана та авантюриста? Але недарма кажуть: у тихому болоті... У репертуарі театру з 2004 року, комедія на дві дії, 2 год. 20 хв.",
@@ -4789,8 +4957,29 @@
       "Image": [
         {
           "id": "attH4l8gYBGrMFi2Z",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1783683130.jpg",
-          "filename": "smert-komivoyazhera-hd.jpg"
+          "width": 1333,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/ey1NbuFtMTMWvC70d_Q-rA/X6F2-C0gkkP_RxrOko4y6Osw_6C2fDbYxJluYdgxtCVPgrA-LVYPgtyVpOdoWfO8qLX9pRd9HXRuvVIuJojLHX-xzUN4GhGpONSAoaWNKKZY4DUHP7acp5SCSnkhvM6Oph3n710qw2JyFHGV23lVt65IBQE_jk_f439aKqMRrYKsuJDj-F-dTpDXT3oyEVUn/km2vivP11hugSY9QOgoMYXER453F0YKsOepqmJWXsOU",
+          "filename": "smert-komivoyazhera-hd.jpg",
+          "size": 1222318,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/3dwWyCfRqAg4qAxt_vI-fg/4rlrFYSTLHaXGnYrGIu9xZC2d9CeF1-qHHIaMgeQ2ifyvcQ9nv3M88jCxPUIlS7-xTH9g55VB4Xz5fvZU9F5M2Cu9xsCEdytOzegVqmKt3DKWVbhnenT7EqS79x_hPuH-czHsBKbA8BytYcCIoCC5w/zxIApPGg4speEtbty-PIisfUKzq-zGYcbIZFPGeH_wM",
+              "width": 48,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/E5MZR3-SE2JsD9ZEXUU78Q/D1ASjfQKaMtsBvOwZRp0M4CV3T8o7YMvLzAHONg5p8o_sXcetj8e7ihOEyt7OHldueXoJUXw0Mb__O0t1eWb71zKuqjvHSbMyTZF3p4UymSxrFfgOFYfxvskzcYqLsJmCt1MJR1UltyaBqSay8F-dw/cJowooLfZDK3N_NzxMtRs4keeRSjzK5p2W6_FLsUf7Q",
+              "width": 682,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/yqUXrvwG6XcKLG4koeu3ZA/Q0zqtyp4JMg9MKb85HpGPPfN2VHq2_Twb08SRSqqmZKivGjFaE5DeUcdHJU9KvhKrfkJXn5cy3IbzUqI6zf_wCZo9X68Fo93iiMAiSelTKa5Mr7TtvsNDeuqRKwY8gyn3jMfzwpiwqUMC1pN6r6-cQ/LBzaBf03bMRChTfMQl6XVJHChzqfmQekEoRfapdI-kI",
+              "width": 1333,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Прем'єра за культовою п'єсою Артура Міллера в постановці художнього керівника театру Кирила Кашлікова. Головну роль комівояжера Віллі Ломана, який усе життя вірив, що наполегливість і відданість справі неодмінно приведуть до успіху, виконує народний артист України Станіслав Боклан. Затьмарений уявленням про успіх, Віллі покладає надії на синів — старший Біфф довго шукає себе, молодший Гепі працює в місті, але не відчуває радості від життя, а напруга між поколіннями наростає через мовчазні очікування, що накопичувалися роками. Це історія про людину, яка щосили прагне відповідати власному уявленню про успіх, і про ціну, яку доводиться платити за нездатність зупинитися. Сучасна драма, 160 хв. з антрактом.",
@@ -4905,8 +5094,29 @@
       "Image": [
         {
           "id": "attUROkDalNsjo7zX",
-          "url": "https://lesyatheatre.com.ua/images/photogalleries/image1738330357.jpg",
-          "filename": "tatu-troyandy-hd.jpg"
+          "width": 1397,
+          "height": 1000,
+          "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/yonkJscFAEFTGQcOdsm1MA/YEGS0dPwZ2mfAdACCPLFZYpgU2r2ORZ4MNrUCnvDxIy1puM8qqEihvLnaFICb6cfhg5UB6LqlaAnKG3qAxZqRcuHrBnWHR9_OGnRYWu3j1X0yZvU55_jgLjex7q6UsvDyhggomYprMVnxbOtAajYG9rDT9-xdmzrr_hbmFmvcBo/Xko7zqU_5-CtiHGWKQxrk1njkfaCYNXaO90aDxjG__4",
+          "filename": "tatu-troyandy-hd.jpg",
+          "size": 1078490,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/ZChrM0RpYBktMEAl_yw_qQ/e7jroIXNip4NQxVxrt8hxBxZ9mCkZ3vMkuHHdzZSwSChcaR-e5n8TNTqEFvLbU3h3fF0WZSq2xW4VFoisakDZXyoa5KHT7f8BYarIzVEODC96lGvp4nUXI4q5rXyWen4Et85q_RT3U5vCKQb20U93Q/HViAiRUAy4EyF_fpqbfQVhJlekrVcZ0mKSHxVj-U9Kg",
+              "width": 50,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/oX4BGy3w81ssb-bepetJKg/ke4GZ_VbKK-Lv27FL4U4LZUau54KJ0oJBzQ1Ul6s2tfFDnYzfLdrXyjVHhsVW4N7EMpJegP2_IxlRGpghWUPIlMe3utD86fVRt5-v9FNTHIw0PPPbjVbXCGLuIB1Xf_QcSumqSONMAp13vQLJoL99A/5dSErBkGlYIKlAcUVUcNyojzztyHp8veXNvLLp_BD18",
+              "width": 715,
+              "height": 512
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/57/57/1790712000000/o2PsmMTGWVKWogjpZNjHHg/4BJ7XTTcFEM_GHpaaJ2QwGkddu78tJ9zIMpfjWMTL5Sz7P7dBFiFm1a4Hg44aF9WTDuIGtOcam4GiTVa9XpK12xj7NeuigKbzljCcwKlJnvx9_vlYOTv6Jg6NZjE36ziH4qc9Qw0iVydA26_RWf7AA/e_0-urgu-jcY2RnPY6tK95EBUFigKm3p0EHHHRlHYRU",
+              "width": 1397,
+              "height": 1000
+            }
+          }
         }
       ],
       "Snippet": "Трагікомедія Теннессі Вільямса, яку сам драматург називав «драматичним любовним посланням світу», — про пристрасну італійку Серафіну, яка живе спогадами про покійного чоловіка Розаріо, зачинившись від світу й ревнуючи його навіть після смерті. Паростки першого кохання її юної доньки Рози приносяться у жертву материнським страхам — аж доки в оселі Серафіни не з'являється дивакуватий молодик Альваро, здатний похитнути її шалену відданість минулому. Постановка Дмитра Богомазова та Андрія Саміна — професійний акторський дебют студентів Карпенка-Карого, з живою музикою на сцені. Трагікомедія тривалістю 1 год. 20 хв.",
