@@ -85,7 +85,7 @@ function siteHeader() {
   <nav>
     <a href="/vsi-podii/">Афіша</a>
     <a href="/sogodni-vvecheri/">Сьогодні</a>
-    <a href="/mistsya/">Де слухати музику?</a>
+    <a href="/mistsya/">Де слухати та дивитись?</a>
     <a href="/about/">Про нас</a>
     <a href="/" class="nav-city">Київ</a>
   </nav>
