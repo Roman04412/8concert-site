@@ -2323,7 +2323,7 @@
           }
         }
       ],
-      "Snippet": "Три одноактні балети в один вечір: \"5 Танго\" На музику Астора П'яццолли у хореографії Ханса ван Манена (з репертуару Dutch National Ballet), камерна „Елегія воєнного часу” та віртуозні „Варіації Доніцетті” — у виконанні трупи Національної опери України.",
+      "Snippet": "Вечір з трьох одноактних балетів трупи Національної опери України. «5 Танго» (23 хвилини без антракту) — відомий у світі балет голландського хореографа Ханса ван Манена (1977, з репертуару Dutch National Ballet) на музику Астора П'яццолли, у костюмах Жан-Поля Врума, де сім пар танцюристів розкривають емоційні нюанси танго через пластику тіла. «Елегія воєнного часу» — камерна сучасна постановка, натхнена темою війни в Україні. «Варіації Доніцетті» — віртуозна класична сюїта на музику Гаетано Доніцетті, що вимагає від танцюристів бездоганної віртуозності. У «5 Танго» зайняті, зокрема, Христина Шишпор, Ольга Голиця, Володимир Кутузов та Микита Сухоруков; репетитори з балету — народні артистки України Раїса Хилько та Сергій Бондур. Вистава йде на сцені Національної опери України.",
       "Price": "200-1000 грн",
       "organizer": "Національна опера України",
       "Time": 61200,
@@ -2918,7 +2918,7 @@
           }
         }
       ],
-      "Snippet": "Одна з найжиттєрадісніших опер Россіні знову на сцені Національної опери України — з фірмовим гумором, стрімким сюжетом і партіями, що вимагають справжньої вокальної віртуозності. «Севільський цирульник» — це класика, яка не старіє: інтриги, переодягання і музика, що змушує усміхатися від першої до останньої ноти.",
+      "Snippet": "Опера на 3 дії Джоаккіно Россіні за лібрето Чезаре Стербіні (за мотивами комедії Бомарше), виконується італійською мовою на сцені Національної опери України. Прем'єрні покази останньої редакції відбулися 19 та 21 квітня 2019 року: режисер-постановник — Анатолій Солов'яненко, диригент-постановник — Микола Дядюра, художник-постановник — Андрій Злобін. Сюжет про протистояння спритного цирульника Фігаро та влюбленого графа Альмавіви, які хитрістю та дотепністю обводять старого ревнивого опікуна Бартоло, щоб з'єднати його з коханою Розіною. У різних складах трупи партії виконують Ігор Євдокименко та Ігор Мокренко (Фігаро), Ольга Фомічова та Сусанна Чахоян (Розіна), Дмитро Іванченко та Анатолій Погрібний (граф Альмавіва), Андрій Маслаков та Дмитро Агєєв (доктор Бартоло), Сергій Магера та Володимир Тишков (Дон Базіліо). Опера виконується італійською мовою.",
       "Price": "200-1000 грн",
       "organizer": "Національна опера України",
       "Time": 64800,
@@ -3056,7 +3056,7 @@
           }
         }
       ],
-      "Snippet": "BIGSHOW ORCHESTRA привозить до Києва мультимедійне шоу «The Harry Potter Symphony» — музично-театральну подорож у світ Гоґвортсу, школи магії з легендарної кіносаги. Улюблені теми з усіх частин «Гаррі Поттера» прозвучать у живому виконанні оркестру, а найкращі мелодії Джона Вільямса, Патріка Дойла, Ніколаса Хупера та Александра Деспла оживуть на великому екрані: відеоряд із культових кадрів фільмів синхронізовано зі світловим шоу. Рубеус Геґрід і Сивілла Трелоні проведуть глядачів найтемнішими коридорами школи магії, якими свого часу пройшов сам Гаррі Поттер, а фойє перетвориться на Алею Діаґон із тематичними декораціями та сюрпризами. Це цілісна історія — музичне, візуальне й інтерактивне театральне дійство, що занурює у магічний всесвіт хлопчика, який переміг зло. Частину коштів від продажу квитків буде спрямовано на підтримку ЗСУ.",
+      "Snippet": "BIGSHOW ORCHESTRA під керівництвом диригента Любомира Ліщука привозить до Києва мультимедійне шоу « The Harry Potter Symphony» — музично-театральну подорож у світ Гоґвортсу, школи магії з легендарної кіносаги. Улюблені теми з усіх частин «Гаррі Поттера» прозвучать у живому виконанні оркестру, а найкращі мелодії Джона Вільямса, Патріка Дойла, Ніколаса Хупера та Александра Деспла оживають на великому екрані: відеоряд із культових кадрів фільмів синхронізовано зі світловим шоу. Рубеус Геґрід і Сивілла Трелені проведуть глядачів найтемнішими коридорами школи магії, якими свого часу пройшов сам Гаррі Поттер, а фойє перетвориться на Алею Діаґон із тематичними декораціями та сюрпризами. Це цілісна історія — музичне, візуальне й інтерактивне театральне дійство, що занурює у магічний всесвіт хлопчика, який переміг зло. Частину коштів від продажу квитків буде спрямовано на підтримку ЗСУ.",
       "Price": "від 490 грн",
       "organizer": "BIGSHOW ORCHESTRA",
       "Time": 66600,
@@ -3350,35 +3350,7 @@
     "fields": {
       "Title": "Моцарт. Поппер. Брамс",
       "Performer": "Кирило Бондар (скрипка), Микола Любенко (віолончель), Денис Кашуба (фортепіано)",
-      "Image": [
-        {
-          "id": "attsWSh0BGLYMOlXl",
-          "width": 1080,
-          "height": 1080,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/sZZ2_gnszvlWul6g6TzEWQ/CxlZZoS_h3SMTd7m8HWMqJBYzFs89RgoAIijNTZbr_QkNPjabRT6LEmgklfdwQ0okAmY7cPHoAqndiQ7cksbJoLzWnYyH1lwjGFtpiS892RForhPP99Xd8Gthl9GZhpkK5bYWgJ6pIlke3UIP2nC0g/2BGhEqAaA1VbWlLJGfUbsqr_QLDViXnmCy0PgQhPLtE",
-          "filename": "12.jpg",
-          "size": 324853,
-          "type": "image/jpeg",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/cRzogyG2EFLFEJrzJKmpXQ/C8zWfBY7F70K0a9Waww3OcKG5k9L-ejp6RGPunUjiwu6s7LwkjbqQposKIL6beYxksf5k-9Aoq5b4kVqGPGkeY2rNMjO9zCXBLyTyGOxWT12oBew4aaec6EiZM4tpJxWtxlKHHrOmj0_KypaZtEVvw/wWJYqB_k8g7v-ofjVsneB6C4YEV1QDMj8lm0wYnojvU",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/Vcz4vips4AOXtTC-89ID8w/K4xcnkHoZh25rS4kUxOFt8UAPaizJaWF1bz3dzKZLZ3iUSpP29KT0r-omp8fma2rRMNxigaMEEZKToQahw10eSWNIlNYC8z_IQNBJI4sbAuPkiZ-Ua6kyZUPvOJBNoL8nVPgJU_6Sn5z4p-DiRWMcA/aTQ7LizfyDfZcMOoaCx6a3oX-1zoLRxv6aHugveA0hE",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/fMa1ZxUqML4bdFdVfykL3g/5NCgE0rU9-5VpU4B6sxqnoQzdr8mTYs1O1CJzTw0K0fSGj513onQnFLGVqCuin-yhHUHmwgc4DhqVlUVg3HM85qeyK2L0D-MxwGWBi-sFYEOx6ydPXoXEEp86id_Feol5l7ZUXz6CJywJnf6i3tcOQ/hZW3vgGTVn74e_n5C4l43s4dZgyLGUtoEaNDsPfPjFE",
-              "width": 1080,
-              "height": 1080
-            }
-          }
-        }
-      ],
-      "Snippet": "Камерний вечір скрипки, віолончелі та фортепіано: Соната Моцарта, віртуозна Угорська рапсодія Поппера для віолончелі та масштабне Фортепіанне тріо № 1 Брамса.\n\nВиконують Кирило Бондар (скрипка), Микола Любенко (віолончель) та Денис Кашуба (фортепіано). 11 жовтня, Колонна зала Національної філармонії, квитки від 125 грн.",
+      "Snippet": "Камерний вечір скрипки, віолончелі та фортепіано: Соната Моцарта, віртуозна Угорська рапсодія Поппера для віолончелі та масштабне Фортепіанне тріо № 1 Брамса. Програма веде слухача від класичної ясності Моцарта через романтичну віртуозність Поппера до широкої симфонічної драматургії Брамса, даючи змогу почути тріо музикантів у трьох зовсім різних стилістичних вимірах одного вечора.\n\nВиконують Кирило Бондар (скрипка), Микола Любенко (віолончель) та Денис Кашуба (фортепіано). 11 жовтня, Колонна зала Національної філармонії, квитки від 125 грн.",
       "Price": "від 125 грн",
       "organizer": "Національна філармонія України",
       "Time": 64800,
@@ -3395,35 +3367,7 @@
     "fields": {
       "Title": "A Weekend in New York",
       "Performer": "Національний академічний духовий оркестр України (диригент — Іван Стецький)",
-      "Image": [
-        {
-          "id": "attpjKCiVvWhRkdhh",
-          "width": 1080,
-          "height": 1080,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/-az-rutUD5ZBFthD0cwJfA/dwu5DrvoWPYiTx5g43Z5KXh9Kj3rFzHBbTBY3uGiRSipCe52FsyTSYE5p_VpcANMiGKRl4upkBfvijPrRIpNRXnDtfQOnD7lnCdXDYZm2Bvewevrsz2UOlBqibtTR_0o5DdbUvwpj0Wvt4WzvIVKPg/P7Zqjr87SrQenJtFstldwPiUSrVQ9KcGASLxGambA7s",
-          "filename": "24.09.2026-1080-x-1080-pyks.jpg",
-          "size": 415502,
-          "type": "image/jpeg",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/xxYrATCTwACSo9E9Jorjuw/Fy9MRGapgi0bjQ0rvDsFWtHiMh4Nj4N1GqudQYrQmRojsrUGss2cKZO08WqbMh1_xtKaa3u4ESAgPL2W_TcqtARGkMYsn0IzWm4ZkLrCHKYqXqawVERnpG2R06L_UpiDR935jlf2HtwLmSqZvd8gQg/WTUwDYN6PN8zPDSzV3eE5kOEko53iTubScqqR1sCTz0",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/3VB3IHpLCz1uaYWSv3KODg/jjIUQZN1bB6dUyXTCB6SZ8FlVa6twCXjO6awLIXnxk8kV-GDp4GPqCdmKF0jXBFco7msFRnk7xGG7nA84Q4uHIsQc3Ov9b6MngIMCxnTUCfPcHsbbeSSThmEiuWoGWLmojpA0kjhuTuV8n0dDIDBIQ/shVsX6RIpMri-wVZfGa0HOI14RIRkHDb2V6I7csy--U",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/2RHi-sGh3U3ijBhUDfeyig/ubsc8y45cFM5pdjdy1s0GF6o-bUWUsLKp37jr4WXbZtgt4fGlM6KiAfWecnijOOC-edBXOE--MXStKaoNu5uDUvsODW1x_nmd2AZgaTLX20C-sR9JNVpMsvzKIeVJlGqXSQJUTaT7jIN7pbncDuBDA/HzI108mbxaVFBcTcCmzdzM24QskokQ2geB3q56vnA-4",
-              "width": 1080,
-              "height": 1080
-            }
-          }
-        }
-      ],
-      "Snippet": "Українська прем'єра! Симфонічна подорож Нью-Йорком у виконанні духового оркестру — ритми Бродвею, джаз-клубів Мангеттена та яскраві саксофонні соло у творах Спарка, Молінеллі, ван дер Руста та де Мея.\n\nВиконує Національний академічний духовий оркестр України під керуванням Івана Стецького. 24 вересня, Колонна зала Національної філармонії, квитки від 125 грн.",
+      "Snippet": "Українська прем'єра! Симфонічна подорож Нью-Йорком у виконанні духового оркестру — ритми Бродвею, джаз-клубів Мангеттена та яскраві саксофонні соло у творах Спарка, Молінеллі, ван дер Руста та де Мея. Партії саксофона виконують Павло Барабащук і Вікторія Тищик, солісткою вечора також стане Христина Лецин.\n\nВиконує Національний академічний духовий оркестр України під керуванням Івана Стецького. 24 вересня, Колонна зала Національної філармонії, квитки від 125 грн.",
       "Price": "від 125 грн",
       "organizer": "Національна філармонія України",
       "Time": 64800,
@@ -3560,7 +3504,7 @@
           }
         }
       ],
-      "Snippet": "На камерній Сцені Укриття Київської опери хор виходить із програмою, повністю зітканою з української пісні — народної та авторської. Без оркестрової пишноти, лише голоси, що тримають зал у напрузі силою самого звучання. Рідкісний випадок, коли хорова класика звучить майже сповідально.",
+      "Snippet": "На камерній Сцені Укриття Київської опери хор театру виходить із програмою, повністю зітканою з української пісні — народної та авторської. Без оркестрової пишності, лише голоси, що тримають зал у напрузі силою самого звучання. Хормейстер-постановник концерту — Анжела Масленнікова. Тривалість концерту — близько 1 години 15 хвилин. Рідкісний випадок, коли хорова класика звучить майже сповідально.",
       "Price": "від 250 грн",
       "organizer": "Київська опера",
       "Time": 61200,
@@ -3880,7 +3824,7 @@
           }
         }
       ],
-      "Snippet": "Трагедія Шекспіра про злет і падіння легендарного давньоримського полководця Кая Марція, який за здобуття ворожого міста Коріоли отримав прізвисько Коріолан.\n\nГордість і зневага до натовпу приводять героя до вигнання зі власного міста — і до спокуси помститися Риму разом із вчорашніми ворогами. Вистава Національного театру ім. Івана Франка про владу, честь і ціну політичних амбіцій.",
+      "Snippet": "Трагедія Шекспіра про зліт і падіння легендарного давньоримського полководця Кая Марція, який за здобуття ворожого міста Коріоли отримав прізвисько Коріолан. Вистава Національного театру ім. Івана Франка в постановці Дмитра Богомазова (прем'єра — грудень 2018 року) розкриває в цій стародавній історії болючий сьогодення код про владу, гонор і ціну політичних амбіцій. Гордість і зневага до натовпу приводять героя до вигнання зі власного міста — і до спокуси помститися Риму разом із вчорашніми ворогами. У головній ролі — Олександр Форманчук, його матір Волумнію грає народна артистка України Наталія Сумська, а серед трибунів — Іван Шаран (Юній Брут) та Остап Ступка (Сіціній Велут). Вистава про владу, честь і ціну політичних амбіцій, яка й сьогодні звучить дивовижно актуально.",
       "Price": "50-1200 грн",
       "organizer": "Національний академічний драматичний театр ім. Івана Франка",
       "Time": 64800,
@@ -4128,35 +4072,7 @@
     "fields": {
       "Title": "WLive: Світло Міфу",
       "Performer": "Академічний симфонічний оркестр Національної філармонії України (диригент — Віктор Плоскіна)",
-      "Image": [
-        {
-          "id": "att1Z64dvbCM4it3S",
-          "width": 1080,
-          "height": 1080,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/vUmrtjD5bUJYiHryMc53wA/CB6TZu1E7xVR-VqYfqEVZ1qrr1XrYy0zVY9OZMiXP56AQzlrALasWgPTaB2oxwJ1BynmcTlXZdwwDhqdZD8r0s6vTWLWzvV_lXaQGaZWZqdgvLfADp13iEQsgt1xhXho4Nsb8bfa8an_bhN-iLDuLg/al6DSHzstV92xwwosORTLM7BKy6uToIVkwoZrLndxts",
-          "filename": "27_09_1080h1080-1.jpg",
-          "size": 854162,
-          "type": "image/jpeg",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/j0f-d300xt-UMgh7WNKOUg/83HKQy43GyMPTS4H2uO7AuNU87kFJ1PlRGwllWjBEXOU7ptqyo7ZbaS-_zscVt6PE6oW01XPy0iVrMx4qPLyplLs_-FJAJxRgDqFrsIih67ZeuKPuqRtL30jUjxcsxBVlPnKABWRe06ZqgUGA3Zbag/OXapmRbzI9QELALSv9AoQW6KdUu4jL9ppZO9IHHS7B8",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/9wLX0xsJ_N-YrAJsbp2s2w/NPzWFeLRkcW_iF_M6DyBpjmi_hzJCG6qR2s3paC7lSP41ZErQZC84saUfIBTB1wD0_NCWFFG3DQRUtIG7kQVwyiFpAhfEQB19kGLv3MJKpeQe8LFuDiRnQr7D5_XJBlSZGFy54iqgb161p1HQmDEeA/UYnZ1oSc3HvY-yhdpC1idbEMCT1DwJTfRf3HK6UcQqg",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/HryaS-GcVNJKW0I56sB5Lg/N-HYnZmVHhEvz8PtpYypjlT7bVAhMACOMs-a-VI2-9ltSJp1bH6kml3CE57AQ13n1RWAdlMz7oUI4ZW7_zQn-1NdkfrTKsg62D9vrWTmszIy_Ld48_FFOb7TlpVDhwt1_ZnJox_-Py0n9uOZ-l1VVA/PPLAHHdA6KpwApWNUQQ6qYUKZ81f0bel1QhQvPHGK8s",
-              "width": 1080,
-              "height": 1080
-            }
-          }
-        }
-      ],
-      "Snippet": "Вечір пам'яті співака Василя Сліпака (сценічний псевдонім — МІФ) до десятих роковин його загибелі: лауреати конкурсу молодих вокалістів його імені виконують арії з опер Моцарта, Верді, Россіні, Доніцетті та інших.\n\nВиконує Академічний симфонічний оркестр Національної філармонії України під керуванням Віктора Плоскіни. 27 вересня, Колонна зала Національної філармонії, квитки від 125 грн.",
+      "Snippet": "Вечір пам'яті співака Василя Сліпака (сценічний псевдонім — МІФ) до десятих роковин його загибелі: лауреати Конкурсу молодих вокалістів його імені виконують арії з опер Моцарта, Верді, Россіні, Доніцетті та інших. На сцені — сопрано Дарія Назимчук і Богдана Габриелян, мецо-сопрано Олена Скицько, баритони Володимир Щигіль і Роман Арабаджи та бас Олексій Піголенко.\n\nВиконує Академічний симфонічний оркестр Національної філармонії України під керуванням Віктора Плоскіни. 27 вересня, Колонна зала Національної філармонії, квитки від 125 грн.",
       "Price": "від 125 грн",
       "organizer": "Національна філармонія України",
       "Time": 64800,
@@ -4265,35 +4181,7 @@
     "fields": {
       "Title": "Love is Tango",
       "Performer": "FUEGO Orchestra",
-      "Image": [
-        {
-          "id": "attp4CHLD9v2h5FKz",
-          "width": 1080,
-          "height": 1080,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/fmW6cbc0WolMLvwHxPGHLw/S1tDrK7vWxDaOghL90myziwPbnOV6Io-koLnZCtx3AZFucmcFrz1o7j0sAIqWsPapRkyfFp3177ny_0Z97-7B0QB65p4V_e4Mr-CpIfFhVkO8AfxeXOPnn38-jl7lGfhPPd3V_qH-JLhWvPORvzQfg/X9Mh5GTOjpVa3lkXSsOyyagNv-WoI_aV4ZHvsa3k-4Y",
-          "filename": "20260906-1080h1080.png",
-          "size": 566508,
-          "type": "image/png",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/rdPy_vucilFZ8ktcOJChZQ/n3NwhA0aGy1v5CmZ3vsuUnqhckeoseLUgt7DwQegAsdKZzTDKPKcnRKN5uRHI72TBxwnrxiZHWMt1oENgJCvGUfYyVZ3YToyeeG_FnaAjHgT8sFGt4_oTosSkyd8AyDPA4AzkMnO3Tl_iJRR9gYQ6A/3Dlc8ZZxFyasie8mQPrUKrQfK1_LOVtKW2u2w6xU4OA",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/vsKqBnebee3HJYCjmpnPmw/dUlycF8xIX4E9YcLsj7bv6Szhq8m9EkIotRffrlpq9TvcubOOrk-SOE33kxNTPUNYtJzl_r2UyqBvdkd1OWtviB9wvmgC05nYR50VZegJk2Fw2Ujwldwn72a6rt3l2fiah9GxQIwcVssZxSf5Z_9PA/VKCO-h_lUEsqTgYh9BfGxXbecaWeI4oCQO9umd14vaY",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/yYDggMjybhbOYiAd1pg_lA/O8DNUzQSDvLgpSPryELjMXDtZ9URuEvjZMN0NWU9IQYjynjKAijcAGC1Ltz-jnlg0q90nk-vZoOj2yS-Do-YrdSkpvfTbaH3QdlywXmmV_GTlxBTJ722aV361mFlVleqMBo6x0lZ-lzZq3f555INFA/Ckxl3nGrYi0b8yBEpA8K9TmlBMjBpo6sYLkYgnJc6U0",
-              "width": 1080,
-              "height": 1080
-            }
-          }
-        }
-      ],
-      "Snippet": "Вечір легендарного танго у виконанні FUEGO Orchestra в оригінальному інструментальному складі — знамениті твори Карлоса Гарделя, Астора П'яццолли, Анхеля Вільольдо та безсмертна класика Ріо-де-ла-Плати поряд із танго-інтерпретаціями світових хітів.\n\n6 вересня, Колонна зала Національної філармонії, квитки від 200 грн.",
+      "Snippet": "Вечір легендарного танго у виконанні FUEGO Orchestra в оригінальному інструментальному складі — скрипка, контрабас, бандонеон і фортепіано виконують знамениті твори Карлоса Гарделя, Астора П'яццолли, Анхеля Вільольдо та безсмертну класику Ріо-де-ла-Плати поряд із танго-інтерпретаціями світових хітів. Концерт організовано у партнерстві з Національним будинком музики.\n\n6 вересня, Колонна зала Національної філармонії, квитки від 200 грн.",
       "Price": "від 200 грн",
       "organizer": "Національна філармонія України",
       "Time": 64800,
@@ -4310,34 +4198,6 @@
     "fields": {
       "Title": "Французький вечір",
       "Performer": "Національний заслужений академічний симфонічний оркестр України, диригент Микола Дядюра, скрипка — Дмитро Ткаченко, віолончель — Марк Коппей (Франція), фортепіано — Катерина Дядюра, ведуча Тетяна Новицька",
-      "Image": [
-        {
-          "id": "attmlsVUVOM0xliqm",
-          "width": 1080,
-          "height": 1080,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/uXZnpo9cIgG74T9T8pO5vg/EbENpD6ZOJhadgMm6xMmDhYlXXIUXhIKTAx34dYBxnfuixp5gm7b477DnKHryzXHnaak5IYiWpiHEQPyPijUEklE03xdy5opxm6esVfx51MQAmKdb3ZtYW-HVjld9qPbfhtDfsThm3107iNRqexiZQ/pWtNAEQ1TOPUgvQY4LJ4SXNNSKQkZ4SU8X9dZ-7ksBc",
-          "filename": "20.09_1080h1080-1.jpg",
-          "size": 770063,
-          "type": "image/jpeg",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/y4gd7NVu0JT_BGg9HBcBtQ/ZNtTm51g1bkP8MrtW4qW786_71f57ZQAEMVhTxUX1X2QS8ikrPBpapWTqmUni5My70GGWNXsLvjIuOlPIWAlccgZL804VSAu3lLueh2-mcg1ryqE1bN-HO-ao-P9dsvjrCiNCsTdNQ3piJCS8fUJBA/LcTR-ZtM0vVk8J0zHjnGFbsB1s_ju_uVNjQgjafsaYA",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/YuLMIvPIEsotmcwIfjp1sA/Pzpa2LiLMLKq4pSxMhQ3zgldxNfODezdkCXTf0KlzOO-69cPotx6MElM3t3gTmcsVYnfzOVxauWxNLD2-zquiAIq-9iVPi2NamPycyGoGS_CuM2sJH61imyHDX9YGsETyyesXF_P8IKFlTZDFtGnGA/MnNZDllQ6MjeqKuF8AtOietj8ieC5I8cf88vjGu0_yk",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/_K1Mr9EjEdZrZAamrxcQNQ/hLQjllaZWrpbcu4TlsnjNyQ9bx_A-Up03nLg1k8mW6z25-fm54w836FkzMmXRUZuOxOCRx8jxDH0tM_p_bttipn063zT71e2f9scIusF1omVF0QUiCwhBIDLarfmdYbywRMtqD6bH8SMhW_w_VUUMw/Wl6AdNvAkNO4SyMeCsb6v2IeB_1hFJcE3ApLhrmysZU",
-              "width": 1080,
-              "height": 1080
-            }
-          }
-        }
-      ],
       "Snippet": "Вечір, присвячений французькій музичній традиції: витончений діалог тембрів Равеля та Сен-Санса у виконанні Національного заслуженого академічного симфонічного оркестру України під орудою Миколи Дядюри. У програмі — Равелів Концерт для фортепіано для лівої руки (написаний для піаніста, що втратив руку на війні), лірична поема Сен-Санса «Муза та поет» для скрипки й віолончелі, його ж Перший віолончельний концерт та розкішний фінал — Друга сюїта з балету «Дафніс і Хлоя». Особливий гість вечора — французький віолончеліст Марк Коппей, один із провідних інтерпретаторів французького репертуару, соліст із міжнародною кар'єрою, що виступає з найкращими оркестрами світу. Захід відбувається за підтримки Французького інституту.",
       "Price": "від 150 грн.",
       "organizer": "Національна філармонія України",
@@ -4679,35 +4539,7 @@
     "fields": {
       "Title": "Романс",
       "Performer": "Каріна Кондрашевська (сопрано), Тетяна Хоменко (скрипка), Анастасія Бика (фортепіано)",
-      "Image": [
-        {
-          "id": "att0d9zmHyyBgUxw6",
-          "width": 1081,
-          "height": 1081,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/yK2edHGaigIywRz6aKbT-w/ke-bomGA8giBBQEguI61NaDlqzl5_RLEnr1DceNHzhJcc3akShXCnKDijyqSQtchY9I7aylzOjgTOwkf23xXgrRiU1f1F_MT-SoPDBrofXVNKo44Cx2yihE5S5rhH9nnWqGI1qpFdInsPL0Zk4jdLw/uFZCo4AlG7JWqJh8xuA5-nM1lJT0Ri3zqHS0lznFT_I",
-          "filename": "27.09_1080h1080-1.png",
-          "size": 1170049,
-          "type": "image/png",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/3IkKsWGOVzFxtCRV1Q3QgA/1Vj3PJiTwVFZed17nimI1WuVEB_G8D_aX0M-jFnb_VZRjITGLSZlTL405y4LqrvIt5v6JAGE0zBX1nMdRXiCYc11-eLie6xGdl05d9Q1NZqZnnbeee0jKYRuTa3iJ2XLor_PX8_t1Is3NpXtHxVCFQ/iwJ7KUawRmyYgULJlnELZQg-aoYS8I-ZdaNLLsV45sQ",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/nZW0XtJ9eVLctm8-FzuM6w/Bh7comuQKSTI3AwQHeb19mdfRaJviYfRiewseyBBb7ztxkNB4d4alXJ59z6ieACBdfRbfglAKJLKJZqw9V4aUm07EHG0j8lkToXFAiZrQLBpi7Se3qKtUwSRIr2_xjUpn1yg0NzfmA5GNRgF2Jsy7g/dpv5NW05SPg-vUJnLihsM9wgYAelmM-N7N9DWf_JDog",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/wLQ3_cZ-xlBpEsFU2CkPfQ/ZDwdIIJzU-oL_L8KM0Dh5MDX8D98Mv_ia2Ez88wNlp5d0e6oD7p02V8DT9sRD3B_gipNavA9gOdMr7G2pwT_VzWFxOtjWa-a3oz1R0Ja81l6LFfcpKNmbatEAvw8lU3r1ie5zU4EcHX_OrY6WjB1TQ/E1aLLMzBOn6Dt8y2y4a0j0lRYg2d_mOLwn0dVypxp1k",
-              "width": 1081,
-              "height": 1081
-            }
-          }
-        }
-      ],
-      "Snippet": "Вечір камерного романсу для сопрано, скрипки та фортепіано — інтимна програма у затишній залі мистецького центру «Шоколадний будинок».\n\nВиконують Каріна Кондрашевська (сопрано), Тетяна Хоменко (скрипка) та Анастасія Бика (фортепіано). 27 вересня, Мистецький центр «Шоколадний будинок» (вул. Шовковична, 17/2), квитки від 400 грн.",
+      "Snippet": "Вечір камерного романсу для сопрано, скрипки та фортепіано — інтимна програма у затишній залі мистецького центру «Шоколадний будинок». Концерт веде Оксана Колодуб.\n\nВиконують Валентина Матюшенко (сопрано), Тетяна Хоменко (скрипка) та Анастасія Бика (фортепіано). 27 вересня, Мистецький центр «Шоколадний будинок» (вул. Шовковична, 17/2), квитки від 400 грн.",
       "Price": "від 400 грн",
       "organizer": "Національна філармонія України",
       "Time": 61200,
@@ -4862,35 +4694,7 @@
     "fields": {
       "Title": "Блукаючі вогні / Feux Follets",
       "Performer": "Євген Галицький (орган, Австрія)",
-      "Image": [
-        {
-          "id": "attioQlPXClxX7tQ8",
-          "width": 1080,
-          "height": 1080,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/0JORh6PeFvutDLobhcnc9g/oosymFlqXoHx-Hy23oTXVVyCkJG6x-T14GDDH4QqZ6hFzKhluSDYSWZVuZVmfNO9AkT4dBJ6KrdNDWbTCWAyQ3tRRJRlMGzCAGi1laPDNN2sQmPrayvsvV7oXvSNZn69cX-fqZKge5ovSqogjNmu-w/73lknM5tFesoREMTB5JrxRgeNm_BIAWJmK1piPgFX9k",
-          "filename": "12.09_1080h1080.jpeg",
-          "size": 300410,
-          "type": "image/jpeg",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/L8HDD5Z3WKTpYuimj6oXAg/wDud9hcEYkSI745MnZ0aK7tfsyDNvTzlaH9J2hX1TW-1grt1ZPj3M-d_bfr1GWp6Eae6xAXcXNAqYULa7bN-fpY4b0t0MeJnY7ay3rBWl_rtz8SgkxY-9hhV2EauK0t90o9t7H8rZ6cmxGBWlKKRNQ/nfbNBKIZ560DO7i0-8PWXVwSjh3jq-Vzn8pDCv-xDcY",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/cWEM_dkgUXvTF43lmy9cTQ/Ts8M3c_7s4Tl8k-bll817z1FOBBE6Ac_N7aTuI0ruksXrWPAIp7L7MmtOAJizZDYswa6E_Bf7JJ0eJfpDfNjPFwNXx_KLcAuLpXPQQNaym95fdYI3iWdjq-PhUVlSAOP6xngCVgO1cpx17xt4BoQzQ/WzrUR9Bg0wpKEAFV011AZdeHm05mKKOPMhqVzBnh3rc",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/Wdf58QUXKj87JFfP7TjduA/vZ6tRzAeeLValNlRhndzAAu3-x04UkGIqxb4YCqxVQ_Ccdvfr-lbz4oSWOC9ssKgOuXgP6sBW8SyIH7w8n9i-0dl3V6CfUU-mU4igBE31S7jkQkNshYMm1desbX2DAaRm0OR0ofAaVll9gL2Xuofcw/5091GMdf-6A5nlU74c1dzjYiL0zJtWJpN-OejwCHCI0",
-              "width": 1080,
-              "height": 1080
-            }
-          }
-        }
-      ],
-      "Snippet": "Органний вечір, що веде від суворої поліфонії Баха й Моцарта до демонічного танцю у «Вальпургієвій ночі» Ебена та примарних вогників В'єрна, а завершується музикою Мендельсона та Астора П'яццолли.\n\nВиконує Євген Галицький (орган, Австрія). 12 вересня, Колонна зала Національної філармонії, квитки від 150 грн.",
+      "Snippet": "Органний вечір, що веде від суворої поліфонії Баха й Моцарта до демонічного танцю у «Вальпургієвій ночі» Ебена та примарних вогників-блукаючих вогнів В'єрна, а завершується музикою Мендельсона та Астора П'яццолли. Назва концерту «Блукаючі вогні» відсилає до містичного образу мерехтливих боліт, що зринає в творах кількох композиторів програми.\n\nВиконує Євген Галицький (орган, Австрія). 12 вересня, Колонна зала Національної філармонії, квитки від 150 грн.",
       "Price": "від 150 грн",
       "organizer": "Національна філармонія України",
       "Time": 64800,
@@ -5257,7 +5061,7 @@
           }
         }
       ],
-      "Snippet": "Гала-концерт до опер Вагнера: увертюра та арія Голландця з «Летючого голландця», хор і сон Ельзи з «Лоенгріна», романс Вольфрама та хор пілігримів з «Тангейзера», III дія («Політ Валькірій») з «Валькірії». Диригент — Микола Дядюра, хормейстер — Богдан Пліш.",
+      "Snippet": "Гала-концерт з музики Ріхарда Вагнера на сцені Національної опери України: увертюра та арія Голландця з «Летючого голландця» (виконує Тарас Штонда), хор і сон Ельзи з «Лоенгріна» (Лілія Гревцова), романс Вольфрама та хор пілігримів з «Тангейзера» (Ігор Євдокименко), а у другому відділенні — повна III дія «Валькірії» («Політ Валькірій») з вісімкома солісток у головних партіях, зокрема, Тетяна Анісімова (Брунгільда) та Тараса Штонди (Вотан). Диригент — Микола Дядюра, хормейстер — Богдан Пліш, художник оформлення концерту — Марія Левитська. Концерт дає рідкісну можливість почути найвідоміші фрагменти вагнерівських опер у виконанні симфонічного оркестру, хору та провідних солістів трупи.",
       "organizer": "Національна опера України",
       "Location": "Національна опера України",
       "Category": "Класика",
@@ -5271,35 +5075,7 @@
     "fields": {
       "Title": "Світло над прірвою",
       "Performer": "Катерина Ясенчук (сопрано), Андрій Рахманін (скрипка), Олександр Чувпило (тенор)",
-      "Image": [
-        {
-          "id": "attQ708qZtkbqr2dN",
-          "width": 1080,
-          "height": 1080,
-          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/Yx8eRnm70HmoeouX6iEEwQ/vO7lhMJiuA-7wPrIAEQck2KwGMzNwsPU4Fev_bI3Jx1737cTZy8qBrhPF2W1BLJXohTIKZGklyiEwTNto5TqUgVrda3Ice6c1M7rAvZPWCCYkGgUqVtLwN9oJ_5hMoKzRLt2oVz-kzJ33dgbmVWg1Q/MmV7fkKcvp5idLpI4lHZ-OXVdRiblrwub4NAuK_LIWA",
-          "filename": "29.09_1080h1080-1.jpg",
-          "size": 315381,
-          "type": "image/jpeg",
-          "thumbnails": {
-            "small": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/eIhObE3ZM0sRsczZF_ugdA/UMo83jvucnofszhkE8tQJBVbb-RsM5Ru4_pE2-MdnDPTQq5LXvPVEcDBrXqX80eAA_dmzHVQ6UgiK5nSo8GViPrEEoFS0MUVFa0qxC-RJ1mE218xhveK0fZLkACAbAc3AqqEDqQ7mlIP80cBvt9GNQ/z2bfb2TQy2puqrFetD8XEkpLViJgZnAtcFEJ17V8nAY",
-              "width": 36,
-              "height": 36
-            },
-            "large": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/x0tQgRxirg461O_SphYDDw/3AwMZZgdQDCgmQfl9U-c2tp_i388QJV8VmW2Wp6AkO3Gc7L2ZgFryLMAM5vUNerIs6EkY2KHoy8x9aAsMHm2WEwCZI5w2tn-itr1RvavZfhd9WOhei70sbnBGjTJ0peYcaQPnTQtdiLIT7cwfP3ugQ/u-7ZKMMk3_P2BMSthmpiG16tmYeahwsidHSdbU-Mqb4",
-              "width": 512,
-              "height": 512
-            },
-            "full": {
-              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790820000000/lQiFQKBBrbeUt3O_c30InQ/9vr3U87t81HYkn787zih17tLGenTvaaTCUMyMIYMwH1omGMYX9dhMlMr4h_C2VxDXFqsGo6S95Vv5X0bCIv0rriyLqkvMG1-gs6VqWAVwDQTPy2baGcHHZ1BH3IdEv_PlsR5R-0iGyqUlVlXIFj3sg/WlM2Ec4fKsKY8ZxSwd9kqwuOYWMmALh8SXgScdyzxqg",
-              "width": 1080,
-              "height": 1080
-            }
-          }
-        }
-      ],
-      "Snippet": "Мистецька спроба осмислити пам'ять про Бабин Яр через музику, поезію та живе слово: скорботна «Kaddisch» Равеля, «Псалом № 50» Скорика та «Пісня Пісень» Барвінського поруч із спогадами очевидців трагедії.\n\nВиконують Катерина Ясенчук (сопрано), Андрій Рахманін (скрипка) та Олександр Чувпило (тенор), ведучий — Андрій Карпов. 29 вересня, Фоє Національної філармонії, квитки від 300 грн.",
+      "Snippet": "Мистецька спроба осмислити пам'ять про Бабин Яр через музику, поезію та живе слово до 85-річчя трагедії: скорботна «Kaddisch» Равеля, «Псалом № 50» Скорика та «Пісня Пісень» Барвінського поруч із спогадами очевидців трагедії.\n\nВиконують Валентина Матюшенко (сопрано), Андрій Рахманін (скрипка), Олександр Чувпило (тенор) та Анна Поліщук (фортепіано), ведучий — Андрій Карпов, режисерка проєкту — Надія Агеєва-Швед. 29 вересня, Фоє Національної філармонії, квитки від 300 грн.",
       "Price": "від 300 грн",
       "organizer": "Національна філармонія України",
       "Time": 64800,
