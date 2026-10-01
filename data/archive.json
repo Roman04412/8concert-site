@@ -3074,6 +3074,34 @@
     "fields": {
       "Title": "Павло Тичина",
       "Performer": "Роман Смоляр (бас), Марія Віхляєва (фортепіано), Оксана Колодуб (ведуча)",
+      "Image": [
+        {
+          "id": "attyAxdcJQz5Ic06d",
+          "width": 1600,
+          "height": 2400,
+          "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790841600000/QpdqGEb4Uov3lLKM39HI4w/ufr2JK_-5D6wRFvNdNh-B5PN2BQ-PHjBOh7ofc30hd0kh4s58iVI-DWJoAcfKHI-GV2YiOWNFZKMRYNjUOjtS15ipU2jpFbfUEEYRIxEwbCzeGaMwBL7cXzLkTUZd5rPzjhvTxTFeUcPlS5X9KsgoBiCI06d98ARM6HqRR_YOrChP-ZHVXlmsraGpkUJxL8d/bEq3YzYP8x5wRDz1A4cQG4YGXNUw6xqaClxoBBEnS8A",
+          "filename": "pavlo-tychyna-xrxp5u.jpg",
+          "size": 238004,
+          "type": "image/jpeg",
+          "thumbnails": {
+            "small": {
+              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790841600000/wl-At1jKvpB0Ifi5jlBiTQ/YgPvE5US_5t-CVBZJz52ynTQkXJRrD1-wLQIh7WsBwCsgb4B7ReIi4FirIWsBmIYxpVCaBNshHyxdY_hUtpQdU7R9nb0mk7JWxs4ewFcxH3J_5kdLnNDxGAxiEEqF7ke3dKYGupHIYJR3-stBnbFiA/N22sd1MVzkukjUDGp1TBfRuEa68O1y5JOQkN1rblkio",
+              "width": 24,
+              "height": 36
+            },
+            "large": {
+              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790841600000/hEoSeneWfXpOvZEEobVsLA/qFnLz6j71TePxoDcR-IDsN8RnZ2vUHDltAozKIXMSZE0VjCO9V0NHluGh8pxAwWNMSpcWlxL9_ITIAGUUtrtHILbheLA0vc6BRYqq4edLAutPknOTswYjtew1dR2qy1twom49jQHJPPa391oFIagYw/lwtodS3Zpcc7n-9JTgfCBgMfVkMgwPVoBijGDwBqJls",
+              "width": 512,
+              "height": 768
+            },
+            "full": {
+              "url": "https://v5.airtableusercontent.com/v3/u/58/58/1790841600000/u4LMvcqVQn4-6F2562PSnQ/WrymKOUGtxblDcmvYOtBhv2sGzkHuiVXCem8OZBPtpv_qUG5a5pCFwgx6aEqtrFdSML15Mxozw2-1nYOqcSGNdfyASlmwvO0gwEtjGwame4kcJOs07wBvnFzryD363hLDuNRxIhx_vzftUQ3pwseGg/d6jc4JOXCWCBB3uLWOSVLOfqJ0dtdaWrVlzkUWI6ry0",
+              "width": 1600,
+              "height": 2400
+            }
+          }
+        }
+      ],
       "Snippet": "Авторський вокальний цикл баса Романа Смоляра на вірші Павла Тичини у камерній атмосфері музею-квартири митця, де поет прожив останні роки життя. У супроводі фортепіано Марії Віхляєвої лунатимуть дванадцять солоспівів на вірші поета: «Не дивися так привітно», «Квітчастий луг», «Ви знаєте, як липа шелестить», «Оксана», «На майдані коло церкви», «Мадонно моя», «Прийшли до мене в гості», «Встав на розвідку місяць повний», «Казала травка», «Брати, прощайте! Нових стріч!», «Послав я в небо свою молитву» та «Не вірте, люди, снігу». Ведуча вечора — Оксана Колодуб.",
       "Price": "від 200 грн.",
       "organizer": "Національна філармонія України",
