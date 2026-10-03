@@ -168,7 +168,7 @@ function buildScopePages(freshUpcoming) {
 function renderVenueCard(venue) {
   return `
       <a href="/mistsya/${venue.slug}/" class="venue-card">
-        <img class="venue-card-image" src="/images/venues/${venue.image}" alt="${escapeHtml(venue.name)}" loading="lazy">
+        <img class="venue-card-image" src="${venueImageSrc(venue.image)}" alt="${escapeHtml(venue.name)}" loading="lazy">
         <div class="venue-card-body">
           <div class="venue-card-category">${escapeHtml(venue.category)}</div>
           <div class="venue-card-name">${escapeHtml(venue.name)}</div>
