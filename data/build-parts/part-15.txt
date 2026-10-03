@@ -54,6 +54,16 @@ function absUrl(p) {
   return /^https?:\/\//.test(p) ? p : `${SITE_URL}${p}`;
 }
 
+// Almost every venue photo is a local file committed under assets/venues/
+// (built into /images/venues/<file> — see resolveImage()'s sibling copy
+// step). A small number of venues instead give `image` as a full external
+// URL (e.g. a Wikimedia Commons facade photo) when we don't have our own
+// hosted copy — this keeps both forms working from the same `venue.image`
+// field everywhere it's read, instead of special-casing each call site.
+function venueImageSrc(image) {
+  return /^https?:\/\//.test(image) ? image : `/images/venues/${image}`;
+}
+
 // Best-effort parse of the free-text Ukrainian "Date" field (e.g. "15 серпня",
 // "сьогодні") into an ISO date. Returns null if it can't confidently parse —
 // callers must handle that (omit startDate rather than emit a wrong one).
@@ -218,4 +228,3 @@ async function fetchConcerts() {
   } while (offset);
   return all;
 }
-
