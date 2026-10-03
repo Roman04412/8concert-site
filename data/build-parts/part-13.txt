@@ -196,7 +196,7 @@
   {
     slug: 'molodyy-teatr',
     name: 'Київський національний академічний Молодий театр',
-    image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/b/b5/Molodyi4.jpg/1280px-Molodyi4.jpg',
+    image: 'molodyy-teatr.jpg',
     category: 'Драматичний театр',
     tagline: 'Спадкоємець театру Леся Курбаса на Прорізній — три сцени й до десяти прем\'єр за сезон',
     seoTitle: 'Вистави в Молодому театрі Києва — афіша, адреса',
@@ -218,7 +218,7 @@
   {
     slug: 'teatr-na-livomu-berezi',
     name: 'Київський академічний театр драми і комедії на лівому березі Дніпра',
-    image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/2020-05-11_13-24-15_Mantach.jpg/1280px-2020-05-11_13-24-15_Mantach.jpg',
+    image: 'teatr-na-livomu-berezi.jpg',
     category: 'Драматичний театр',
     tagline: 'Перший театр лівобережного Києва — у переобладнаному кінотеатрі «Космос»',
     seoTitle: 'Вистави в Театрі на лівому березі — афіша, адреса',
