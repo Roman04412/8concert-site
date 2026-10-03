@@ -90,7 +90,7 @@ function renderVenuePage(venue, allConcerts) {
     name: venue.name,
     description: venue.tagline,
     url: `${SITE_URL}/mistsya/${venue.slug}/`,
-    image: absUrl(`/images/venues/${venue.image}`),
+    image: absUrl(venueImageSrc(venue.image)),
     ...(venue.address ? { address: { '@type': 'PostalAddress', name: venue.address, addressLocality: 'Київ', addressCountry: 'UA' } } : {}),
   };
   const breadcrumbJsonLd = renderBreadcrumbJsonLd([
@@ -102,7 +102,7 @@ function renderVenuePage(venue, allConcerts) {
   const content = `
 <nav class="breadcrumb"><a href="/">Афіша</a> / <a href="/mistsya/">Місця</a> / ${escapeHtml(venue.name)}</nav>
 <article class="concert-page">
-  <img class="concert-page-image" src="/images/venues/${venue.image}" alt="${escapeHtml(venue.name)}" loading="lazy">
+  <img class="concert-page-image" src="${venueImageSrc(venue.image)}" alt="${escapeHtml(venue.name)}" loading="lazy">
   <div class="concert-tags">
     <span class="tag">${escapeHtml(venue.category)}</span>
   </div>
@@ -121,7 +121,7 @@ function renderVenuePage(venue, allConcerts) {
     headerHtml: siteHeader(),
     contentHtml: content + siteFooter(),
     jsonLd: [placeJsonLd, breadcrumbJsonLd],
-    ogImage: `/images/venues/${venue.image}`,
+    ogImage: venueImageSrc(venue.image),
   });
 }
 
