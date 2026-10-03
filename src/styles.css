@@ -69,6 +69,11 @@ nav a {
   nav a:hover { color: var(--dark); background: var(--line); }
 }
 
+/* Short "Місця" label only shown in the mobile header badge (see the
+   max-width:768px nav a[href="/mistsya/"] override below); desktop keeps
+   the full descriptive link text. */
+.nav-mistsya-short { display: none; }
+
 .nav-city {
   font-family: 'DM Sans', sans-serif;
   font-size: 11px;
@@ -894,9 +899,9 @@ footer {
   }
   .tabs-bar::-webkit-scrollbar { display: none; }
   .tab {
-    padding: 14px 8px;
-    font-size: 11px;
-    letter-spacing: 0.04em;
+    padding: 14px 6px;
+    font-size: 10.5px;
+    letter-spacing: 0.02em;
     white-space: nowrap;
   }
   .filter-row { padding: 16px 20px; }
@@ -937,7 +942,11 @@ footer {
 }
 
 
-/* Show "Місця" on mobile header, top-right opposite the logo */
+/* Show "Місця" on mobile header, top-right opposite the logo. Swapped to
+   the short label (via nav-mistsya-full/short above) instead of the full
+   "Де слухати та дивитись?" question — the full text doesn't fit this
+   badge on narrow screens and was wrapping/overflowing the fixed-height
+   sticky header, spilling on top of the content below it. */
 @media (max-width: 768px) {
     nav a[href="/mistsya/"] {
       display: inline-block;
@@ -947,5 +956,20 @@ footer {
       padding: 8px 16px;
       border: 1px solid var(--line);
       border-radius: 8px;
+      white-space: nowrap;
     }
+    nav a[href="/mistsya/"] .nav-mistsya-full { display: none; }
+    nav a[href="/mistsya/"] .nav-mistsya-short { display: inline; }
+}
+
+/* Extra-narrow phones (e.g. iPhone SE, 375px): shrink the tab row a little
+   further so all four tabs ("Всі події" / "8 подій" / "Сьогодні" / "Цей
+   тиждень") fit on one line without the last one getting clipped at the
+   screen edge. */
+@media (max-width: 380px) {
+  .tab {
+    padding: 14px 4px;
+    font-size: 10px;
+    letter-spacing: 0;
+  }
 }
