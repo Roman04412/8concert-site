@@ -78,7 +78,7 @@
   {
     slug: 'natsionalnyi-palats-ukraina',
     name: 'Національний палац мистецтв «Україна»',
-    image: 'natsionalnyi-palats-ukraina.png',
+    image: 'natsionalnyi-palats-ukraina-hq.jpg',
     category: 'Концертна арена',
     tagline: 'Головна концертна арена України на понад 3700 глядачів',
     seoTitle: 'Концерти в Палаці «Україна» — афіша, адреса, правила',
