@@ -73,7 +73,7 @@
       'Формат нічного клубу — може не підійти для тихого камерного вечора',
     ],
     address: 'Caribbean Club, вул. Симона Петлюри, 4, Київ',
-    locationMatch: ['caribbean club'],
+    locationMatch: ['caribbean club', 'caribbean concert hall'],
     setting: 'indoor',
     venueType: 'клуб',
   },
