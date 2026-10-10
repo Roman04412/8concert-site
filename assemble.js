@@ -62,4 +62,29 @@ if (fs.existsSync(b64Dir)) {
   if (imageDirs.length) {
     console.log(`assemble.js: reconstructed ${imageDirs.length} venue image(s) from base64.`);
   }
+
+  // Some venue photos are better fetched straight from their (Wikimedia
+  // Commons) source at build time than shipped as hand-chunked base64, which
+  // proved unreliable for larger files. The base64 copy above stays as a
+  // fallback if the download fails.
+  const REMOTE_VENUE_IMAGES = {
+    'molodyy-teatr.jpg':
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/2020-05-11_13-24-15_Mantach.jpg/960px-2020-05-11_13-24-15_Mantach.jpg',
+  };
+  for (const [imageName, url] of Object.entries(REMOTE_VENUE_IMAGES)) {
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': '8concert-build/1.0 (https://8concert.com)' } });
+      const type = res.headers.get('content-type') || '';
+      const buf = Buffer.from(await res.arrayBuffer());
+      const isJpeg = buf.length > 2 && buf[0] === 0xff && buf[1] === 0xd8;
+      if (res.ok && type.startsWith('image/') && isJpeg && buf.length > 20000) {
+        fs.writeFileSync(path.join(venuesDir, imageName), buf);
+        console.log(`assemble.js: downloaded ${imageName} (${buf.length} bytes).`);
+      } else {
+        console.warn(`assemble.js: download of ${imageName} gave unusable response (${res.status}, ${type}); keeping base64 copy.`);
+      }
+    } catch (err) {
+      console.warn(`assemble.js: download of ${imageName} failed (${err.message}); keeping base64 copy.`);
+    }
+  }
 }
